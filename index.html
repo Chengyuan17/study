@@ -487,25 +487,80 @@ body {
   html, body { overflow-x:hidden; }
   .sidebar { transform:translateX(-100%); visibility:hidden; box-shadow:none; opacity:0; }
   .sidebar.open { transform:translateX(0); visibility:visible; box-shadow:4px 0 24px rgba(0,0,0,.15); opacity:1; }
-  .main { margin-left:0; padding:16px; padding-top:68px; }
+  .main { margin-left:0; padding:14px; padding-top:64px; max-width:100%; }
   .menu-toggle { display:flex; }
-  .hero-row { flex-direction:column; }
-  .hero-checkin { width:100%; flex-direction:row; justify-content:center; }
+  .card { padding:16px; border-radius:12px; }
+  .card h4 { font-size:14px; margin-bottom:14px; }
+  .section-title { font-size:19px; }
+  .section-subtitle { font-size:12px; margin-bottom:18px; }
+  .hero-row { flex-direction:column; gap:14px; }
+  .hero-countdown { padding:20px; border-radius:12px; }
+  .countdown-days { font-size:40px; }
+  .countdown-label { font-size:12px; }
+  .hero-checkin { width:100%; flex-direction:row; justify-content:center; gap:12px; }
+  .progress-ring-wrap { width:90px; height:90px; }
+  .progress-ring-text strong { font-size:20px; }
+  .progress-ring-text { font-size:10px; }
+  .checkin-btn { padding:10px 22px; font-size:13px; }
   .stats-row { grid-template-columns:repeat(2,1fr); gap:10px; }
-  .dash-grid { grid-template-columns:1fr; }
+  .stat-value { font-size:24px; }
+  .stat-label { font-size:11px; }
+  .stat-card { padding:14px; border-radius:12px; }
+  .dash-grid { grid-template-columns:1fr; gap:14px; }
   .stats-grid { grid-template-columns:1fr; }
-  .flashcard { min-height:280px; }
-  .flashcard-face { padding:24px; }
-  .flashcard-question { font-size:18px; }
-  .section-title { font-size:20px; }
+  .chapter-select { gap:6px; }
   .chapter-tag { padding:6px 12px; font-size:11.5px; }
-  .fc-btn { padding:10px 22px; font-size:12px; }
-  .quiz-timer-bar { padding:10px 14px; }
+  .study-filters { gap:8px; margin-bottom:8px; }
+  .flashcard-container { max-width:100%; }
+  .flashcard { min-height:260px; }
+  .flashcard-face { padding:20px; border-radius:14px; }
+  .flashcard-question { font-size:17px; }
+  .flashcard-answer { font-size:13px; line-height:1.8; }
+  .flashcard-chapter { font-size:10px; padding:3px 10px; }
+  .flashcard-type { font-size:10px; padding:3px 10px; }
+  .flashcard-actions { gap:10px; }
+  .fc-btn { padding:10px 20px; font-size:12px; }
+  .keyboard-hint { display:none; }
+  .quiz-mode-tabs { flex-direction:column; gap:8px; }
+  .quiz-mode-tab { max-width:100%; padding:14px; }
+  .quiz-mode-tab h5 { font-size:14px; }
+  .quiz-setup { max-width:100%; }
+  .quiz-option { flex-direction:column; align-items:flex-start; gap:8px; padding:12px 14px; }
+  .quiz-option select, .quiz-option input { width:100%; }
+  .quiz-timer-bar { padding:10px 12px; gap:10px; border-radius:12px; }
+  .quiz-timer-time { font-size:18px; min-width:55px; }
+  .quiz-nav-dot { width:24px; height:24px; font-size:10px; }
+  .quiz-nav-dots { gap:5px; }
+  .quiz-question-card { padding:18px; border-radius:12px; }
+  .quiz-q-text { font-size:15px; margin-bottom:12px; }
+  .quiz-textarea { min-height:100px; font-size:13px; padding:10px 14px; }
+  .quiz-ref-answer { padding:14px; }
+  .quiz-ref-answer p { font-size:13px; }
+  .qr-rate-bar { padding:12px 16px; flex-wrap:wrap; }
+  .qr-progress-bar { padding:8px 12px; gap:10px; font-size:12px; border-radius:12px; }
+  .qr-nav-btn { width:32px; height:32px; }
+  .wrong-stats-bar { flex-wrap:wrap; gap:10px; padding:12px 14px; font-size:12px; border-radius:12px; }
+  .wrong-list-item { padding:12px 14px; }
+  .wrong-q { font-size:13px; }
+  .setting-row { flex-direction:column; align-items:flex-start; gap:8px; padding:14px 0; }
+  .setting-input { width:100%; }
+  .btn { padding:9px 20px; font-size:12px; }
+  .toast { top:14px; right:14px; left:14px; padding:12px 18px; font-size:12px; }
 }
 @media (max-width:400px) {
+  .main { padding:10px; padding-top:60px; }
   .stats-row { grid-template-columns:1fr; }
   .flashcard-actions { flex-direction:column; align-items:center; }
   .hero-checkin { flex-direction:column; }
+  .countdown-days { font-size:34px; }
+  .hero-countdown { padding:16px; }
+  .flashcard { min-height:240px; }
+  .flashcard-face { padding:16px; }
+  .flashcard-question { font-size:16px; }
+  .quiz-question-card { padding:14px; }
+  .quiz-q-text { font-size:14px; }
+  .stat-value { font-size:20px; }
+  .card { padding:12px; }
 }
 ::-webkit-scrollbar { width:5px; height:5px; }
 ::-webkit-scrollbar-track { background:transparent; }
