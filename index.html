@@ -1,0 +1,2587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>传播学考试冲刺打卡</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="考试打卡">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --primary-glow: rgba(99,102,241,.15);
+  --accent: #f59e0b;
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #1a1d23;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border: #e5e7eb;
+  --border-light: #f3f4f6;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.08);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --tr: .25s cubic-bezier(.4,0,.2,1);
+  --sidebar-w: 260px;
+}
+[data-theme="dark"] {
+  --bg:#0f1117; --card:#1a1d27; --text:#e5e7eb; --text-secondary:#9ca3af;
+  --text-tertiary:#6b7280; --border:#2d3039; --border-light:#23262f;
+  --shadow:0 1px 3px rgba(0,0,0,.2); --shadow-md:0 4px 12px rgba(0,0,0,.3);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+.app { display:flex; min-height:100vh; }
+
+/* Sidebar */
+.sidebar {
+  width:var(--sidebar-w); background:linear-gradient(180deg,#1e1b4b,#312e81,#3730a3);
+  color:white; padding:28px 0 20px; position:fixed; top:0; left:0; bottom:0;
+  z-index:100; display:flex; flex-direction:column;
+  transition:transform .35s cubic-bezier(.4,0,.2,1); box-shadow:4px 0 24px rgba(0,0,0,.15); overflow-y:auto;
+}
+.sidebar-header { padding:0 24px 24px; border-bottom:1px solid rgba(255,255,255,.1); }
+.sidebar-header h1 {
+  font-size:21px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px;
+  background:linear-gradient(135deg,#e0e7ff,#c7d2fe);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.sidebar-header p { font-size:12px; opacity:.5; }
+.sidebar-nav { flex:1; padding:16px 12px; }
+.nav-item {
+  display:flex; align-items:center; gap:14px; padding:12px 16px;
+  border-radius:11px; cursor:pointer; font-size:14px; font-weight:500;
+  color:rgba(255,255,255,.55); transition:all var(--tr); margin-bottom:3px;
+  user-select:none; -webkit-user-select:none; position:relative;
+}
+.nav-item:hover { background:rgba(255,255,255,.08); color:rgba(255,255,255,.9); }
+.nav-item.active {
+  background:rgba(255,255,255,.14); color:white; font-weight:600;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.nav-item.active::before {
+  content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+  width:3px; height:18px; background:#a5b4fc; border-radius:0 3px 3px 0;
+}
+.nav-icon { width:22px; display:flex; align-items:center; justify-content:center; }
+.nav-icon svg { width:17px; height:17px; }
+.sidebar-footer { padding:16px 24px; border-top:1px solid rgba(255,255,255,.08); font-size:11px; opacity:.35; text-align:center; }
+.dark-toggle {
+  display:flex; align-items:center; gap:10px; padding:10px 16px; margin:0 12px 8px;
+  border-radius:10px; cursor:pointer; font-size:13px; color:rgba(255,255,255,.5);
+  transition:all var(--tr); border:none; background:transparent; width:calc(100% - 24px);
+}
+.dark-toggle:hover { background:rgba(255,255,255,.08); color:rgba(255,255,255,.8); }
+
+/* Main */
+.main { flex:1; margin-left:var(--sidebar-w); padding:32px 36px; max-width:960px; min-height:100vh; }
+.page { display:none; }
+.page.active { display:block; animation:fadeIn .3s ease; }
+.section-title { font-size:22px; font-weight:800; margin-bottom:6px; letter-spacing:-.02em; }
+.section-subtitle { font-size:13px; color:var(--text-tertiary); margin-bottom:24px; font-weight:500; }
+
+/* Cards */
+.card {
+  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:24px; margin-bottom:20px; border:1px solid var(--border-light); transition:box-shadow var(--tr);
+}
+.card:hover { box-shadow:var(--shadow-md); }
+.card h4 { font-size:15px; font-weight:800; margin-bottom:18px; color:var(--text); }
+
+/* Dashboard */
+.hero-row { display:flex; gap:20px; margin-bottom:24px; align-items:stretch; }
+.hero-countdown {
+  flex:1; background:linear-gradient(135deg,#fef3c7,#fde68a,#fcd34d);
+  border-radius:var(--radius); padding:28px; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:center;
+  box-shadow:0 4px 16px rgba(245,158,11,.12);
+}
+.hero-countdown::before {
+  content:''; position:absolute; top:-30px; right:-30px; width:120px; height:120px;
+  background:radial-gradient(circle,rgba(245,158,11,.2),transparent 70%); border-radius:50%;
+}
+.countdown-days { font-size:52px; font-weight:900; color:#78350f; line-height:1; letter-spacing:-.04em; }
+.countdown-label { font-size:13px; color:#92400e; margin-top:6px; font-weight:600; }
+.hero-checkin { width:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+.progress-ring-wrap { position:relative; width:120px; height:120px; }
+.progress-ring-wrap svg { transform:rotate(-90deg); }
+.progress-ring-bg { fill:none; stroke:var(--border); stroke-width:8; }
+.progress-ring-fill { fill:none; stroke:var(--primary); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .6s ease; }
+.progress-ring-text {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; font-size:11px;
+  color:var(--text-secondary); font-weight:600; line-height:1.4;
+}
+.progress-ring-text strong { font-size:26px; font-weight:900; color:var(--primary); }
+.checkin-btn {
+  padding:12px 28px; border:none; border-radius:50px; font-size:14px; font-weight:700;
+  cursor:pointer; transition:all var(--tr); color:white;
+  background:linear-gradient(135deg,#6366f1,#4338ca); box-shadow:0 4px 16px rgba(99,102,241,.3);
+}
+.checkin-btn:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(99,102,241,.4); }
+.checkin-btn:active { transform:translateY(0); }
+.checkin-btn.done { background:linear-gradient(135deg,#10b981,#059669); box-shadow:0 4px 16px rgba(16,185,129,.3); }
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.stat-card {
+  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:20px; text-align:center; border:1px solid var(--border-light);
+  position:relative; overflow:hidden; transition:all var(--tr);
+}
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:var(--radius) var(--radius) 0 0; }
+.stat-card:nth-child(1)::before { background:linear-gradient(90deg,#818cf8,#6366f1); }
+.stat-card:nth-child(2)::before { background:linear-gradient(90deg,#34d399,#10b981); }
+.stat-card:nth-child(3)::before { background:linear-gradient(90deg,#fbbf24,#f59e0b); }
+.stat-card:nth-child(4)::before { background:linear-gradient(90deg,#f87171,#ef4444); }
+.stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.stat-value { font-size:32px; font-weight:900; color:var(--primary); line-height:1.1; letter-spacing:-.03em; }
+.stat-label { font-size:12px; color:var(--text-secondary); margin-top:4px; font-weight:600; }
+.stat-card:nth-child(2) .stat-value { color:var(--success); }
+.stat-card:nth-child(3) .stat-value { color:var(--accent); }
+.stat-card:nth-child(4) .stat-value { color:var(--danger); }
+.dash-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+/* Calendar */
+.calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal-day { aspect-ratio:1; border-radius:5px; background:#f3f4f6; cursor:pointer; min-width:0; transition:transform .15s; }
+[data-theme="dark"] .cal-day { background:#23262f; }
+.cal-day:hover { transform:scale(1.15); z-index:1; }
+.cal-day.today { outline:2px solid var(--primary); outline-offset:1px; }
+.cal-day.level-1 { background:#c7d2fe; }
+.cal-day.level-2 { background:#a5b4fc; }
+.cal-day.level-3 { background:#818cf8; }
+.cal-day.level-4 { background:#6366f1; }
+.cal-day.future { background:transparent; border:1px dashed var(--border); }
+.cal-labels { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:4px; }
+.cal-labels span { text-align:center; font-size:11px; color:var(--text-tertiary); font-weight:600; }
+.chapter-progress { margin-bottom:12px; }
+.chapter-progress-header { display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px; }
+.chapter-progress-name { font-weight:600; }
+.chapter-progress-pct { color:var(--text-tertiary); font-size:12px; font-weight:500; }
+.progress-bar { height:6px; background:var(--border-light); border-radius:100px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--primary-light),var(--primary)); transition:width .6s ease; }
+
+/* Study */
+.study-filters { display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap; align-items:center; }
+.study-filters-label { font-size:12px; font-weight:700; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.06em; margin-right:2px; }
+.chapter-select { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.chapter-tag {
+  padding:7px 16px; border-radius:100px; border:1.5px solid var(--border);
+  background:var(--card); font-size:12.5px; cursor:pointer; transition:all var(--tr);
+  font-weight:600; user-select:none; -webkit-user-select:none; color:var(--text-secondary);
+}
+.chapter-tag:hover { border-color:var(--primary-light); color:var(--primary); }
+.chapter-tag.active {
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white; border-color:transparent; box-shadow:0 2px 10px rgba(99,102,241,.25);
+}
+.study-progress-bar { height:4px; background:var(--border-light); border-radius:100px; margin-bottom:20px; overflow:hidden; }
+.study-progress-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--primary-light),var(--primary)); transition:width .4s ease; }
+.flashcard-container { perspective:1200px; max-width:660px; margin:0 auto; }
+.flashcard-progress { text-align:center; margin-bottom:16px; color:var(--text-secondary); font-size:13px; font-weight:600; }
+.flashcard {
+  width:100%; min-height:340px; position:relative; cursor:pointer;
+  transform-style:preserve-3d; transition:transform .65s cubic-bezier(.4,0,.2,1);
+}
+.flashcard.flipped { transform:rotateY(180deg); }
+.flashcard-face {
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:20px;
+  box-shadow:var(--shadow-lg); padding:32px; display:flex; flex-direction:column; border:1px solid var(--border-light);
+}
+.flashcard-front {
+  background:linear-gradient(160deg,#eef2ff,#e0e7ff,#c7d2fe);
+  justify-content:center; align-items:center; position:relative;
+}
+[data-theme="dark"] .flashcard-front { background:linear-gradient(160deg,#1e1b4b,#312e81); }
+.flashcard-front::before {
+  content:''; position:absolute; top:-50px; right:-50px; width:160px; height:160px;
+  background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%); border-radius:50%;
+}
+.flashcard-back { background:var(--card); transform:rotateY(180deg); overflow-y:auto; pointer-events:none; }
+.flashcard.flipped .flashcard-back { pointer-events:auto; }
+.flashcard.flipped .flashcard-front { pointer-events:none; }
+.flashcard-chapter {
+  position:absolute; top:16px; left:20px; font-size:11px; color:var(--primary);
+  background:rgba(99,102,241,.1); padding:4px 12px; border-radius:20px; font-weight:700; z-index:1;
+}
+.flashcard-type {
+  position:absolute; top:16px; right:20px; font-size:11px;
+  padding:4px 12px; border-radius:20px; font-weight:700; z-index:1;
+}
+.type-noun { background:#fef3c7; color:#92400e; }
+.type-short { background:var(--success-light); color:#065f46; }
+.type-essay { background:#fce7f3; color:#9d174d; }
+.flashcard-question { font-size:21px; font-weight:700; text-align:center; line-height:1.7; color:var(--text); margin-top:16px; z-index:1; }
+.flashcard-hint { margin-top:16px; font-size:12px; color:var(--text-tertiary); z-index:1; font-weight:500; }
+.flashcard-answer-title { font-size:13px; font-weight:800; color:var(--primary); margin-bottom:14px; padding-bottom:10px; border-bottom:2px solid var(--primary-glow); }
+.flashcard-answer { font-size:14px; line-height:1.9; color:var(--text-secondary); white-space:pre-wrap; }
+.flashcard-actions { display:flex; gap:12px; justify-content:center; margin-top:24px; }
+.fc-btn {
+  padding:12px 28px; border:none; border-radius:50px; font-size:13px;
+  font-weight:700; cursor:pointer; transition:all var(--tr);
+}
+.fc-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.fc-btn:active { transform:translateY(0); }
+.fc-btn.unknown { background:#fee2e2; color:#991b1b; }
+.fc-btn.fuzzy { background:#fef3c7; color:#92400e; }
+.fc-btn.mastered { background:var(--success-light); color:#065f46; }
+.keyboard-hint { text-align:center; margin-top:14px; font-size:11px; color:var(--text-tertiary); font-weight:500; }
+.keyboard-hint kbd { display:inline-block; padding:1px 6px; background:var(--border-light); border:1px solid var(--border); border-radius:4px; font-size:11px; font-family:inherit; font-weight:700; margin:0 2px; }
+
+/* Quiz */
+.quiz-setup { max-width:500px; margin:0 auto; text-align:center; }
+.quiz-option {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; background:var(--border-light); border-radius:12px;
+  margin-bottom:10px; border:1px solid transparent; transition:all var(--tr);
+}
+.quiz-option:hover { border-color:var(--border); }
+.quiz-option label { font-weight:700; font-size:13.5px; }
+.quiz-option select, .quiz-option input {
+  padding:8px 12px; border:1.5px solid var(--border); border-radius:8px;
+  font-size:13px; outline:none; transition:all var(--tr); background:var(--card); font-weight:500; color:var(--text);
+}
+.quiz-option select:focus, .quiz-option input:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); }
+.quiz-timer-bar {
+  position:sticky; top:0; z-index:10; background:var(--card);
+  border-radius:var(--radius); padding:12px 20px; margin-bottom:20px;
+  box-shadow:var(--shadow-md); border:1px solid var(--border-light);
+  display:flex; align-items:center; gap:16px;
+}
+.quiz-timer-time { font-size:22px; font-weight:900; color:var(--primary); font-variant-numeric:tabular-nums; min-width:70px; }
+.quiz-timer-time.warning { color:var(--danger); animation:pulse 1s ease-in-out infinite; }
+.quiz-timer-progress { flex:1; height:4px; background:var(--border-light); border-radius:100px; overflow:hidden; }
+.quiz-timer-fill { height:100%; background:var(--primary); border-radius:100px; transition:width 1s linear; }
+.quiz-timer-fill.warning { background:var(--danger); }
+.quiz-nav-dots { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-bottom:20px; }
+.quiz-nav-dot {
+  width:28px; height:28px; border-radius:50%; border:2px solid var(--border);
+  font-size:11px; font-weight:700; cursor:pointer; transition:all var(--tr);
+  display:flex; align-items:center; justify-content:center; background:var(--card); color:var(--text-secondary);
+}
+.quiz-nav-dot:hover { border-color:var(--primary); color:var(--primary); }
+.quiz-nav-dot.answered { background:var(--success-light); border-color:var(--success); color:#065f46; }
+.quiz-question-card {
+  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:32px; margin-bottom:20px; max-width:720px; margin-left:auto; margin-right:auto; border:1px solid var(--border-light);
+}
+.quiz-q-number { font-size:11px; color:var(--primary); font-weight:800; margin-bottom:8px; letter-spacing:.05em; }
+.quiz-q-text { font-size:17px; font-weight:700; line-height:1.7; margin-bottom:16px; }
+.quiz-textarea {
+  width:100%; min-height:120px; padding:12px 16px; border:1.5px solid var(--border);
+  border-radius:12px; font-size:13.5px; line-height:1.7; resize:vertical; outline:none;
+  font-family:inherit; transition:all var(--tr); background:var(--border-light); color:var(--text);
+}
+.quiz-textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); background:var(--card); }
+.quiz-ref-answer {
+  margin-top:16px; padding:18px; background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
+  border-radius:12px; border-left:4px solid var(--success); display:none;
+}
+[data-theme="dark"] .quiz-ref-answer { background:linear-gradient(135deg,#052e16,#064e3b); }
+.quiz-ref-answer.show { display:block; animation:fadeIn .3s ease; }
+.quiz-ref-answer h4 { font-size:12px; color:var(--success); margin-bottom:8px; font-weight:800; }
+.quiz-ref-answer p { font-size:13.5px; line-height:1.9; white-space:pre-wrap; color:var(--text-secondary); }
+
+/* Quiz mode tabs */
+.quiz-mode-tabs { display:flex; gap:12px; margin-bottom:24px; justify-content:center; }
+.quiz-mode-tab {
+  flex:1; max-width:220px; padding:20px 16px; border-radius:var(--radius);
+  border:2px solid var(--border); background:var(--card); cursor:pointer;
+  transition:all var(--tr); text-align:center;
+}
+.quiz-mode-tab:hover { border-color:var(--primary-light); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.quiz-mode-tab.active { border-color:var(--primary); background:var(--primary-glow); }
+.quiz-mode-tab h5 { font-size:15px; font-weight:800; margin-bottom:4px; }
+.quiz-mode-tab p { font-size:11.5px; color:var(--text-tertiary); line-height:1.4; }
+
+/* Quick review card */
+.qr-card {
+  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:0; margin-bottom:20px; max-width:660px; margin-left:auto;
+  margin-right:auto; border:1px solid var(--border-light); overflow:hidden;
+}
+.qr-card-header {
+  padding:20px 28px 16px; border-bottom:1px solid var(--border-light);
+  display:flex; justify-content:space-between; align-items:flex-start;
+}
+.qr-card-body { padding:24px 28px; }
+.qr-card-q { font-size:18px; font-weight:700; line-height:1.7; margin-bottom:0; }
+.qr-card-answer-area { padding:0 28px 24px; }
+
+/* Noun: simple reveal */
+.qr-reveal-btn {
+  display:inline-flex; align-items:center; gap:6px; padding:10px 24px;
+  border:1.5px solid var(--border); border-radius:50px; background:var(--card);
+  font-size:13px; font-weight:700; cursor:pointer; color:var(--text-secondary);
+  transition:all var(--tr); margin-top:8px;
+}
+.qr-reveal-btn:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-glow); }
+.qr-answer-block {
+  margin-top:16px; padding:18px 20px; background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
+  border-radius:12px; border-left:4px solid var(--success);
+  font-size:13.5px; line-height:1.9; color:var(--text-secondary); white-space:pre-wrap;
+  animation:fadeIn .3s ease;
+}
+[data-theme="dark"] .qr-answer-block { background:linear-gradient(135deg,#052e16,#064e3b); }
+
+/* Short: progressive points */
+.qr-points-list { margin-top:12px; }
+.qr-point {
+  padding:10px 14px; margin-bottom:6px; border-radius:10px;
+  background:var(--border-light); font-size:13px; line-height:1.7;
+  cursor:pointer; transition:all var(--tr); position:relative;
+  color:var(--text-secondary); border:1px solid transparent;
+}
+.qr-point:hover { border-color:var(--border); }
+.qr-point-hidden {
+  filter:blur(6px); user-select:none; -webkit-user-select:none; pointer-events:none;
+}
+.qr-point-num {
+  display:inline-block; width:22px; height:22px; border-radius:50%;
+  background:var(--primary-glow); color:var(--primary); font-size:11px;
+  font-weight:800; text-align:center; line-height:22px; margin-right:8px; flex-shrink:0;
+}
+.qr-reveal-all {
+  display:inline-flex; align-items:center; gap:4px; margin-top:8px;
+  padding:6px 16px; border-radius:50px; border:1px solid var(--border);
+  background:var(--card); font-size:12px; font-weight:600; cursor:pointer;
+  color:var(--text-tertiary); transition:all var(--tr);
+}
+.qr-reveal-all:hover { border-color:var(--primary); color:var(--primary); }
+
+/* Essay: optional textarea */
+.qr-essay-toggle {
+  display:flex; gap:8px; margin-top:8px;
+}
+.qr-essay-toggle button {
+  padding:8px 18px; border-radius:50px; border:1.5px solid var(--border);
+  background:var(--card); font-size:12px; font-weight:700; cursor:pointer;
+  color:var(--text-secondary); transition:all var(--tr);
+}
+.qr-essay-toggle button:hover { border-color:var(--primary); color:var(--primary); }
+.qr-essay-textarea {
+  width:100%; min-height:140px; padding:14px 16px; margin-top:12px;
+  border:1.5px solid var(--border); border-radius:12px; font-size:13.5px;
+  line-height:1.7; resize:vertical; outline:none; font-family:inherit;
+  transition:all var(--tr); background:var(--border-light); color:var(--text);
+}
+.qr-essay-textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); background:var(--card); }
+
+/* Self-rate bar */
+.qr-rate-bar {
+  display:flex; gap:8px; align-items:center; padding:16px 28px;
+  border-top:1px solid var(--border-light); background:var(--border-light);
+}
+.qr-rate-bar span { font-size:12px; color:var(--text-tertiary); font-weight:600; margin-right:4px; }
+
+/* Quick review progress */
+.qr-progress-bar {
+  display:flex; align-items:center; gap:14px; margin-bottom:20px;
+  padding:10px 18px; background:var(--card); border-radius:var(--radius);
+  box-shadow:var(--shadow); border:1px solid var(--border-light); font-size:13px; font-weight:600;
+}
+.qr-progress-bar .progress-bar { flex:1; }
+.qr-progress-count { color:var(--text-secondary); min-width:60px; text-align:right; }
+.qr-nav-btns { display:flex; gap:8px; }
+.qr-nav-btn {
+  width:36px; height:36px; border-radius:50%; border:1.5px solid var(--border);
+  background:var(--card); cursor:pointer; display:flex; align-items:center;
+  justify-content:center; transition:all var(--tr); color:var(--text-secondary);
+}
+.qr-nav-btn:hover { border-color:var(--primary); color:var(--primary); }
+.qr-nav-btn:disabled { opacity:.3; cursor:not-allowed; }
+
+/* Wrong Book */
+.wrong-stats-bar {
+  display:flex; gap:16px; margin-bottom:16px; padding:14px 20px;
+  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  border:1px solid var(--border-light); font-size:13px; font-weight:600;
+  color:var(--text-secondary); align-items:center;
+}
+.wrong-stats-bar strong { color:var(--text); font-size:18px; margin-right:4px; }
+.wrong-list-item {
+  padding:16px 20px; border-bottom:1px solid var(--border-light);
+  cursor:pointer; transition:all var(--tr);
+}
+.wrong-list-item:first-child { border-radius:var(--radius) var(--radius) 0 0; }
+.wrong-list-item:last-child { border-bottom:none; border-radius:0 0 var(--radius) var(--radius); }
+.wrong-list-item:hover { background:var(--border-light); }
+.wrong-q { font-weight:700; font-size:14px; margin-bottom:5px; }
+.wrong-chapter { font-size:12px; color:var(--text-tertiary); font-weight:500; }
+.wrong-answer-preview {
+  max-height:0; overflow:hidden; transition:max-height .3s ease;
+  font-size:13px; line-height:1.8; color:var(--text-secondary); white-space:pre-wrap;
+}
+.wrong-answer-preview.show { max-height:300px; padding-top:12px; overflow-y:auto; }
+.tag { font-size:11px; padding:2px 8px; border-radius:100px; font-weight:700; }
+.tag-unknown { background:var(--danger-light); color:#991b1b; }
+.tag-fuzzy { background:var(--warning-light); color:#92400e; }
+.tag-mastered { background:var(--success-light); color:#065f46; }
+
+/* Stats & Settings */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+.setting-row { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border-light); }
+.setting-row:last-child { border-bottom:none; }
+.setting-label { font-weight:700; font-size:14px; }
+.setting-desc { font-size:12px; color:var(--text-tertiary); margin-top:2px; }
+.setting-input {
+  padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:13px;
+  outline:none; width:150px; text-align:center; transition:all var(--tr); font-weight:500;
+  background:var(--card); color:var(--text);
+}
+.setting-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); }
+
+/* Buttons */
+.btn { padding:10px 24px; border:none; border-radius:var(--radius-sm); font-size:13px; font-weight:700; cursor:pointer; transition:all var(--tr); }
+.btn:active { transform:scale(.97); }
+.btn-primary { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:white; box-shadow:0 3px 12px rgba(99,102,241,.2); }
+.btn-primary:hover { box-shadow:0 5px 20px rgba(99,102,241,.3); transform:translateY(-1px); }
+.btn-outline { background:var(--card); border:1.5px solid var(--border); color:var(--text); }
+.btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+.btn-danger { background:var(--card); border:1.5px solid var(--danger-light); color:var(--danger); }
+.btn-danger:hover { background:var(--danger-light); }
+
+/* Toast */
+.toast {
+  position:fixed; top:24px; right:24px; padding:14px 24px; border-radius:12px;
+  color:white; font-weight:700; font-size:13px; z-index:9999;
+  transform:translateX(calc(100% + 40px)); transition:transform .4s cubic-bezier(.4,0,.2,1); box-shadow:var(--shadow-lg);
+}
+.toast.show { transform:translateX(0); }
+.toast.success { background:linear-gradient(135deg,#10b981,#059669); }
+.toast.error { background:linear-gradient(135deg,#ef4444,#dc2626); }
+.toast.info { background:linear-gradient(135deg,#6366f1,#4f46e5); }
+.empty-state { text-align:center; padding:48px 24px; color:var(--text-tertiary); }
+.empty-state .icon { font-size:48px; margin-bottom:12px; opacity:.4; }
+.empty-state p { font-size:14px; font-weight:500; }
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(4px); z-index:150; }
+.overlay.show { display:block; }
+
+/* Mobile */
+.menu-toggle {
+  display:none; position:fixed; top:14px; left:14px; z-index:200;
+  width:42px; height:42px; border:none; border-radius:11px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white; cursor:pointer; box-shadow:0 4px 14px rgba(99,102,241,.3);
+  transition:all var(--tr); align-items:center; justify-content:center;
+}
+.menu-toggle:active { transform:scale(.93); }
+@media (max-width:768px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0; padding:16px; padding-top:68px; }
+  .menu-toggle { display:flex; }
+  .hero-row { flex-direction:column; }
+  .hero-checkin { width:100%; flex-direction:row; justify-content:center; }
+  .stats-row { grid-template-columns:repeat(2,1fr); gap:10px; }
+  .dash-grid { grid-template-columns:1fr; }
+  .stats-grid { grid-template-columns:1fr; }
+  .flashcard { min-height:280px; }
+  .flashcard-face { padding:24px; }
+  .flashcard-question { font-size:18px; }
+  .section-title { font-size:20px; }
+  .chapter-tag { padding:6px 12px; font-size:11.5px; }
+  .fc-btn { padding:10px 22px; font-size:12px; }
+  .quiz-timer-bar { padding:10px 14px; }
+}
+@media (max-width:400px) {
+  .stats-row { grid-template-columns:1fr; }
+  .flashcard-actions { flex-direction:column; align-items:center; }
+  .hero-checkin { flex-direction:column; }
+}
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#d1d5db; border-radius:100px; }
+::-webkit-scrollbar-thumb:hover { background:#9ca3af; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background:#374151; }
+/* Keyword highlights */
+.kw-book { background:linear-gradient(180deg,transparent 60%,#fef3c7 60%); font-weight:700; padding:0 2px; }
+.kw-quote { color:var(--primary); font-weight:700; }
+.kw-year { background:#ede9fe; border-radius:3px; padding:0 4px; font-weight:700; color:#5b21b6; font-variant-numeric:tabular-nums; }
+.kw-theory { background:linear-gradient(180deg,transparent 60%,#d1fae5 60%); font-weight:700; padding:0 2px; }
+[data-theme="dark"] .kw-book { background:linear-gradient(180deg,transparent 60%,rgba(254,243,199,.2) 60%); }
+[data-theme="dark"] .kw-year { background:rgba(139,92,246,.2); color:#c4b5fd; }
+[data-theme="dark"] .kw-theory { background:linear-gradient(180deg,transparent 60%,rgba(16,185,129,.15) 60%); }
+/* Point counter */
+.qr-point-counter { font-size:12px; color:var(--text-tertiary); font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.qr-point-counter strong { color:var(--primary); font-size:14px; }
+/* Timer badge */
+.qr-timer-badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--text-tertiary); font-weight:600; padding:3px 10px; background:var(--border-light); border-radius:50px; font-variant-numeric:tabular-nums; }
+.qr-timer-badge svg { opacity:.5; }
+/* Time stats */
+.time-stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.time-stat-item { text-align:center; padding:14px; background:var(--border-light); border-radius:12px; }
+.time-stat-value { font-size:24px; font-weight:900; color:var(--primary); }
+.time-stat-label { font-size:11px; color:var(--text-tertiary); margin-top:2px; font-weight:600; }
+/* Review reminder */
+.review-banner { display:flex; align-items:center; gap:14px; padding:16px 20px; background:linear-gradient(135deg,#fef3c7,#fde68a); border-radius:var(--radius); margin-bottom:20px; cursor:pointer; transition:all var(--tr); border:1px solid rgba(245,158,11,.2); }
+[data-theme="dark"] .review-banner { background:linear-gradient(135deg,#451a03,#78350f); border-color:rgba(245,158,11,.15); }
+.review-banner:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(245,158,11,.15); }
+.review-banner-icon { font-size:28px; flex-shrink:0; }
+.review-banner-text { flex:1; }
+.review-banner-text strong { font-size:14px; color:#78350f; display:block; margin-bottom:2px; }
+[data-theme="dark"] .review-banner-text strong { color:#fbbf24; }
+.review-banner-text span { font-size:12px; color:#92400e; }
+[data-theme="dark"] .review-banner-text span { color:#d97706; }
+.review-banner-count { font-size:28px; font-weight:900; color:#b45309; min-width:40px; text-align:center; background:rgba(255,255,255,.5); border-radius:10px; padding:6px 12px; line-height:1; }
+[data-theme="dark"] .review-banner-count { background:rgba(0,0,0,.2); color:#fbbf24; }
+/* Answer template */
+.answer-template { margin-top:14px; border-top:1px dashed var(--border); padding-top:14px; }
+.answer-template-toggle { display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--text-tertiary); cursor:pointer; padding:4px 12px; border-radius:50px; border:1px solid var(--border); background:var(--card); transition:all var(--tr); }
+.answer-template-toggle:hover { border-color:var(--primary); color:var(--primary); }
+.answer-template-content { display:none; margin-top:10px; padding:14px 16px; background:linear-gradient(135deg,#faf5ff,#ede9fe); border-radius:10px; border-left:3px solid #8b5cf6; font-size:12px; line-height:1.8; color:#5b21b6; }
+[data-theme="dark"] .answer-template-content { background:linear-gradient(135deg,#2e1065,#1e1b4b); color:#c4b5fd; }
+.answer-template-content.show { display:block; animation:fadeIn .25s ease; }
+.answer-template-content ol { padding-left:18px; margin:0; }
+.answer-template-content li { margin-bottom:3px; }
+.answer-template-content .tmpl-tip { font-style:italic; color:var(--text-tertiary); margin-top:6px; font-size:11px; }
+.due-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; background:#fef3c7; border-radius:50px; font-size:11px; font-weight:700; color:#92400e; margin-left:6px; }
+[data-theme="dark"] .due-badge { background:rgba(245,158,11,.15); color:#fbbf24; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="toggleSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h1>传播学冲刺</h1><p>2005-2018 真题精练</p></div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>仪表盘</div>
+      <div class="nav-item" data-page="study" onclick="switchPage('study')"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>卡片学习</div>
+      <div class="nav-item" data-page="quiz" onclick="switchPage('quiz')"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>模拟考试</div>
+      <div class="nav-item" data-page="wrong" onclick="switchPage('wrong')"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>错题本</div>
+      <div class="nav-item" data-page="stats" onclick="switchPage('stats')"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>学习统计</div>
+      <div class="nav-item" data-page="settings" onclick="switchPage('settings')"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>设置</div>
+    </nav>
+    <button class="dark-toggle" onclick="toggleDarkMode()"><span id="darkIcon">&#9790;</span><span id="darkLabel">夜间模式</span></button>
+    <div class="sidebar-footer">198 道真题 · 离线可用</div>
+  </aside>
+  <div class="main">
+    <div class="page active" id="page-dashboard">
+      <div class="hero-row">
+        <div class="hero-countdown" id="countdownBox"><div class="countdown-days" id="countdownDays">--</div><div class="countdown-label" id="countdownLabel">距离考试还有</div></div>
+        <div class="hero-checkin">
+          <div class="progress-ring-wrap"><svg width="120" height="120" viewBox="0 0 120 120"><circle class="progress-ring-bg" cx="60" cy="60" r="52"/><circle class="progress-ring-fill" id="progressRing" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg><div class="progress-ring-text"><strong id="ringDone">0</strong><span>/ <span id="ringGoal">10</span> 今日</span></div></div>
+          <button class="checkin-btn" id="checkinBtn" onclick="doCheckin()">今日打卡</button>
+        </div>
+      </div>
+      <div id="reviewBanner" style="display:none;"></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">已学题目</div></div>
+        <div class="stat-card"><div class="stat-value" id="statMastered">0</div><div class="stat-label">已掌握</div></div>
+        <div class="stat-card"><div class="stat-value" id="statStreak">0</div><div class="stat-label">连续打卡</div></div>
+        <div class="stat-card"><div class="stat-value" id="statWrong">0</div><div class="stat-label">待巩固</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="card"><h4>打卡日历</h4><div class="cal-labels" id="calLabels"></div><div class="calendar-grid" id="calendarGrid"></div></div>
+        <div class="card"><h4>各年份掌握进度</h4><div id="chapterProgressList"></div></div>
+      </div>
+    </div>
+    <div class="page" id="page-study">
+      <div class="section-title">卡片学习</div>
+      <div class="section-subtitle">翻转卡片查看答案，用间隔重复法逐一攻克真题</div>
+      <div class="study-filters"><span class="study-filters-label">题型</span><span class="chapter-tag active" onclick="filterStudyType('all',this)">全部</span><span class="chapter-tag" onclick="filterStudyType('noun',this)">名词解释</span><span class="chapter-tag" onclick="filterStudyType('short',this)">简答题</span><span class="chapter-tag" onclick="filterStudyType('essay',this)">论述题</span></div>
+      <div class="study-filters"><span class="study-filters-label">年份</span><div class="chapter-select" id="studyChapterSelect" style="margin-bottom:0;"></div></div>
+      <div class="study-progress-bar"><div class="study-progress-fill" id="studyProgressFill"></div></div>
+      <div class="flashcard-container">
+        <div class="flashcard-progress" id="fcProgress">0 / 0</div>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="flashcard-face flashcard-front"><div class="flashcard-chapter" id="fcChapter"></div><div class="flashcard-type" id="fcType"></div><div class="flashcard-question" id="fcQuestion">选择年份开始学习</div><div class="flashcard-hint" id="fcHint">点击卡片翻转查看答案</div><div class="answer-template" id="answerTemplate" style="display:none;" onclick="event.stopPropagation()"><div class="answer-template-toggle" onclick="toggleTemplate()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> 答题框架提示</div><div class="answer-template-content" id="templateContent"></div></div></div>
+          <div class="flashcard-face flashcard-back"><div class="flashcard-answer-title">参考答案</div><div class="flashcard-answer" id="fcAnswer"></div></div>
+        </div>
+        <div class="flashcard-actions" id="fcActions" style="display:none;"><button class="fc-btn unknown" onclick="rateCard('unknown')">不熟</button><button class="fc-btn fuzzy" onclick="rateCard('fuzzy')">模糊</button><button class="fc-btn mastered" onclick="rateCard('mastered')">掌握</button></div>
+        <div class="keyboard-hint">快捷键: <kbd>空格</kbd> 翻转 &nbsp; <kbd>1</kbd> 不熟 &nbsp; <kbd>2</kbd> 模糊 &nbsp; <kbd>3</kbd> 掌握 &nbsp; <kbd>&larr;</kbd><kbd>&rarr;</kbd> 切换</div>
+      </div>
+    </div>
+    <div class="page" id="page-quiz">
+      <div class="section-title">刷题练习</div><div class="section-subtitle">快速复习或正式模考，根据题型自动适配答题方式</div>
+      <div id="quizSetup">
+        <div class="quiz-mode-tabs">
+          <div class="quiz-mode-tab active" id="modeQuick" onclick="selectQuizMode('quick')">
+            <h5>快速刷题</h5><p>逐题翻看，按题型自动适配<br>名词翻转 / 简答揭点 / 论述自评</p>
+          </div>
+          <div class="quiz-mode-tab" id="modeFormal" onclick="selectQuizMode('formal')">
+            <h5>正式模考</h5><p>限时答题，交卷后对照答案<br>全部题型统一文本框作答</p>
+          </div>
+        </div>
+        <div class="quiz-setup" style="max-width:500px;margin:0 auto;">
+          <div class="card">
+            <div class="quiz-option"><label>题目数量</label><select id="quizCount"><option value="5">5 题</option><option value="10" selected>10 题</option><option value="15">15 题</option><option value="20">20 题</option></select></div>
+            <div class="quiz-option" id="quizTimeRow"><label>限时(分钟)</label><input type="number" id="quizTime" value="30" min="5" max="120" style="width:80px;"></div>
+            <div class="quiz-option"><label>题目范围</label><select id="quizScope"><option value="all">全部年份</option><option value="wrong">错题优先</option><option value="unknown">薄弱优先</option></select></div>
+            <div class="quiz-option"><label>年份筛选</label><select id="quizYear"><option value="-1">不限年份</option></select></div>
+            <button class="btn btn-primary" style="width:100%;margin-top:16px;padding:14px;font-size:15px;border-radius:14px;" onclick="startQuiz()">开始</button>
+          </div>
+        </div>
+      </div>
+      <div id="quizArea" style="display:none;">
+        <div class="quiz-timer-bar" id="quizTimerBar"><div class="quiz-timer-time" id="quizTimer">30:00</div><div class="quiz-timer-progress"><div class="quiz-timer-fill" id="quizTimerFill" style="width:100%"></div></div><div style="display:flex;gap:8px;"><button class="btn btn-primary" onclick="submitQuiz()" style="padding:8px 18px;font-size:12px;">交卷</button><button class="btn btn-outline" onclick="cancelQuiz()" style="padding:8px 14px;font-size:12px;">放弃</button></div></div>
+        <div class="quiz-nav-dots" id="quizNavDots"></div>
+        <div id="quizQuestions"></div>
+      </div>
+      <div id="quickReviewArea" style="display:none;">
+        <div class="qr-progress-bar">
+          <div class="qr-nav-btns"><button class="qr-nav-btn" id="qrPrev" onclick="qrNav(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><button class="qr-nav-btn" id="qrNext" onclick="qrNav(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 6 15 12 9 18"/></svg></button></div>
+          <div class="progress-bar" style="flex:1;"><div class="progress-fill" id="qrProgressFill"></div></div>
+          <div class="qr-progress-count" id="qrCount">0/0</div>
+          <button class="btn btn-outline" onclick="cancelQuiz()" style="padding:6px 14px;font-size:12px;">退出</button>
+        </div>
+        <div id="qrCardContainer"></div>
+      </div>
+    </div>
+    <div class="page" id="page-wrong">
+      <div class="section-title">错题本</div><div class="section-subtitle">整理薄弱知识点，点击题目可展开答案预览</div>
+      <div class="wrong-stats-bar" id="wrongStatsBar"></div>
+      <div class="chapter-select" style="margin-bottom:16px;"><span class="chapter-tag active" onclick="filterWrong('all', this)">全部</span><span class="chapter-tag" onclick="filterWrong('unknown', this)">不熟</span><span class="chapter-tag" onclick="filterWrong('fuzzy', this)">模糊</span></div>
+      <div class="card" id="wrongList" style="padding:0;"><div class="empty-state"><div class="icon">&#128161;</div><p>还没有错题记录，开始学习吧</p></div></div>
+    </div>
+    <div class="page" id="page-stats"><div class="section-title">学习统计</div><div class="section-subtitle">数据驱动复习，直观查看学习进展</div><div class="stats-grid"><div class="card"><h4>答题用时</h4><div id="timeStats"></div></div><div class="card"><h4>掌握分布</h4><div id="masteryChart"></div></div><div class="card"><h4>每日学习量</h4><div id="dailyChart"></div></div><div class="card"><h4>各年份掌握情况</h4><div id="chapterChart"></div></div><div class="card"><h4>学习记录</h4><div id="studyLog"></div></div></div></div>
+    <div class="page" id="page-settings"><div class="section-title">设置</div><div class="section-subtitle">自定义你的学习参数</div><div class="card"><div class="setting-row"><div><div class="setting-label">考试日期</div><div class="setting-desc">设置后首页会显示倒计时</div></div><input type="date" class="setting-input" id="examDate" onchange="saveSettings()"></div><div class="setting-row"><div><div class="setting-label">每日目标</div><div class="setting-desc">每天计划学习的题目数量</div></div><input type="number" class="setting-input" id="dailyGoal" value="10" min="1" max="50" onchange="saveSettings()"></div><div class="setting-row"><div><div class="setting-label">数据管理</div><div class="setting-desc">导出或重置所有学习数据</div></div><div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="exportData()">导出</button><button class="btn btn-danger" onclick="resetData()">重置</button></div></div></div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const CHAPTERS = [
+  "2005年真题",
+  "2006年真题",
+  "2007年真题",
+  "2008年真题",
+  "2009年真题",
+  "2010年真题",
+  "2011年真题",
+  "2012年真题",
+  "2013年真题",
+  "2014年真题",
+  "2016年真题",
+  "2018年真题",
+];
+
+const CARDS = [
+  {ch:0, type:"noun", q:`“拒检”运动`, a:`拒检运动”是指国统区新闻界争取新闻出版自由的一场斗争。1945年8月7日，重庆国
+在其他进步出版机构的支持下，不送国民党当局审查而自行出版了黄炎培撰写的《延安归来》一书，提“拒检运动”的序幕。9月1日和4日，重庆《新华日报》先后发表社评支持“拒检运动”。这一运动到各界广泛支持，迅速扩展到成都、昆明等地，并由出版界扩展到新闻界。拒检运动的兴起与发展，使国民党当局陷入被动局面。为了缓和国内外的矛盾，国民党当局被迫做出让步，于9月12日宣布：“自10月1日起废止战时新闻检查制度。但收复区在军事行动尚未完成以前除外。”这收复区例外的规定，是国民党当局有意留下的一个“尾巴”。9月22日，国民党中央第10次常会通过了废止新闻出版检查制度的决定与办法。国统区新闻文化界为之奋斗多年的取消新闻出版检查制度的斗争，终于获得了巨大的胜利。`},
+  {ch:0, type:"noun", q:`《共产主义杂志》`, a:`《共产主义杂志》，创刊于1847年9月的伦敦，是以科学革命理论为指导的第一个国际共产主义组织（共产主义同盟）的正式刊物，开创了共产主义机关报刊的历史。杂志共16页，分序言、社论、文章，批判了各种错误思潮。由于缺乏资金，仅出一期。`},
+  {ch:0, type:"noun", q:`中东通讯社`, a:`中东通讯社是埃及共和国唯一的官方通讯社，外文简称MENA，简称中东社。是中东和阿拉伯地区成立最早的通讯社，总社在开罗。1956年由埃及两大日报和两大出版社筹资成立，1960年收归国有。1980年由埃及协商委员会遴选该社董事会主席和两名主编。国内有26个分社。国外有15个分社和记者站，大多集中在中东和北非各国。每天用阿拉伯、英、法3种文字发稿。着重报道埃及、中东、非洲和不结盟国家的事务。设有图片部和电视新闻部，向国内外提供或交换图片和电视新闻。还为中东和非洲国家的通讯社培训人员。`},
+  {ch:0, type:"noun", q:`意见领袖`, a:`意见领袖是拉扎斯菲尔德等人在两级传播论（two-step flowof communication）中提出的一个重要概念，是指人群中那些首先或较多接触大众传播信息，并将经过自己加工后的信息传播给其他人的人。意见领袖介入传播过程，加快了信息传播进程并扩大了传播信息的影响。其特点是：①与被影响者一般处于平等关系而非上下级关系；②并不集中于特定的群体或阶层，而是均匀地分布于社会上任何群体和阶层中；③其影响力一般分为“单一型”和“综合型”；④社交范围广，拥有较多的信息渠道，对大众传播的接触频度高、接触量大。`},
+  {ch:0, type:"noun", q:`文化帝国主义`, a:`文化帝国主义又称媒介帝国主义（media imperialism），是指个别文化高压国家利用各种手段，以一种文化模式来取代世界文化的多元性和多样性的过程，是现代帝国主义总过程的一部分。文化帝国主义有三个特点：①它以强大的经济、资本实力为后盾，主要通过市场来进行扩张；②它是一种文化价值的扩张，即通过含有文化价值的产品或商品的销售来实现全球性文化支配；③由于信息产品的文化含量最高（或者说信息本身就是文化产品），那么，很明显，这种文化扩张主要是通过信息产品的传播来实现的。`},
+  {ch:0, type:"noun", q:`传播制度`, a:`，传播制度是指一定社会制度中对大众传播活动直接或间接地起着制约、控制作用的部分。传播制
+度是社会制度的反映，它体现了社会制度或制度性因素在各个方面对传播媒介活动的制约和影响。传播制度中既包括媒介与政府的关系问题，也包括媒介与社会群体和广大受众的关系问题；既包括言论出版的自由与权利问题，也包括言论出版者所应承担的责任和义务问题。传播制度体现全部社会结构和社会关系的复杂性。`},
+  {ch:0, type:"noun", q:`公共关系`, a:`公共关系是指社会组织为了塑造组织形象，通过传播、沟通手段来影响公众的科学与艺术。这一概念具体包含三方面意思：①公共关系活动的根本目的就是塑造组织形象。②社会组织通过传播、沟通手段影响公众。公共关系的主体是社会组织，客体是公众，手段是传播、沟通。③从理论上讲，公共关系是一门科学；从运作上讲，公共关系又是一种艺术。它是科学与艺术的统一体。`},
+  {ch:0, type:"noun", q:`“报刊宣传运动”`, a:`报刊宣传运动是指一种有目标、有计划的经常性公共关系活动，是公共关系职业化的雏形。19世纪中叶到20世纪初，报刊宣传运动孕育公共关系的职业思想，一个机构生存和发展需要通过舆论传播与沟通影响公众。19世纪30年代，民主政治发展、经济繁荣、科技进步，美国传播事业快速发展。便士报运动造就了一批商业性专业传播人。`},
+  {ch:0, type:"noun", q:`独立公众`, a:`独立公众又称为中立公众或不确定公众，是指对社会组织奉行的政策、采取的行动持中立态度或尚未表态或态度还不明确的公众。独立公众往往是社会组织公共关系工作的竞争之地。做好这部分公众的沟通工作，争取他们对社会组织的了解、支持和合作，是公共关系工作的重点。独立公众的态度具有极大的可塑性，既可向顺意公众转化，也可向逆意公众转化，宜采取说服、争取的工作方式，争取他们向组织有利的方向转化，绝不能掉以轻心。当条件成熟时，可以将之转化为顺意公众。`},
+  {ch:0, type:"noun", q:`广告活动`, a:`广告活动是指广告主根据自己的营销需求提出广告目的或目标之后，广告代理公司会同广告主及有关部门决定达成这一目标的最佳方法，然后在此基础上确定达成广告目标的阶段、手法及措施，把以上这些努力与企业的其他营销努力相结合，然后去执行所计划的这些活动的过程。概括来说，广告活动就是设定广告目的，制定广告策略，然后在市场上执行这些策略的过程。`},
+  {ch:0, type:"short", q:`如何理解传播效果的含义，并适当举例说明。`, a:`（1）传播效果的含义
+在传播学研究领域，传播效果这个概念具有以下双重含义：
+①它指带有说服动机的传播行为在受传者身上引起的心理、态度和行为的变化。说服性传播，指的是通过劝说或宣传来使受传者接受某种观点或从事某种行为的传播活动，这里的传播效果，通常意味着传播活动在多大程度上实现了传播者的意图或目的。
+例如，父母劝说孩子不要沉迷于网络游戏，应该把主要精力放在学习功课上，他们使用了规劝、感化等各种各样的说服方法，希望孩子能够理解父母的一片苦心。在这里，传播效果便意味着父母的主观意图是否得到了实现，换言之，也是孩子是否听从了父母的教诲。
+②它指传播活动尤其是报刊、广播、电视等大众传播媒介的活动对受传者和社会所产生的一切影响和结果的总体，不管这些影响是有意的还是无意的、直接的还是间接的、显在的还是潜在的。
+例如，记者写了一篇关于物价即将上调的消息，本意是让受众有一个心理准备，但结果也许引起了消费者恐慌或大规模的抢购风潮。
+（2）传播效果的三个层面
+传播效果又可以分为不同层面。传播效果依其发生的逻辑顺序或表现阶段可以分为三个层面：外部信
+息作用于人们的知党和记忆系统，引起人们知识量的增加和认知结构的变化，属于认知层而上的效果；作用于人们的观念或价值体系而引起情绪或感情的变化，属于心理和态度层面上的效果；这些变化通过人们的言行表现出来，即成为行动层面上的效果。从认知到态度再到行动，是一个效果的累积、深化和打大的过程。
+以报刊、广播、电视为代表的大众传播的社会效果，包括以下三个层面：
+①环境认知效果。
+在现代社会，我们对周围世界的知觉与印象在很大程度上依赖于大众传播媒介。大众传媒是以传递信报道事实、提示社会上发生的事件为己任的，但它们并不是有闻必录。传媒报道什么、不报道什么从什么角度进行报道，都在影响着我们对周围环境的知觉与印象。这种效果，传播学中也称“视野制约效果”，即大众传播制约着我们观察社会和世界的视野。
+②价值形成与维护效果。
+大众传媒在报道的新闻和传达的信息中，通常包含着是与非、善与恶、美与丑、进步与落后的价值判断。大众传媒提倡什么、反对什么，客观上起着形成与维护社会规范和价值体系的作用。这种作用是通过传媒的舆论导向功能发挥出来的，它可以通过舆论引导形成新的规范和价值，又可以通过舆论监督来维护既有的规范和价值。
+③社会行为示范效果。
+大众传媒的影响并不仅仅表现在认知和价值取向的领域，它们还通过向社会提示具体的行为范例或行为模式来直接、间接地影响人们的行动。大众传播具有“地位赋予”功能，一种行为如果得到传媒的广泛报道和传播，往往会成为一般人学习或仿效的对象。`},
+  {ch:0, type:"short", q:`如何认识“议程设置功能”理论。`, a:`（1）“议程设置功能”的内涵
+“议程设置功能”作为一种理论假说，最早见于美国传播学家麦库姆斯和肖于1972年在《舆论季刊》上发表的一篇论文。他们认为，大众传播具有一种为公众设置“议事日程”的功能，传媒的新闻报道和信息传达活动以赋予各种“议题”不同程度的显著性的方式，影响着人们对周围世界的“大事”及其重要性的判断。
+（2）“议程设置功能”理论的特点
+①传播效果分为认知、态度和行动三个层面，这些层面同时也是一个完整意义上的效果形成过程的不同阶段，“议程设置功能”假说的着眼点是这个过程的最初阶段，即认知层面上的效果。
+②“议程设置功能”理论所考察的，不是某家媒介的某次报道活动产生的短期效果，而是作为整体的大众传播具有较长时间跨度的一系列报道活动所产生的中长期的、综合的、宏观的社会效果。这里着眼的是传播媒介的日常新闻报道和信息传播活动所产生的影响。
+③“议程设置功能”理论暗示了这样一种媒介观，即传播媒介是从事“环境再构成作业”的机构。即传播媒介对外部世界的报道不是“镜子”式的反映，而是一种有目的的取舍选择活动。
+（3）“议程设置功能”理论的意义
+①“议程设置功能”理论则从考察大众传播在人们的环境认知过程中的作用入手，重新揭示了大众传媒的有力影响，为效果研究摆脱“有限论”的束缚起了重要的作用。
+②“议程设置功能”理论中所包含的传播媒介是“从事环境再构成作业的机构”的观点，把西方主流传播学长期以来力图回避的一个重要问题-大众传播过程背后的控制问题重新摆在了人们面前。
+③“议程设置”研究与我国的舆论导向研究之间也有一定的理论接点。
+（4）“议程设置功能”理论的不足
+①它只强调了传播媒介“设置”或形成社会议题的一面，而没有涉及反映社会议题的一面。
+②媒介的“议程设置功能”是强大的，但也不能把它的效果绝对化。`},
+  {ch:0, type:"short", q:`公共关系传播的原则。`, a:`公共关系传播顺利进行要遵循以下几个原则：
+（1）目的明确原则
+公关传播是带有明确目的性的传播，它的总目标是树立、改善组织形象，形成有利的舆论环境，获得各界的支持。公关传播根据传播效果四层次理论，可分为以下四种：
+①引起公众注意。
+②诱发公众兴趣。
+③取得公众的肯定态度。
+④促发公众的支持行为。
+（2）双向沟通原则
+双向沟通原则是指传播双方互相传递、互相理解的信息互助原则。具体包含：一是沟通必须由两人以上进行；二是沟通双方互为角色；三是沟通双方相互理解并有所交流。组织与公众的沟通应注意以下两个方面：
+①创造沟通的共识区域。
+②具备反馈意识。
+（3）平衡理论原则
+①A-A式平行沟通。
+公关传播就是要创造A-A式的平行沟通的环境，即双方均以成人状态参与沟通，并随时注意公众反应，不断调节使其保持在A-A状态之中。这种方法就是以个人心态的平衡去引导、建立双方关系的平衡。
+②情感沟通。
+情感是形成态度的重要条件，平衡理论要求在沟通中诉诸情感，通过情感互动和思想交流，产生接近与认同，达到态度的一致和关系的平衡。公关传播追求组织与公众之间态度、感情的一致和关系的平衡。
+（4）有效沟通原则
+公共传播追求的是有效沟通，即通过沟通使公众理解、喜爱、支持组织。影响与公众有效沟通的因素，包括以下方面：
+①信息的真实性与信息量的大小。
+②传播者的方式与态度。
+③传播内容的制作技巧与传播渠道的畅通。
+（5）沟通的七个“C”原则
+①可信赖性；②一致性；③内容；④明确性；⑤持续性与连贯性；⑥渠道；⑦被沟通者的接受能力。`},
+  {ch:0, type:"short", q:`处理社区关系的一般做法。`, a:`社区作为组织的经营场所和办公地点的所在地，是组织赖以生存的环境。处理好与社区的关系是组织公关工作的重要任务。
+（1）社区关系的含义
+社区是一个社会性的概念，是指由共同生活于一定区域的人们因利益关系紧密而构成的一种社会集体。具体而言，居住于一定区域、具有共同联系并彼此交往的人们，就构成了一个社区。例如村庄、集镇、街坊邻居、城市的一个市区或郊区，甚至整个城市，都是在规模上大小不一的社区。
+社区是一个相对独立的地域性社会，每个社区都有其特定的人口和特定的地理区域，其居民之间有着某些共同的利益，以及重要的社会交往。社区关系亦称“区域关系”“地方关系”。它是指社会组织与其所在地的地方政府、社会团体和其他组织以及当地居民之间的邻里关系。
+（2）建立良好社区关系的意义
+建立良好的社区关系，是为了争取社区公众对组织的了解、理解和支持，为组织创造一个稳固的生存环境；同时体现组织对社区的责任和义务，通过社区关系扩大组织的区域性影响，其意义表现在以下几个方面：
+①社区关系影响着组织的生存环境。
+社区如同组织扎根的土壤，没有良好的社区关系，组织就会失去立足之地。社区公众是由特定的活动空间所确定的，区域性、空间性很强。地方性组织的活动直接受社区公众的制约，社区关系便直接影响着
+组织其他各方面的关系，如员工家属关系、本地顾客关系、地方的政府关系和媒介关系风，跨区域的
+组织也不能脱离特定的区域，甚至要善于同各种不同背景的社区公众打交道，以争取社区提供各种地方性的服务和支持，使跨区域性组织能够在各种完全不同的社区环境下生存和发展。
+②社区关系影响着组织的公众形象。
+社区公众涉及当地社会政治、经济、文化、教育等各个方面和阶层，类型繁多，涉及面广，对组织客观上存在着各种不同感受、要求和评价：由于处在同一社区，对组织的某一种评价和看法又极容易相互传播，形成区域性的影响，从而形成组织的某一种公众形象。组织的社区关系好坏，直接影响着组织的址会公众形象。
+（3）处理社区关系的方法
+①树立居民意识。
+从社区公众的角度来看，不论组织的性质、规模等方面如何，但有一点是共同的，那就是每个组织都是社区的一员。因此，组织应自觉遵守社区的各种规定，服从社区公约、行为规范，承担为社区应尽的各种义务。
+②为社区建设尽职尽责。
+组织在社区除了尽量做好一个好“居民”外，还需要为社区建设尽职尽责，充分利用自己的技术、资金、人才和设备等方面的优势，积极支持社区的全面发展和建设，多为社区提供无偿的服务。
+③维护社区的生态环境。
+随着全球对环境危机的日益关切以及政府对环境的重视，生态环境问题已成为当前组织所面临的一项重大问题。组织应当树立公众利益优先的思想，在生产经营过程中应树立环保的新形象。为此，组织应花大力气改革传统的工艺流程，减少各种污染，包括水污染、空气污染、噪音污染等，并积极参加绿化工程，开发绿色环保产品，适应绿色消费，通过各种活动来保护环境。`},
+  {ch:0, type:"essay", q:`试论述改革开放以来我国新闻学研究的过程及特点。`, a:`（1）1978年年底党的十一届三中全会召开，确定了国家实行改革开放的整体发展战略，从此中国新闻事业进入了一个新的发展时期，新闻学研究也迎来了历史上最好的发展时期。
+伴随着改革开放新时期的到来，新闻工作的重点开始逐渐由以阶级斗争为纲转移到以经济建设为中心的轨道上来。与此相应，新闻学研究也开始逐渐回归到对新闻学本身和新闻媒体自身实践问题的研究上来。
+（2）随着新闻改革逐步提上日程，一些新闻院系媒体和省市纷纷建立专门的新闻研究机构，出版新闻学术刊物，开展学术研讨活动，促进了新闻学研究和新闻改革的全面展开。从20世纪80年代开始，各种学术讨论会相继召开，许多新闻改革实践与理论问题进入新闻学界的研究视野。
+以1980年5月在兰州召开的“西北五报新闻学术研讨会”为例，这次研讨会有来自全国30多个新闻单位、新闻教育和研究机构的代表参加，探讨的问题十分广泛，包括报纸的性质、作用和任务，党报的党性和人民性，报纸上的批评与自我批评，新闻的真实性，报纸的指导性，新闻工作的客观规律等一些基本理论问题，对促进新闻改革，深化理论研究具有启示意义。
+（3）我国新闻学研究十分活跃，一些学者开始吸收与引进西方新闻学与传播学的研究成果，同时结合新闻改革实践，对新闻观念、报道内容、传播形式、管理体制、经营理念和运行机制等诸多领域深入开展研究，取得了许多成果。
+（4）在管理和经营方面也进行了许多观念更新，使得新闻媒体逐步确立起“事业单位企业化管理”的新的管理和经营思路，形成了新的运行体制和机制，开始逐渐步入企业化管理，市场化经营，社会化服务的发展道路，有力地推动了新闻传媒产业的发展。
+这些反映新闻改革最新成果的新闻观念和经营理念，大大丰富了社会主义新闻学的理论内涵，也促进了新闻改革的深入发展。
+（5）进入新时期以来，我国的新闻学研究始终瞄准党和国家工作大局的需要，瞄准人民群众的信息与文化需要，瞄准媒体改革发展的需要，坚持结合新闻工作实际开展研究，力求遵循新闻学术规范开展研究，在服务媒体改革服务学科建设和服务社会发展等方面取得了重大进展，发挥智库的作用。`},
+  {ch:0, type:"essay", q:`如何全面理解“信息主权”问题。`, a:`（1）信息主权的含义
+信息主权，是诺顿斯登和席勒在《国家主权和国际传播》中提出的概念。信息主权，即一个国家对本国的信息传播系统进行自主管理的权利，这是信息时代的国家主权的重要组成部分。一般而言，信息主权包括以下三个方面的内容：
+①对本国信息资源进行保护、开发和利用的权利。
+②不受外部干涉，自主确立本国的信息生产、加工、储存、流通和传播体制的权利。
+③对本国信息的输出和外国信息的输入进行管理和监控的权利。
+其中第三项内容直接涉及跨国界传播，其功能包括保护国家机密和排除危及国家安全的有害信息等重要方面。
+（2）信息主权是在全球信息化的背景下，国家主权面临着新的威胁因素的背景下提出来的。
+①信息化使各国国内信息系统与全球信息系统连成一体，国内系统受到国外因素更为直接的影响。来自外部的信息干扰，有可能使一国的信息系统遭到破坏，使国家失去危机管理能力而陷于混乱。同时，在世界上还存在强权政治的情况下，个别传播大国有可能凭借自己的技术优势，通过“劫持”他国电信系统，阻断信息和数据往来等手段来达到其政治目的。
+②信息主权同样是一个与建立“新世界信息秩序”密切相关的问题。广大发展中国家认为，在世界信息单向流通的不平衡结构下，传播弱国的信息主权没有任何保障，这种状况使它们在政治、经济、文化各个领域处于极为不利的状态。
+（3）发展中国家的学者主张，与拥有领土、领空、领海、资源以及社会制度的主权一样，一个国家对自己的信息传播资源和传播制度同样应该拥有主权，这是在信息时代保障国家主权完整的重要条件。对信息主权的重视和保护，已经成了世界各国规划和建设本国信息系统的重要指导思想。`},
+  {ch:1, type:"noun", q:`《香港船头货价纸》`, a:`《香港船头货价纸》是我国历史上第一份中文商业报纸、最早的经济类报纸和最早的以单页报纸形式两面印刷的中文报纸，1857年11月3日由孖刺报馆创办。所刊内容以船期、商品价格、商业行情、商业信息和广告为主，主要读者对象为商店职员。1873年改版为日报，后又脱离《孖刺报》，成为中国人自己办的报纸，直至1919年停刊。`},
+  {ch:1, type:"noun", q:`“癸丑报灾”`, a:`“癸丑报灾”是指袁世凯政府在1913年为迫害摧残国民党报刊制造的一系列查封报馆的事件。“二次革命”失败后，袁世凯政府借军事胜利对国民党系统的报刊以及其他异己报刊大肆摧残，凡国民党系统的报刊一律扣以“乱党报纸”的罪名而查封。到1913年底，全国继续出版的报纸只剩下139家，较之民国元年的500家锐减300多家，北京的上百家报纸也只剩下20余家。报刊减少至三分之一，报人大批被捕被害。`},
+  {ch:1, type:"noun", q:`《法兰西共和国公报》`, a:`《法兰西共和国公报》是巴黎公社时期最重要的报纸。它原是梯也尔政府机关报，1871年3月18日起被法国国民自卫军接管，巴黎公社成立后成为公社机关报，共出版66期。该报除发布重要宣言、法令、决议和指示外，还澄清事实真相，戳穿敌人的谎言。后该报印刷发行业务落入私人之手，文风刻板，不太关心群众利益。`},
+  {ch:1, type:"noun", q:`流言`, a:`流言是指一种通常以口头形式在人们中间流传，涉及人们信念而目前没有可靠证明标准的一种特殊的陈述或话题。流言是集合行为中的主要信息形式。流言的特点：①流言总是以“传播真相”的形式出现的，其目的是让人们“确信”或“相信”所传播的言论或消息是“事实”。②流言传播的渠道主要是人际的口头传播。③流言的内容往往涉及一些特殊的事件或敏感的话题，这些事件或话题容易唤起一般人的重视、关心或兴趣。④流言是一些没有确切证据的信息，或者说至少在其流行期间缺少可靠的证据。`},
+  {ch:1, type:"noun", q:`拟态环境`, a:`拟态环境是指由大众传播活动形成的信息环境。它并不是客观环境的镜子式再现，而是大众传播媒介通过对新闻和信息的选择、加工和报道，重新加以结构化以后向人们所提示的环境。而传播媒介大多具有特定的倾向性，因而“拟态环境”并不是客观环境的再现，只是一种“象征性的环境”。拟态环境是说明大众传播社会影响力的重要概念，由美国学者李普曼在其所著的《公众舆论》一书中提出。`},
+  {ch:1, type:"noun", q:`传播流`, a:`传播流是指由大众传媒发出的信息，经过各种中间环节，“流”向传播对象的社会过程。构成这项研究的代表性成果有拉扎斯菲尔德等人的《人民的选择》、卡兹等人的《个人影响》、罗杰斯的《创新与普及》以及克拉帕的《大众传播效果》。“传播流”的观点认为，大众传播并不是直接“流”向一般受众，而是要经过“意见领袖”这个中间环节，即“大众传播→意见领袖→一般受众”。后来，罗杰斯把大众传播过程区分为两个方面，一是作为信息传递过程的“信息流”，二是作为效果或影响的产生和波及过程的“影响流”。前者可以是“一级”的，即信息可以由传媒直接“流”向一般受众；而后者则是多级的，要经过人际传播中许多环节的过滤，后发展成为“多级”或“N级传播”模式。`},
+  {ch:1, type:"noun", q:`服务性公共关系`, a:`服务性公共关系，是指组织通过向公众提供满意服务的方式来构建良好的公共关系。其目的在于
+以实际行动使目标公众得到实惠。通过提高公众满意度，塑造良好的组织形象，争取公众的支持，增强组织的市场竞争力，促进组织的稳步发展。服务性公共关系的特点，是以实际的行动使公众满意，从而对组织形成正面的印象和积极的评价。`},
+  {ch:1, type:"noun", q:`广告环境`, a:`广告环境是指影响和制约广告活动策略、计划的诸种因素，包括两个层面：一个层面是指影响广
+告活动产生、发展的宏观环境；一个层面是指影响广告传播活动实施的微观环境。广告的微观环境，与广告行业自身经营有关。而宏观环境则是与广告主企业的经营、市场营销联系在一起的。`},
+  {ch:1, type:"noun", q:`广告主题`, a:`广告主题是指在精确分析市场、消费者和产品特性的基础上确定好广告要传达的内容。广告主题是广告所要表达的重点和中心思想，是广告作品为达到某项目标而要表述的基本观念，是广告表现的核心，也是广告创意的主要题材。广告的其他要素都是为广告主题服务的。只有主题鲜明、诉求突出才有可能是优秀的广告作品，否则，整个广告作品缺乏统一的指南，各种信息就会显得杂乱无章，很难引起受众的注意。广告主题涉及的核心问题是市场，它的确立建立在市场调查和科学分析的基础上。广告主题正确与否直接关系到广告的成败。`},
+  {ch:1, type:"noun", q:`广告提案`, a:`广告提案是运用口头说明的方式，以视听媒介为手段，将广告策划中有关广告活动企划、创意构想、调查结果等重要部分呈现给广告主的一种形式。即把创意策划准确生动地向客户提交与说明，以求赢得客户的赞赏与支持。广告提案是广告策划结果的一种阐述形式，其重要性不亚于广告策划书。在提案的过程中，要充分了解自己的目的，诚心关心广告主的利益.精心准备提案细节，透彻阐述策划要点。`},
+  {ch:1, type:"short", q:`“知沟假说”？`, a:`（1）“知沟”理论的诞生
+美国传播学家蒂奇诺等人，提出了这样一种理论假说：由于社会经济地位高者通常能比社会经济地位低者更快地获得信息，因此，大众媒介传送的信息越多，这两者之间的知识鸿沟也就越有扩大的趋势。这即是“知沟”理论的诞生。
+（2）“知沟”假说与形成的主客观原因
+大众传播的信息传达活动无论对社会经济地位高者还是低者都会带来知识量的增加，但由于社会经济地位高的人获得信息和知识的速度大大快于后者，随着时间的推移，最终结果是两者之间的“知沟”不断变宽，差距不断扩大。
+蒂奇诺认为，除了接触媒介和学习知识的经济条件的因素以外，造成“知沟”扩大的原因还有以下几个方面：
+①传播技能上的差异-获得关于公共事物和科学的知识，需要一定程度的阅读和理解能力。
+②已有知识储存量的差异-知识储存越多，对新事物、新知识的理解和掌握越快。
+③社交范围的差异-社交范围越广，人际交流越活跃，获得知识的过程越能加速。
+④信息的选择性接触、理解和记忆的因素-生活的水准、层次与媒介的内容越接近，对媒介的接触和利用程度越高。
+⑤大众传播媒介的性质-传播有一定深度的关于公共事务和科学知识的媒介主要是印刷媒体，其受众主要集中于高学历阶层。
+在上述无论哪一方面，社会经济地位高的阶层都处于有利的状况，这是造成社会“知沟”不断扩大的根本原因。`},
+  {ch:1, type:"short", q:`如何看待大众传媒的公共性与公益性`, a:`（1）大众传媒具有公共性与公益性的依据
+大众传媒拥有自己的经营目标和宣传目标，但是，它们与单纯的营利企业不同，与宗教或政治团体的单纯机关媒介也不同。大众传媒的活动，在更大程度上受到公共性和公益性的制约。这种公共性和公益性的依据包括以下三个方面：
+①大众传媒是现代社会必不可少的信息生产者和提供者，在满足社会的普遍信息需求方面起着一种公共服务的作用。
+②大众传媒的信息生产和传播活动对社会的政治、经济和文化道德具有广泛而强大的影响力，这种影响力涉及到普遍的社会秩序和社会公共生活。
+③大众传媒是某些“稀有”公共传播资源（例如广播电视使用的电波频率）的受托使用者，作为公共财产的使用人，它们必须对社会和公众承担相应的义务和责任。
+（2）公共性与公益性对大众传播的制约
+①这种公共性和公益性，是大众传媒的权利基础：大众传媒拥有最大限度的采访权、言论权、编辑权和刊载权，并拥有广泛的舆论监督的权利。
+②另一方面，公益性和公共性也对大众传媒产生重要的制约，它要求传媒的活动必须符合社会公共利益。例如，传媒不得泄露国家机密，损害国家利益；不得煽动社会骚乱，扰乱正常的社会秩序；不得传播宗教或种族歧视内容，破坏社会团结；不得侵犯公民的隐私权和名誉权，损害个人的合法权利；不得传播淫秽色情或唆使、诱发社会犯罪的暴力内容，危害健康的社会道德和社会安定。
+③媒介报道新闻和提供信息必须坚持真实和客观原则，不得以虚假内容损害受众利益等等。公共性和公益性对传媒活动的这些制约，有些体现为法律形式的限制，有些则作为受众监督和传媒自律的重要规范发挥作用。`},
+  {ch:1, type:"short", q:`媒体广告组织的主要职能是什么？`, a:`（1）媒介广告组织的含义
+媒介广告组织是指媒介自己设立专门从事媒介广告经营的广告组织。这里所说的媒介既包括报社、杂志社、广播电台、电视台等大众传播媒介，即传统意义上的“四大媒介”，也包括网络媒体等新媒体。
+（2）媒介广告组织的主要职能
+①及时、正确发布广告
+这是媒介广告组织的基本职能，广告部门自然就是要通过有组织地、按计划地把与客户签订了合同的广告按照规定的时间、版面位置发布，而且必须保证不能出现任何差错。
+②向广告主和广告代理公司提供有关服务信息
+媒介有责任和义务向客户及时提供有关报刊的发行数量，每个版面的编辑方针，广播电台、电视台的收听、收视率，每个频率、节目时段的收听、收视率，每个新的专题栏目、影视故事片的内容情况方面的详细资料。
+③监督修正广告的内容和形式
+媒介除了要严格遵守法律、各种行政法规，杜绝违法广告的发布，而且还应该对虽然并不违法，但是对社会道德、社会价值标准可能起到负面影响的广告给予修正。
+④进行临时性广告设计制作和修改补充的工作
+对于一些应急的情况，考虑到时间等方面的因素，媒介的广告部门会需要进行一些临时性的设计和制作工作，且会承接一些零散的社会服务类的分类广告。
+⑤开发业务渠道，拓展新型广告阵地，发挥媒介自身优势
+媒介的广告组织最重要的职能是不断开发新的业务渠道，增加广告收入，其首要内容就是巩固现有的客户群体，发展新的客户。同时，媒介广告组织还应该努力地研究自己的媒介，借鉴国内外先进的方法和思路，进行广告发布形式和内容的创新，充分利用媒介的各类资源。
+⑥协助媒介的编辑部门和其他经营部门，当好参谋
+新闻媒介的编辑部门、经营部门和广告部门应该是一架完整机器的各个组成部分，分工不同，但是最终的目标是一致的。`},
+  {ch:1, type:"short", q:`简述改革开放以来我国广告业的发展状况。`, a:`改革开放以来我国广告业的发展可以划分为三个阶段。
+（1）初步恢复阶段（1979～1982年）
+当代广告业的恢复和发展始于1979年。这一年，中共中央宣传部发出《关于报刊、广播、电视台刊播外国商品广告的通知》。1979年农历正月初一，上海电视台首次播出人参桂酒的广告，标志着我国（大陆）电视广告的发轫。自此广播广告、报纸广告重新登堂入室。
+本阶段的特点包括：①广告解禁，并逐步被社会接受：②广告管理逐渐规范化：③国有大型广告公司组建：④广告研究和广告教育起步。
+（2）补偿性发展阶段（1983～1992年）
+经过了复苏时期的发展，20世纪80年代中期到90年代中期的中国广告业进入了新的阶段，从此我国广告业驶入持续发展的快车道。
+本阶段的特点包括：①低起点、高速度发展：②企业经历广告“蜜月期”：③外资广告公司登陆中国。
+（3）转型发展阶段（1993年至今）
+1993年7月，国家工商行政管理局和国家计划委员会共同制定了《关于加快广告业发展的规划纲要》，明确广告业是知识密集、技术密集、人才密集的高新技术产业，提出我国广告业的发展战略和重点目标，进一步推动了我国广告业的发展进程。
+本阶段的特点包括：①广告市场增幅趋缓：②广告管理依法进行：③媒体格局变化：④广告主趋向成熟：⑤国际广告公司迅速发展。`},
+  {ch:1, type:"essay", q:`简述世界近代资产阶级报业的演进、发展过程及其阶段性特征。`, a:`（1）近代资本主义报业产生的背景
+①资本主义市场经济的兴起以及由此产生的社会变化，形成了对新闻事业的内在的社会需求。
+a.从经济上看，人们为了在市场上进行竞争与生存发展，对信息的需求量剧增。一些重要的商业城市或港口，成为近代新闻的发源地。
+b．从政治上看，资本主义生产关系和制度的诞生，特别是在16、17世纪之交，社会政局动荡，社会信息量剧增，社会各阶层对新闻信息的需求也剧增。特别是新兴的阶级和政治力量更加迫切地需要传播信息、宣传政治观点，左右舆论，以促进社会变革。因此，近代报纸是在欧洲封建社会向近代社会过渡的背景下产生的。
+②社会和物质技术条件的发展
+印刷术的日趋进步和造纸工业的发展为近代报业提供了技术和物质基础：交通和邮政事业的日趋发达扩大了报纸发行的空间，增强了报纸的时效性：人口日益集中，城市逐渐增多为报纸提供了大量且较为集中的市场。
+（2）近代资本主义报业的产生
+近代新闻事业的主体形式是报纸，近代报纸诞生的标志-每周定期刊物的出现。
+①最早的定期报刊产生于德意志地区。
+新航路开辟以后，欧洲的贸易集散地逐渐移到大西洋沿岸，英法德等国都出现了一些重要的商业城市，它们取代威尼斯等地中海城市而成为新的信息中心。德意志是金属活字印刷的发源地，又是南欧和北欧交通贸易的连接点，因此出现了最早的定期报刊。
+1609年德意志地区出现两种周报：《通告-报道或新闻报》，在沃尔芬比特尔发行；《报道》，在斯特拉斯堡出版。
+②最早的日报也诞生于德意志地区。
+1650年莱比锡一位书商创办的《新到新闻》通常被认为是世界上第一张日报。
+（3）近代报刊的发展历程
+①资产阶级革命时期的政论报刊
+资产阶级报刊的发展与资产阶级革命的发展紧密联系。1566年尼德兰人民揭开了资产阶级革命的序幕后，英、美、法先后进行了资产阶级革命。19世纪中叶以后，德、意、日等国也从封建社会演进到资本主义社会。各国国情不同，历程也有很大差异，但各国报业的发展却有共同的规律：
+a.资产阶级革命以前，资产阶级报刊受封建统治者的压制，封建统治者通过出版许可制、内容审查制，英国甚至用设立“星法庭”等手段压制异己思想和信息的传播。
+另一方面，封建统治者出版官报，扶植御用报刊，制造舆论，维护其封建统治。资产阶级报刊中，围绕着革命、改良、保守或维护封建统治等重大问题，从各自的阶级利益出发，进行争论，这就是史称的政论报纸时期。
+b.在资产阶级革命过程中，资产阶级思想家首先举起出版自由的旗帜，宣传民主思想，论述出版自由的重要性。资产阶级革命后，建立了资产阶级的政权，资产阶级报刊的发展过程受两个因素的制约：
+第一，各国的资产阶级革命是否彻底，建立起怎样的政治制度。
+第二，该国的资产阶级共和制是否巩固，有无封建复辟。
+②资产阶级革命后的政党报刊
+资产阶级革命后，各国报业无论发展快慢，均经历了一个政党报刊为主的时期。这些党政报刊的共同特点是：政治上有明显的倾向性；内容上侧重于时政新闻和言论；读者对象主要是政界和上层人士。从政党报刊的特点看，它们是政论报刊的发展。
+③18世纪工业革命后：廉价报刊为主
+a.廉价报刊
+指的是工业革命后各国先后出现的面向社会中下层的通俗小报，因售价低而得名。世界上第一家成功的廉价报纸是1833年本杰明·戴在美国纽约创办的《太阳报》。在这之后又陆续出现了其他的廉价报刊。这样，报纸便从“政党报刊”时代过渡到“大众化报刊时代”。
+b.廉价报纸的特点是：
+第一，政治上标榜独立，不受制于某个政党。
+第二，经济上自主经营，不依赖政法或政党津贴。
+第三，读者对象为平民大众，也称大众化报纸。
+第四，内容上注重地方新闻、社会新闻以及各种趣味性的软新闻。
+第五，形式上文字通俗，版面活泼，可读性强。
+第六，经营上完全商业化，大量刊登广告，以此降低售价，扩大发行，进而赢得更多的广告。
+廉价报纸的出现使商业报纸更加兴盛，逐步成为资产阶级报业的主体，并为其向现代报业演变奠定了基础。`},
+  {ch:1, type:"essay", q:`简析新媒介的发展趋势及其特点。`, a:`（1）新媒体的含义
+“新媒体”是相对传统媒体（包括报纸、杂志、广播、电视等媒体）而言的。是指利用数字技术、网络技术，通过互联网、宽带局域网、无线通信网和卫星等渠道，以电视、电脑和手机为终端，向用户（即受众）提供视频、音频、语音数据服务、远程教育等交互式信息和娱乐服务，以此获取经济利益的一种传播形式。
+（2）新媒体的特点
+以数字技术为代表的新媒体，其最大特点是打破了媒介间的壁垒，消融了媒体介质之间，地域、行政之间，甚至传播者与接受者之间的边界。具体包括以下几个方面：
+①媒体个性化突出。
+由于技术的原因，以往所有的媒体几乎都是大众化的。而新媒体却可以做到面向更加细分的受众，可以面向个人。个人可以通过新媒体定制自己需要的新闻。每个新媒体受众手中最终接收到的信息内容组合可以是一样的，也可以是完全不同的。这与传统媒体受众只能被动地阅读或者观看毫无差别的内容有很大不同。
+②受众选择性增多。
+从技术层面上讲，新媒体时代，人人都可以接收信息，人人也都可以充当信息发布者，打破了只有新闻机构才能发布新闻的局限，充分满足了信息消费者的细分需求；与传统媒体的“主导受众型”不同，新媒体是“受众主导型”。受众有更大的选择，可以自由阅读，可以发布信息。
+③表现形式多样。
+新媒体形式多样，各种形式的表现过程比较丰富，可融文字、音频、画面为一体，做到即时地、无限地扩展内容，从而使内容变成“活物”。除了大容量之外，新媒体还有“易检索性”的特点：可以随时存储内容，查找以前内容和相关内容非常方便。
+④信息发布实时。
+与广播、电视相比，只有新媒体才真正具备无时间限制，随时可以加工发布。新媒体与用强大的软件和网页呈现内容，可以轻松地实现24小时在线。
+⑤交互性极强。
+新媒体独特的网络介质使得信息传播者与接受者的关系走向平等，受众不再轻易受媒体摆布，而是可以通过新媒体的互动，发出更多的声音，影响信息传播者。
+（3）新媒体的发展趋势
+在现代科技影响下，当代媒体产业结构面临深刻的调整，主要发展趋势包括以下几个方面：
+①新兴媒体行业将引领时代潮流，新媒体产业在媒体产业中的比重迅速上升。
+在发达国家如美国、日本、韩国，新兴媒体产业所占比重尤其高于传统媒体产业。美国十分注重把高新技术应用到文化娱乐业。世界将进入数字娱乐信息时代，数字娱乐在美国国内生产总值中将占一半的份额，新技术、新产品将使数字娱乐全面超越传统娱乐方式。日本媒体产业依托数字化信息技术，也已完成了从早期媒体产业向现代媒体产业的转型。
+②部分传统的媒体行业将逐步走向衰微，适应市场需求的媒体行业将继续保持活力。
+新媒体产业对报刊、图书出版等传统媒体产业构成了巨大的挑战。新兴媒体产业的崛起，对传统媒体产业，特别是传统媒体构成冲击是毫无疑问的。但影响的范围和程度仍有待进一步观察和研究。一些适应市场需求的传统文化行业仍将继续保持活力。
+③文化内容将成为媒体产业核心竞争力。
+现代科技使文化表现形式日新月异，“传媒汇流”为文化传播手段提供了极为广阔的空间。过去稀缺的媒体资源、传输资源出现了过剩的现象，文化内容短缺问题日益突出。没有内容，新媒体产业就成为毫无意义的空壳，如同一台无效运转的机器。在21世纪，“创意性文化内容的时代”已经到来，在未来的竞争中，文化内容是最重要的竞争力。`},
+  {ch:2, type:"noun", q:`北岩报团`, a:`北岩报团是英国的第一个报团，由哈姆斯沃思创办，因为他于1905年受封北岩勋爵，这个报团通常被称为“北岩报团”。哈姆斯沃思创办《回答》杂志后，又创办了《每日邮报》《每日镜报》，购买了《观察家报》（1905），控制了《泰晤士报》（1908），以及多种地方报刊，开创了富有英国特色的大众化报刊的事业。被称为舰队街的拿破仑，组成了庞大的报业帝国，并开始了英国报业的垄断化进程。后他的弟弟H．哈姆斯沃思（1914年受封罗瑟米尔勋爵），继承了该报团的大部分报刊，但《泰晤士报》转让给了阿斯特家族，随后《每日镜报》于1931年分离出去。以后该报团称“罗瑟米尔报团”或联合报业公司。`},
+  {ch:2, type:"noun", q:`三社四边协定`, a:`“三社四边协定”是早期通讯社为垄断市场而对各自势力范围进行的规定和划分。欧洲三大通讯社哈瓦斯社、路透社和沃尔夫社，分别属于当时资本主义世界三个举足轻重的国家。它们在走向国际性通讯社的过程中，既有激烈的竞争和冲突，又有暂时的妥协和合作，后来它们的业务日益越过国界，而且同殖民扩张的进程相联系，经过十来年的激烈争夺，把世界新闻市场基本分割完毕。为了确认既成事实和各自的垄断范围，1870年1月17日他们签订了“联环同盟”协定。该协定以三大通讯社为主，美国的纽约联合新闻社虽然也参加、但不能插足美国以外的地区，所以通常被称为“三社四边协定”。`},
+  {ch:2, type:"noun", q:`《六合丛谈》`, a:`《六合丛谈》是上海第一家中文报刊，月刊。英国伦敦传教士亚历山大·伟列亚力1857年创刊于上海，不同于此前的其他刊物，本刊物并非纯粹性宣传基督教义的宗教性刊物，而是综合性期刊。在内容上，《六合丛谈》刊有宗教、科学、文学、新闻等，是一份综合性的新闻性期刊。亚历山大本意是想将其办成新闻性刊物，但是又想使所有的人都成为自己刊物的读者，遂将宗教宣传、自然科学、商业行情、中外新闻融于一起，办成一个大杂烩。《六合丛谈》发行区域大，但是实际发行量很小，一年后停刊。`},
+  {ch:2, type:"noun", q:`极权主义理论`, a:`极权主义理论又称威权主义，是一种在对社会事物进行评价和判断时，从与外部权力或权威的关系上考虑问题的认知态度和思维方式。这一理论是在15世纪中叶近代印刷技术发明后不久，欧洲封建专制主义的气候下产生的，现代仍有残余。其最大特点是主张媒介必须一切以权力或权威的意志为转移，一切必须为统治者服务。主要内容包括：①报刊必须对当权者负责，维护国王和专制国家的利益；②报刊必须绝对服从于权力，不得批判占统治地位的道德和政治价值；③政府有权对出版物进行事先检查，这种检查是合法的；④对当权者或当局制度的批判属于犯罪行为，应给予严厉的法律制裁。极权主义传播制度及其理论随资产阶级革命的胜利而崩溃。`},
+  {ch:2, type:"noun", q:`非语言符号`, a:`非语言符号，是指不以人工创制的自然语言为语言符号，而是以其他视觉、听觉等符号为信息载体的符号系统。非语言符号大致包括：①语言符号的伴生符，如声音的高低、大小，速度的快慢，文字的字体、大小、粗细、工整或潦草等，都是声音语言或文字的伴生物，也称为副语言。②体态符号，如动作、手势、表情、视线、姿势等。由于它们也能像语言那样传递信息，有人也称之为“体态语言”。一般而言，体态符号既可以独立使用，也可以与语言并用，它们在形成语境（传播情境）方面起着重要的作用。③物化、活动化、程式化、仪式化的符号。`},
+  {ch:2, type:"noun", q:`群体暗示`, a:`群体暗示是指处于激动的人群中的个人具有很强的“被暗示性”，周围人的话语、表情、动作乃至现场的氛围，对他都成为有力的暗示刺激，使他的信念、思维和行为方式迅速与现场的人群融为一体。
+群体暗示通常伴随着集合行为出现。集合行为通常是大量人群聚集于狭小的物理空间，人们保持着高密度的接触，参加者通常处于亢奋、激动的精神状态，这样一些情境状态容易使他对周围的信息失去理智的分析批判能力，表现为一味地盲信和盲从。`},
+  {ch:2, type:"noun", q:`整合营销传播`, a:`整合营销传播是指统筹运用各种传播方式并加以最佳组合，以特定的目标群体为传播对象，传送基本一致的营销信息，促进联系和沟通的系统传播活动。它的特点是：①以消费者为核心；②以消费者数据库为基础；③以建立消费者和品牌之间的关系为目的；④以“一种声音”为内在支持点；⑤以各种传播媒介的整合运用为手段。`},
+  {ch:2, type:"noun", q:`广告媒体计划`, a:`广告媒体计划是指一系列的决策，包括把广告信息传播给未来的购买者或者产品、品牌的使用者。媒体计划也是一个过程，它意味着要做出许多决策，并随着策划的进展，每一决策都可能被修改甚至被抛弃。广告媒体计划是选择媒体的指导，它要求制定具体的媒体目标，以及设计具体的媒体战略来达到这些目标。一旦这一系列决策做出，并且目标和战略也制定出来以后，这些信息就有组织地形成了广告媒体计划。`},
+  {ch:2, type:"noun", q:`隐性公共关系`, a:`隐性公共关系是指在短时期内看不出显著效果，但可对组织的发展产生长远影响的，具有一定延续效应的公共关系结果。公共关系主要从事组织机构信息传播，关系协调与形象管理事务的咨询、策划、实施和服务的管理职能。包括选创组织的成功，降低组织失败的影响，宜布变更等。`},
+  {ch:2, type:"noun", q:`公共关系公司`, a:`公共关系公司又称公共关系咨询公司或公共关系顾问公司，是指由一定数量的各具专长的公共关系专家组成的、专门向各种社会组织提供收费公共关系咨询的社会服务性机构。其主要服务方式是为客户进行公共关系咨询，有时也受客户委托，直接为客户组织、实施公共关系活动，主要服务对象是那些未建立专门公关机构或没有专职公关人员的社会组织。有时也为已经建立专门公关机构的大中型企业提供高层次的或者专门化的公共关系咨询或服务。`},
+  {ch:2, type:"short", q:`媒介控制有哪几种方式？`, a:`媒介控制的方式，具体包括如下：
+（1）国家和政府的政治控制
+国家和政府的政治控制是媒介控制的主要方面。这种控制的目的，是通过规定大众传播体制，制定有关法律、法规和政策，来保障媒介活动为国家制度、意识形态以及各种国家目标的实现服务。
+（2）利益群体和经济势力的控制
+媒介控制中存在着种种社会利益群体和经济势力的控制。由于这些控制也是在一定社会制度和传播制度的范围内进行的，因此也带有明显的制度性因素。社会群体能够通过自己的媒介来维护自身的利益，传播自己的主张。资本主义制度下，除了垄断资本和少数大利益集团外，一般社会群体的传播权利是不能得到保障的，传播媒介的控制权主要掌握在垄断资本手中。
+（3）广大受众的社会监督控制
+许多传播内容会直接影响到受众的利益。因此，广大受众对传播媒介的活动拥有进行社会监督的正当权利。受众进行社会监督控制的手段包括：①个人信息的反馈。②结成受众团体，以群体运作方式对媒介活动施加影响。③诉诸于法律手段。④通过影响媒介的销售市场来制约媒介活动。
+（4）传媒的内部控制
+传媒的内部控制是指大众媒介的编辑方针，是大众传媒的自律。`},
+  {ch:2, type:"short", q:`大众传播效果研究经历了哪几个发展阶段？`, a:`从20世纪初到现在，传播效果研究已有近百年的历史，它本身也经历了一个发展变化的过程。就对大众传播效果的性质和影响力强弱的认识而言，这一过程大致可分为三个阶段：20世纪初至30年代末为第一时期；40年代至60年代为第二时期；70年代以后至现在为第三个时期。这三个时期，无论是效果观、媒介观还是受众观都有明确的变化。这些变化，与时代的演进、媒介环境的变迁以及效果研究的理论视角和方法的改变有着密切的关系。
+（1）第一阶段：早期的“子弹论”或“皮下注射论”
+20世纪初至30年代末是传播效果研究的初级阶段，也是大众报刊、电影、广播等媒介迅速普及和发展，人们对它们的社会作用和影响力既寄予高度期待又感到深深担忧的时期。
+①这一时期大众传播理论的核心观点：
+传播媒介拥有不可抵抗的强大力量，它们所传递的信息在受传者身上就像子弹击中躯体，药剂注入皮肤一样，可以引起直接速效的反应；它们能够左右人们的态度和意见，甚至直接支配他们的行动。
+②在这个时期，人们普遍认为大众传播拥有极大的影响力。产生这种观念的原因有以下几个方面：
+a.大众传媒发展的迅猛势头所产生的社会冲击是巨大的。在这个时期，大众报刊飞速普及，电影和广播等新的电子媒介也不断登场，大众传媒不仅成了人们获得外界信息的主要渠道，而且深深地渗透到个人、家庭和社会生活的各个方面。
+b.在这个时期，无论是国家、政党、团体还是社会活动家、企业广告宣传人员，对传播媒介的利用都达到空前的程度，一般个人无时无刻不处于各种形式的宣传或说服活动的包围之中，也使得人们处处感受到传播的“力量”。
+c.第一次世界大战的宣传战史研究以及宣传技巧研究。
+d.“子弹论”观点的出现与当时西方流行的本能心理学和社会学理论也有密切的关系。
+③对早期“子弹论”的评价
+“魔弹论”是错误的，这主要表现在它是一种唯意志论观点，它过分夸大了大众传播的力量和影响，忽视了影响传播效果的各种客观社会因素，并且否定了受众对大众传媒的能动的选择和使用能力。
+它对传播过程做了过于简单的描述：一方是全能的媒介在发送信息；另一方是分散的大众在等待着接受它，其间别无他物。随着传播效果研究的深入，这种观点自然会被人们抛弃。
+（2）第二阶段：“传播流”研究与“有限效果论”
+从20世纪40年代开始，传播效果研究开始进入第二个时期，“魔弹论”的效果观逐渐受到否定。这个时期的重要特点是，社会调查法和心理实验法普遍应用于传播学研究，学者们开始对传播效果产生的过程与机制进行实证考察。
+①这个时期的主要研究领域有三个：一是“传播流”研究；二是说服性传播的效果研究；三是“使用与满足”研究。
+传播流，指的是由大众传媒发出的信息，经过各种中间环节，“流”向传播对象的社会过程。构成这项研究的代表性成果有拉扎斯菲尔德等人的《人民的选择》、卡兹等人的《个人影响》、罗杰斯的《创新与普及》以及克拉帕的《大众传播效果》。
+②《人民的选择》
+《人民的选择》是拉扎斯菲尔德等人在1940年美国总统大选期间，围绕大众传播的竞选宣传，对选民投票意向的影响所做的一项实证调查的研究报告。通过这次分析，他们提出了对后来的传播效果乃至整个传播学研究产生了重大影响的一系列理论假说。其中包括：
+a.“政治既有倾向”假说。
+政治既有倾向，指的是人们在接触传媒宣传之前已有的政治态度。拉扎斯菲尔德等人认为，人们在就政治问题进行决策之际，这种决策的性质并不取决于一时的政治宣传和大众传播，而是基本上取决于人们既有的政治立场和态度，他们把这个观点称为“政治既有倾向”假说。
+b.“选择性接触”假说。
+受众并不是不加区别地对待任何传播内容，而是更倾向于“选择”那些与自己的既有立场、态度一致
+或接近的内容加以接触。很明显，这种“选择性”接触活动的结果，更可能在加强原有态度的方向上起作
+用，而不是导致它的改变。
+c.“意见领袖”和“两级传播”。
+大众传播并不是直接“流”向一般受众，而是要经过意见领袖这个中间环节，即“大众传播-意见领袖-一般受众”。这就是两级传播概念的产生。
+d.对大众传播效果类型的概括。
+既有倾向的作用、选择性接触机制以及意见领袖的发现，揭示了传播效果产生过程中存在着众多的制约因素。他们把大众传播可能产生的效果分为“无变化”“小变化”“强化”“结晶”和“改变”五种。
+③《个人影响》和《创新与普及》
+a.《个人影响》提出了“中介因素”的概念。
+卡兹和拉扎斯菲尔德认为，制约和影响大众传播效果的“中介因素”主要有四种：选择性接触机制；媒介本身的特性；讯息内容以及受众本身的性质。
+b.罗杰斯在《创新与普及》中把大众传播过程区分为两个方面：一是作为信息传递过程的“信息流”；二是作为效果或影响的产生和波及过程的“影响流”。前者可以是“一级”的，即信息可以由传媒直接“流”向一般受众；而后者则是多级的，要经过人际传播中许多环节的过滤。这样，罗杰斯就把“两级传播”模式发展成为“多级”或“N级传播”模式。
+《人民的选择》《个人影响》和《创新与普及》，可以说是“传播流”研究的三部曲。这些研究揭示了大众传播效果的产生是一个极为复杂的社会过程，其间存在着众多的中介环节和制约因素，单一的大众传播并不能左右人们的态度。这些结论，从正面否定了强调简单的“刺激一反应”关系的“子弹论”观点。但另一方面，正因为“传播流”研究的焦点集中于揭示效果产生的制约因素，其结论强调了大众传播效果和影响的无力性，人们把它称为“无力的大众传播观”。
+④《大众传播效果》与“有限效果论”
+1960年，克拉帕在《大众传播效果》一书中对《人民的选择》和《个人影响》以来的“传播流”研究进行了系统总结，并提出了关于大众传播效果的“五项一般定理”。克拉帕的观点极力强调了大众传播影响的无力性和效果的有限性，因而被称为“有限效果论”。
+⑤“说服性传播”的效果研究
+“说服性传播”的效果，指的是受传者的态度沿传播者说服意图的方向发生的变化。在这个意义上，它是一种“纯效果”。第二次世界大战期间，霍夫兰等人在军队里进行了一系列心理实验，这是关于“说服与态度改变”的最早的实证研究。
+a.这些研究揭示了效果的形成并不简单地取决于传播者的主观愿望，而是受到传播主体、信息内容、说服方法、受众属性等各种“条件”的制约。这些研究结论，同样是否定“魔弹论”效果观的有力证据。
+b.霍夫兰等人的“说服性传播”效果研究主要采用实验心理学方法，包括前后比较法和控制对照法等，在许多研究中，这些方法是综合并用的。此后，霍夫兰的心理实验法与拉扎斯菲尔德的抽样调查法一起，成为传播效果研究的主要方法。
+（3）20世纪70年代以后的宏观效果理论
+①进入20世纪70年代后，在对“有限效果论”进行批评和反思的基础上，传播效果研究领域又出现了一批新的理论模式或假说，其中包括“议程设置功能”理论、“沉默的螺旋”理论、“知沟”研究、“培养分析”研究等。
+这些理论或假说的主题、内容各不相同，但有几个共同的特点：第一，它们研究的焦点大都集中于探索大众传播综合的、较长期的和宏观的社会效果；第二，它们都不同程度地强调传媒影响的有力性；第三，它们都与社会信息化的现实密切结合在一起。
+②20世纪90年代以后直到21世纪的今天，效果研究的一个突出热点是，探讨媒介技术对社会发展的推动作用以及对社会生活产生的影响。`},
+  {ch:2, type:"short", q:`公共关系中的公众有哪些特点？`, a:`（1）公共关系的公众的含义
+公共关系公众，是指与特定的公共关系主体相互联系、相互作用的个人、群体或组织的总和，是公共关系传播沟通对象的总称。“公众”在公共关系工作中是一个特殊的范畴，具有特定的含义。一个社会组织的公共关系工作并非针对全社会的公众，而是针对在社会公众中与组织直接或间接相关的某些特定组织、群体和个人。
+（2）公共关系中的公众的特点
+①整体性
+a.公众不是单一的群体，而是与某一组织运行有关的整体环境。任何组织的生存和发展都离不开一定的公众环境。公众环境与自然环境、地理环境不同，是指组织运行过程中必须面对的社会关系和社会舆论的总和。这些社会关系和社会舆论范围很广，涉及组织内部和外部，社会方方面面，而且相互关联，成复杂。
+b.公共关系工作不可只注意其中某一类公众，而忽略其他公众。对其中任何一种公众的疏忽，都可能致使整个公众环境的恶化。公众环境恶化必然影响组织的生存和发展。因此，首先应该将组织面对的公众视作一个完整的环境，要用全面、系统的观点来分析自己面临的公众。
+②共同性
+a.公众不是一盘散沙，而是具有某种内在共同性的群体。当某一群人、某一社会阶层、某些社会团体因为某种共同性而发生内在联系时，便成为一类公众。这种共同性即相互之间的某种共同点，比如共同的利益、共同的需求、共同的目的等，这样一些共同点，使一群人或一些团体和组织具有相同或类似的态度和行为，构成组织所面临的一类公众。
+b.了解和分析自己的公众，必须了解和分析其内在的共同性，内在的联系，这样才可能化混沌为清晰，从公众整体中区分出不同的对象来
+③多样性
+公众的存在形式不是单一的，而是复杂多样的。“公众”仅是个统称，具体的公众形式可以是个人，可以是群体，也可以是团体或组织，日常的公共关系工作对象，包括各种各样的个人关系、群体关系、团体关系、组织关系，等等。即便是同一类的公众，也可以有不同的存在形式。公众形式的多样性，决定了沟通方式和传播媒介的多样性。
+④变化性
+a.公众不是封闭僵化、一成不变的对象，而是一个开放的系统，处于不断变化发展的过程之中。任何组织面临的公众，其性质、形式、数量、范围等均会随着主体条件、客观环境的变化而变化。
+b.公众环境的变化，必将导致公共关系工作目标、方针、策略、手段的变化。反过来，组织自身的变化也会导致公众环境的变化，如组织的政策、行为、产品的变化使公众的意见、评价、态度或行为发生相应的变化，这种变化的结果又可能倒过来对组织产生影响、制约作用。
+⑤相关性
+公众不是抽象的、各组织“通用”的，而是具体的，与特定的组织相关的。公众总是相对一定的公共关系行为主体（组织或个人）而存在的。一群人之所以成为某一组织的公众，是因为他们与该组织具有一定的相关性、互动性。这种相关性是组织与公众形成公共关系的关键，寻找公众、确定公众很重要的就是寻找和确定这种相关性，并把它们具体的担心揭示出来，分析清楚，从而确定自己的工作目标。`},
+  {ch:2, type:"short", q:`公共关系有哪些主要功能？`, a:`（1）公共关系的含义
+公共关系是一种多侧面多层次的经营管理活动，每一侧面每一层次的公共关系活动都有其相对独立的作用，但同时又彼此联系、相互渗透，共同发挥着公共关系的整体性作用，这种整体性作用就是公共关系活动的基本功能。公共关系的功能主要是指在履行其职责的基础上对公共关系主体、公共关系客体以及整个社会发挥的作用和功效，它主要表现公共关系工作者能够做什么。公共关系的功能主要表现在树立形象、协调关系、全员教育、优化环境四个方面。前两个功能是公共关系对组织的直接功能，后两个则是间接功能。
+（2）公共关系对组织的直接功能-树立组织形象、协调好关系网络
+①树立组织形象。
+组织形象是社会组织的总体表现与特征以及他们在社会公众中的反映与评价，社会公众对组织的总体评价构成组织的总体形象。其内容主要包括产品形象、员工形象、服务质量、环境形象、组织风貌等各种形象要素。
+然而组织形象的塑造是一项复杂的系统工程，需要遵循科学的原则。根据公共关系学的理解，主要遵循有效性原则、总体性原则、符号化原则。
+②协调网络关系。
+公共关系作为组织与公众沟通的桥梁。发挥着协调沟通的重要功能。现代社会中，组织面临着复杂多变的各种关系，面对众多的公共群体，组织必须谨慎地处理各种社会关系和利益关系。
+协调关系网络一般包括以下两个方面：
+a.组织内部的协调沟通。
+对组织内部的协调主要可以从三个方面着手：
+第一，建立沟通渠道，促进组织内部的信息交流。
+第二，培养组织各个职能部门之间的协作意识。
+第三，建设组织文化，培养员工共同的价值观和道德取向，增强员工对组织的向心力和凝聚力。
+b.组织与外部的协调沟通。
+对组织外部关系的协调工作也可以从三个方面着手：
+第一，及时做好沟通联络工作，积极寻求组织和公众的共同点，谋求组织与外部的良好合作关系。
+第二，与社会公众建立广泛的联系，增进组织和公众之间的相互了解，使组织与公众建立起真诚有效的密切合作关系。
+第三，运用公共关系的各种沟通协调手段广交朋友，广结人缘，消除敌意，创造一个“人和”的环境。
+（3）公共关系对于个人和社会的间接功能-提高个人素质、优化社会环境
+①提高个人素质。
+a.公共关系促使个人观念更新。
+第一，公共关系是塑造组织形象的艺术，组织的形象与个人的形象是分不开的。它灌输给每一个人有关形象的意识，在注重组织形象的同时也必须注重个人的形象。
+第二，公关强调“公众至上”，以尊重公众的意愿、满足公众的需求为己任，培养人们强烈的尊重他人意识。
+第三，公关谋求组织与公众之间的合作，表现出强烈的合作意识。
+b.公共关系有助于个人能力的提高。
+第一，为了树立组织的形象，公关部常以独特新颖、出奇制胜的专题活动吸引公众，这种创造性的活动需要富有创造能力的人来胜任，在工作中培养了人的创造能力。
+第二，公关活动常要和各种人、各种矛盾打交道，要处理各种突发事件，要适应不断变化的公众和环境，因而促使个人交际能力、自我调节能力、应变能力的提高。
+②优化社会环境。
+公共关系活动作为联系组织与公众之间的桥梁，可以促使社会环境优化，公共关系的作用主要体现在对社会互动环境和社会心理环境的优化上。
+a.优化社会互动环境。
+社会互动是指社会的横向发展，指社会上人与人，群体与群体之间的交往和相互作用，主要通过沟通社会信息，协调社会行为和净化社会风气实现。
+b.优化社会心理环境。
+从社会学、心理学角度分析，任何个人都有合群的需要、感情的需要、交往的需要，如果这些需要得不到满足或满足不够，就会导致个人心理失调。公共关系恰好能提供给社会一些良好的关系氛围，用真诚、广泛的社会交往使人们摆脱孤独和隔阂，使社会心理环境得到优化。`},
+  {ch:2, type:"essay", q:`试析《新青年》在新文化运动中的作用。`, a:`1915年9月15日，由陈独秀主编的《青年杂志》第1卷第1号在上海正式出版发行。不久，为避免与基督教上海青年会主办的《上海青年》杂志混名，遂从第2卷第1号起易名。一份刊物的创世，引发一场伟大的历史事件，并对历史的发展、社会的进步产生巨大的推动作用，这在历史上是不多见的。《新青年》与新文化运动及五四爱国运动紧密联系在一起，并对中国现代社会的走向起着难以估量的作用。《新青年》的开创，使它成为介绍新文化、新知识、新思想的园地。在中国的近代，在一段时间在一定程度上，它反映了新文化知识分子的群体意志，成为中国思想的领导中心，开创了中国历史的新纪元。
+（1）《新青年》的创刊标志着新文化运动的兴起，它擂响了思想解放运动的战鼓
+《新青年》创刊之后，在一年多的时间里，它首先紧紧抓住思想文化问题，如陈独秀创办《新青年》，就以“除旧布新”作为方向。这一时期，刊物上发表的易白沙的《孔子平议》、胡适的《文学改良刍议》、鲁迅的《狂人日记》和吴虞《吃人与礼教》等文章带给中国思想界的震撼，对于思想解放所起的重大作用，是当时其他报刊上的政治、时评性文字所不可比拟的。
+（2）《新青年》是新文化运动的一面旗帜
+《新青年》除了以一般性言论指导全国进步人士之外，还有针对性地以通信形式来回答各地青年提出的种种问题。这些回信绝大部分随即发表在《新青年》上，回信是陈独秀作为新文化运动的统帅视不同情况而发出的具体的思想指令，在当时所起的积极作用极大。当时不少青年，如王统照、叶挺、俞颂华等都曾致函《新青年》，在与陈独秀书信往来中，受到启发与鼓励，思想日益进步，投身于新文化运动，为中国革命做出了重要的贡献
+（3）宣传马克思主义，培养新一代青年
+1920年9月，即从8卷1号起，《新青年》改组为中国共产党上海发起组的机关刊物，积极进行马克思主义理论宣传，成为在中国传播马克思主义的主要阵地，在广大革命知识分子中发生了广泛的影响，对中国共产党的成立和中国革命运动的发展做了思想上的准备。《新青年》从1915年创刊到1922年休刊，其间有7个年头。这7年，是中国知识分子，尤其是青年知识分子思想大解放的年代，是新旧思潮大激战的年代，也是中国由旧民主主义革命开始向新民主主义革命转变的年代。《新青年》适应了时代的要求，指引着这个时代前进的步伐，培育了整整的一代青年。`},
+  {ch:2, type:"essay", q:`试述世界信息生产和流通结构不平衡的表现。`, a:`发展中国家建立世界新闻传播新秩序的斗争，不是一个偶然的现象，而是直接来自世界新闻传播严重的不平衡状态。这种不平衡不仅意味着在新闻传播力量、新闻流向等方面，发展中国家与发达国家存在着相当大的差距，而且意味着发展中国家变动的现实不可能得到全面真实的反映。造成这种不平衡状态的根本原因在于这些国家的经济实力和技术水平的悬殊。世界信息生产和流通结构的不平衡表现在以下几个方面：
+（1）传播力量的不平衡
+①传播媒介的分配不均
+西方少数发达国家凭着雄厚的经济实力和发达的科学技术，建立了异常强大的新闻传播事业，拥有大量现代化的新闻传播工具。反之，广大发展中国家由于经济不发达，文化教育事业落后，科学技术水平低，新闻传播事业基础与设施薄弱，新闻传播工具既缺乏又落后。
+②新传播技术导致不平衡加剧
+a.某些大国凭借着强大的经济、技术实力，企图在电波、网络空间构筑起新的霸权。
+b.传播工具的普及率及其先进程度决定着信息量的获取能力。
+c.新技术带来的不仅有福音，还有巨大的信息不平衡。广大发展中国家拥有的新闻传播力量，与它们在国际政治舞台上的地位、在世界总人口中所占的比例，是极不相称的。
+如果不是所有的国家、所有的人都能享有信息，信息社会就只能加深、而不是缩小世界各国间的“信息鸿沟”，其结果将是，信息大量集中于富国，发展中国家则过着前所未有的-物质和信息的双重贫困生活。
+（2）传播流向的不平衡
+少数发达国家凭借其强大的现代化的新闻传播媒介和设备，垄断了世界新闻的采集和发布市场。来自发达国家的新闻信息源源不断地流向发展中国家，而发展中国家向发达国家输出的新闻，不仅数量少，而且很难为发达国家的主流媒介接受。所以国际市场上的新闻流动，基本上是单向的，即由发达国家流向发展中国家，由“北”流向“南”。
+（3）传播内容的不平衡
+①世界新闻传播的不平衡，不仅仅指数量上西方国家通讯社、电台、电视台及其新闻产品垄断或控制了发展中国家的新闻市场，更为重要的是，西方发达国家的机构并不是根据发展中国家的需要，而是根据自身的需要播报新闻的。它们按照西方的政治观点、价值观念、文化传统来筛选、采制新闻，因此报道内容存有很强烈的主观观念。
+②西方新闻媒介有关发展中国家的报道内容严重失衡，在总体上扭曲了发展中国家的国际形象，损害了发展中国家的社会稳定和经济发展，阻碍了世界各国人民的相互了解和合作，也在根本上破坏了世界范围内新闻自由采集、自由传播的现实基础。
+（4）评价
+世界新闻传播的不均衡状态，在政治、经济、思想、文化等方面给发展中国家带来很大的危害。发展中国家的领导人也意识到了问题的严重性，为捍卫来之不易的独立，争取经济自主，从60年代末70年代初就开始了为建立平等新闻传播秩序的斗争。他们或者是在国际会议上大声疾呼，或撰写文章痛陈利害，或积极组建发展中国家传播机构的合作组织，强烈要求并致力于打破世界新闻秩序，建立自由、平等、均衡、公正的世界新闻新秩序。`},
+  {ch:2, type:"essay", q:`影响消费者行为的主要因素有哪些？（5分）`, a:`消费者购买行为受到文化、社会、个人和心理因素的影响。
+（1）文化因素
+文化、亚文化和社会阶层对购买行为起到了重要作用，文化因素对消费者购买行为的影响最为广泛和深远。
+（2）社会因素
+消费者的购买行为同样也受到一系列社会因素的影响，包括相关群体、家庭、角色和地位。
+（3）个人因素
+购买者决策也受其个人特征的影响，特别是受其年龄和生命周期阶段、职业、经济环境、生活方式、个性以及自我观念的影响。
+（4）心理因素
+一个人的购买选择也受四种主要心理因素的影响，即动机，认知，学习以及信念和态度。`},
+  {ch:2, type:"essay", q:`在上述影响消费者行为诸多因素中，中国黄酒品牌“古越龙山”近几年的广告活动对其中哪些因素运用得比较多？（3分）`, a:`中国黄酒品牌“古越龙山”广告活动运用的因素为文化因素、社会因素和心理因素。
+（1）古越龙山在进行广告宣传的同时加大了黄酒基础性研究和酒文化的传播，充分利用黄酒文化来影响消费者。
+（2）古越龙山推出的年份酒属于高档产品，其目标消费者应具有相应的社会地位。
+（3）古越龙山的传播策略将从提升品牌的知名度、美誉度到全面提升品牌消费的忠诚度，把关注变成认知，让消费者不仅知道黄酒，还要了解黄酒、喜欢黄酒。这一点充分地利用了消费者的心理因素。`},
+  {ch:2, type:"essay", q:`古越龙山为什么选择中央电视台作为主要广告投放媒体？请阐述你自己的观点。（12分，字数300字左右）`, a:`古越龙山选择中央电视台作为主要广告投放媒体的原因如下：
+（1）电视广告具有优势
+①成本效用高
+电视有最广泛的受众，而且还能到达印刷媒体不能有效到达的人群。
+②冲击力大
+电视将画面、声音、颜色、动作和戏剧结合起来，可导致一定程度的消费者参与，也能使产品显得重要、有趣。如果广告令人喜爱，还能使消费者产生对赞助商的正面的联想。
+③影响面广
+电视对文化有强烈的影响，人们更相信在电视上做广告的公司。
+（2）中央电视台具有优势
+①受众对广告常持有保留甚至怀疑态度，通常从媒体的可信度，判断广告的真实性。媒体的信誉好，社会地位高，广告可以借媒体的地位、信誉更好地说服目标公众。
+②中央电视台具有其他媒体所不能替代的社会地位及公众信誉。在中央电视台播出的广告会增加其可信度，因此改变消费者的认知，进而产生购买行为。`},
+  {ch:2, type:"essay", q:`如果你是古越龙山的品牌经理，你认为在2008年奥运会期间，古越龙山可以在品牌建设方面开展哪些工作？请说明你建议的理由。（10分，字数300字左右）`, a:`在2008年奥运会期间，古越龙山在品牌建设方面可开展的工作如下：
+①成为奥运会的赞助商之一
+奥运会是世界体育盛会，其赛事会受到世界各国的瞩目。古越龙山可通过奥运赞助的方式来提升品牌知名度和美誉度。
+②以向世界宣传黄酒文化为目标展开一系列的营销活动
+在影响消费者认知的基础上，进一步从文化层面深入。通过向世界宣传黄酒文化的基础上，推广自己的品牌。营销活动中介绍黄酒文化的同时可以提供黄酒的试喝，采用促销手段力争在一定的时间和空间内形成一个品牌的沟通高潮，产生轰动效应。
+③加大企业广告在CCTV-5的投放力度
+CCTV-5是体育频道，因此奥运会期间会得到更多消费者的关注。此时加大广告CCTV-5的投放力度能使有效传播次数迅速增多，广告的效果得到加强，借此来提升品牌形象，直接刺激销量。`},
+  {ch:3, type:"noun", q:`《中国报学史》`, a:`《中国报学史》是新闻学专家戈公振的名著，写于1925年至1926年，1927年11月由商务印书馆出版，曾多次再版，日本人小野保增译为日文，书名改为《支那新闻学史》，于1943年在东京出版。《中国报学史》全书共6章，第1章绪论，阐述报学史的定名、报纸的定义以及本书编辑方法。第2章至第6章，分别就官报独占时期、外报创始时期、民报勃发时期、民国成立以后、报界现状等阶段，全面、系统地评介报纸发展的历史，有明确的历史分期和报刊分类，且史料翔实，多为第一手材料，为中国报刊史研究提供了一个较为完整的理论框架和丰富的史料。本书从主要观点与论断到文字表述的字里行间，洋溢着作者的爱国、民主、进步思想和敬业乐业精神，为新闻学研究树立了治学与道德风范，被称为“中国新闻史研究开山之作”。`},
+  {ch:3, type:"noun", q:`《民国暂行报律》`, a:`《民国暂行报律》制定于1912年3月2日，是南京临时政府内务部为了对报刊出版进行初步管理而发布的一个简略的法令。该法令规定了三条管理办法：①出版报刊必须履行登记手续；②不得破坏共和国体；③报道失实，污毁个人名誉者应该更正等。但在当时民主、自由气氛空前高涨的报界，此报律受到了报界的一致反对，孙中山基于对新闻自由、言论自由的尊重，以及法律文件的制定必须经过参议院，不得违反程序的原则，下令取消了该报律。“暂行报律”被撤销一事，加深了人们对言论出版自由的认同。`},
+  {ch:3, type:"noun", q:`“纽约三大便士报”`, a:`“纽约三大便士报”是指纽约的《太阳报》（1833年由本杰明·戴创办，美国第一份成功的廉价报纸）、纽约《先驱报》（1835年由贝内特创办）和纽约《论坛报》（1841年由格里利创办）。便士报是工业革命后出现的面向中下层读者的大众化报纸，特点是政治上标榜独立，内容上注重地方新闻、社会新闻以及各种消闲、趣味性软新闻；文字通俗，版面活泼，可读性强；经营上完全商业化，大量刊登广告，以此降低售价，扩大发行，进而赢得更多的广告。`},
+  {ch:3, type:"noun", q:`选择性接受假说`, a:`选择性接受假说是拉扎斯菲尔德等在《人民的选择》中提出的关于受众在接收信息时选择性接受的假说。选择性接触假说是指受众并不是不加区别地对待任何媒介内容，而是更倾向于“选择”那些与自己的既有立场和态度一致或接近的媒介内容加以接触；选择性接触行为的结果更容易在强化人们原有态度的方向上起作用，而不是导致它的改变。选择性接受包含三个方面：①选择性接触，是指受众在接触大众传播活动之际，并不是不加区别地对待任何媒介和内容，而是更倾向于接触与自己的既有立场、观点、态度一致或接近的媒介或内容加以接触，而有意无意地回避那些与自己既有倾向相左的媒介或内容。②选择性理解，是指受众总要依据自己的价值观念及思维方式对接触到的信息做出独特的个人解释，使之同受众固有的认识相互协调而不是相互冲突。③选择性记忆，是受众在接触信息后，保留在记忆中的往往是那些与自己的既有兴趣、需求、立场、态度或观点一致或接近的内容。`},
+  {ch:3, type:"noun", q:`冷媒介`, a:`冷媒介是麦克卢汉就媒介分类提出的两个著名概念之一，另一个是热媒介。冷媒介传递的信息少而模糊，在理解之际需要更多的感官和思维活动的配合，相反，热媒介传递的信息比较清晰明确，接收者不需要动员更多的感官和思维活动就能理解。冷媒介与热媒介的区分在于说明媒介作用于人的形式不同，引起的心理和行为反应也不同。`},
+  {ch:3, type:"noun", q:`姿态传播`, a:`姿态传播是指以姿态作为媒介的人际传播活动。人际传播是面对面的传播活动，基本媒体是语言，
+除此之外还有表情、手势、动作等各种各样的姿态（gesture）符号。姿态是人际传播中自我表达的重要手段，姿态符号也能传达意义，又称为“体语”。姿态的主要功能是：①强调语言；②补充语言；③代替语言；④控制语言：⑤表达超语言的意义。`},
+  {ch:3, type:"noun", q:`杰夫金斯`, a:`杰夫金斯是20世纪50年代后英国的公共关系理论专家和公关实务大师，从理论和实践上把公共关系推向了一个新的发展阶段。他在英国开办了第一家公共关系学校，讲授公共关系学、广告学和市场营销学等方面的课程，并且先后到过18个国家讲学。杰夫金斯是世界上撰写公共关系理论著作最多的公共关系专家，著有《市场学、广告学和公共关系学词典》《公共关系·广告·市场营销》《市场学和公共媒介设计》《公共关系学》《公共关系与市场管理》《公共关系与成功企业管理》等著作。他提出了“公共关系工作六部曲”，即：“估计形势-确定目标-确认公众-选择传播媒介与技巧-编制预算方案-评价结果”，从公共关系决策管理层面解决了管理过程和管理环节上的理论问题，对于公共关系工作管理和工作流程做出了科学规定，在实践中推动了公共关系活动的程式化、层次化、规范化发展，在公共关系发展史上具有划时代意义。`},
+  {ch:3, type:"noun", q:`社区关系`, a:`社区是一个地理概念、位置概念，如城市、街道、村庄等。社区关系是指组织同所在地区的其他各种组织和全体居民的关系。类似于家庭同邻居的关系，社区关系是组织生存发展的外部环境的重要组成部分。社区关系的一般做法是：①向所有相邻单位和居民通报本组织的宗旨、生产经营项目、组织为繁荣地方经济所做的努力以及本组织将给社区带来的利益等信息。②经常走访、调查社区公众，了解对本组织的反映，及时发现问题，并加以改进和调整。③敞开大门，请社区公众通过同组织内各层成员的接触，建立感情联系。④积极主动地支持、参与社区内正常的公益性活动，使公众感觉到组织的存在，认识本组织对社区的价值。⑤为支持社区地方经济而尽力，在一定程度上可担任本社区经济发展的“龙头”，或成为本社区经济发展的“中坚”。`},
+  {ch:3, type:"noun", q:`公益广告`, a:`公益广告又称公共广告，是指为维护社会公德，帮助改善和解决社会公共问题而组织开展的广告活动。这类广告所传播的信息内容，主要是有关道德、教育、环境、健康、交通、公共服务等，涉及人们当前关心的社会问题，与社会公众利益密切相关。公益广告的主要特征：①不以营利为目的；②为社会共同利益而不是为某些团体或组织服务，有别于企业广告或公共关系广告，体现企业等所承担的社会责任。`},
+  {ch:3, type:"noun", q:`广告调查`, a:`广告调查是围绕广告活动而组织展开的调查研究活动。它是市场调查的一个组成部分，是整个广告活动的开端和基础。广告调查的作用在于为广告决策提供充分有力的信息，为广告的创作设计提供依据，也为企业经营管理发挥参谋作用。广告调查的特点有：①目标明确；②操作性强；③注意保密；④具有累积性。`},
+  {ch:3, type:"short", q:`怎样理解“权利主体受众”？`, a:`权利主体受众是指受众不仅仅是传媒信息的使用者和消费者，他们还是构成社会共同体的成员，也是参与社会管理和社会公共事务的公众。这样的角色使公众作为权利主体在大众传播过程中享有以下基本权利：
+（1）传播权-即一般意义上的表现自由和言论自由的权利。
+（2）知晓权-通过大众传播渠道获得信息的权利，尤其指对公共权力机构的活动所拥有的知情或知察权。
+（3）媒体接近权-利用大众传媒阐述主张、发表言论以及开展各种社会和文化活动的权利，其中
+的一项重要内容是反论权。
+（4）媒介监督权-大众传播的信息生产和传播活动涉及受众广泛的利益，受众有权通过各种形式对传媒的活动进行监督。`},
+  {ch:3, type:"short", q:`如何正确认识“循环传播模式”？`, a:`（1）循环传播模式
+循环传播模式由美国学者奥斯古德和施拉姆于1954年提出。该模式中没有传播者和受传者的概念，传播双方都作为传播行为的主体，通过讯息的传受处于你来我往的相互作用之中；参与传播过程的每一方在不同阶段都依次扮演着译码者（执行接收和符号解读功能）、解释者（执行解释意义功能）和编码者（执行符号化和传达功能）的角色，并相互交替着这些角色（如下图所示）。
+（2）正确认识循环传播模式
+①循环传播模式体现了社会传播的双向性和互动性，这无疑是正确的。
+②这个模式也有其缺陷：a.它把传播双方放在完全对等或平等的关系中，则与社会传播的现实情况不符。b.这个模式能够体现人际传播特别是面对面传播的特点，但在说明大众传播过程方面仍有局限性。`},
+  {ch:3, type:"short", q:`公共关系有哪几种活动模式？`, a:`社会组织的公共关系在不同时期、面对不同公众、处理不同问题时，采用适当的方法和一定的技术、技巧所形成的系统就是公共关系模式。公共关系活动模式包括以下几种：
+（1）宣传性公共关系
+特点是利用大众传播媒介，直接向公众传递组织的各种信息，加强公众对组织的了解程度，形成有利于组织发展的社会环境。该模式指导性强，可在短时间内取得预期的沟通效果，但易停留在与公众的表面接触上，活动的长久性效果难以把握。
+（2）公益性公共关系
+以各种精心设计的公益性活动、赞助性活动进行的公共关系活动。它以公众普遍关注的社会现象和人物为主要活动对象，通过调动人们的同情心和社会责任感达到树立组织形象，改善公众关系的目的。追求的是长远的、整体的利益。
+（3）征询性公共关系
+以采集信息、舆论调查、民主测验等形式开展公共关系活动。目的在于及时发现问题，并通过解决问题获得公众的好感。防止各种细小问题的扩大化。
+（4）交际性公共关系
+特点是通过人与人的直接接触、为组织广交朋友，建立广泛的社会关系网络，建立直接的、有一定权威性的信息网络。具有直接性、人情味和灵活性，容易引起感情的共鸣。
+（5）服务性公共关系
+以向社会公众提供产品和服务为手段的公共关系。目的在于以实际行动和看得见的产品获得公众的了解与评价。用事实影响并改变公众。
+（6）还有发挥不同功能的一些公共关系模式，如建设型公共关系、维系型公共关系、防御型公共关
+系、进攻型公共关系、矫正型公共关系。`},
+  {ch:3, type:"short", q:`公共关系有哪些主要职能？`, a:`公共关系的职能主要有如下几点：
+（1）收集信息公共关系的首要任务就是要充当组织的眼睛和耳朵，为组织的生存发展提供关于环境的信息，提供用于决策的各种依据。信息是组织参与竞争的实力与资本。
+（2）咨询建议咨询建议是要求公共关系机构和人员要向组织的决策层和各级管理者提供有关组织生存、发展各方面
+情况的报告和建议，充当组织的“智囊”和“参谋”。
+（3）传播沟通
+传播是连接公共关系的主体与客体的桥梁，公关的过程实际上就是信息交流、意见与情感沟通的过程，是组织与公众“双向沟通”的过程。公关活动应特别重视组织通过大众传播媒介等手段如何使自身信息有效地向外传输.
+（4）教育引导
+教育引导是以传播知识为主要手段在内外公众之间寻求利益共同点的活动。①在内部员工中树立全员公关意识，引导员工将个人利益同组织的形象和声誉相结合；②全面提升组织形象，通过职业训练使全体员工成为合格的组织成员；③主动出击引导外部公众，为他们提供产品服务的相关知识和信息，把公关工作做在消费者对本组织产生印象之初，甚至之前。
+（5）社会交往
+组织同公众之间的联系不仅要通过大众传播媒介进行，还要借助于大量直接交往的社会活动，通过多种形式的公共关系活动为组织广结人缘，建立广泛的、较为稳固的、有一定感情基础的社会横向关系网络。
+（6）协调疏通
+在正常情况下，协调疏通能使组织内的所有部分的行为达到和谐一致；使组织同外部环境之间的关系达到最佳状态。在特殊情况下，协调疏通又表现为一种消除矛盾、化解问题的“消防队”作用。`},
+  {ch:3, type:"essay", q:`简述资产阶级革命时期代表性报刊（含其他出版物）的情况及其发展特征。`, a:`自从尼德兰人民揭开了资产阶级革命的序幕后，英（1640年）、美（1775年）、法（1789年）等国先后进行了具有世界影响的资产阶级革命，这几个国家于革命前后发展起来的报业，在世界近代报业史上具有重要的地位和典型意义。而德、意、日等国，由于其资产阶级革命较为缓慢，直到19世纪中叶以后才通过民族统一战争或自上而下的变革，从封建社会演进到资本主义社会。由于缺乏相应的政治经济环境，它们的报业发展十分迟缓，直至19至20世纪之交，才逐渐赶上其他国家的步伐。
+（1）资产阶级革命时期代表性报刊（含其他出版物）
+①英国约翰·弥尔顿的政治小册子《论出版自由》，发表于1644年，18世纪在英、美、法广泛流传，是资产阶级反对封建势力、争取新闻自由的锐利武器。
+②美国潘恩的政治小册子《常识》，发表于1776年，控诉了英国的血腥压迫，鼓舞人民反英斗争的士气，被称为美国独立战争的号角。
+③法国马拉创办的《人民之友报》。1789年至1792年间出版，是资产阶级革命民主派的主要喉舌，同时也是法国大革命中最有影响的报纸，马拉宣称其办报目的在于教育人民运用自由。
+（2）资产阶级革命时期资产阶级报业的发展特点
+思想。①封建统治者压制出版自由，严禁资产阶级的书籍、政论小册子以及报刊宣传反封建的资产阶级民主
+②革命爆发后，资产阶级政论小册子与报刊冲破限禁、迅速发展，动员人民进行革命斗争。
+③革命胜利后，资产阶级报纸的作用发生了变化，从反对封建主义的舆论工具，转变为维护资本主义制度的工具。`},
+  {ch:3, type:"essay", q:`结合当前国际传播形势，阐述“国际新闻选择中的价值标准”。`, a:`新闻选择中的价值标准是指构成新闻的信息中所包含有的引起受众普遍兴趣的各种素质。
+（1）一般的新闻价值标准
+中西新闻界普遍认为，新闻价值的构成要素有五个：
+①及时。新闻是“易碎品”，时效越强越有生命力。
+②接近。事件发生的地点离读者越近，新闻价值就越大。
+③显著。显要人物引起的注意高于非显要人物。
+④重大。新闻事实对现实和未来的影响程度越大，新闻价值越大。
+⑤趣味。大多数受众对新奇、反常、变态、带人情味的东西更有兴趣。
+（2）国际新闻选择中的价值标准
+随着传播技术的创新和国际传播的飞速发展，跨文化传播中的差异、冲突和障碍也日渐显现，为此，学术界提供了一套用于国际新闻选择中的价值标准：
+①时间跨度。与时效性概念接近，但强调不同媒介组织的不同时效要求。例如，在几小时内发生完成的事件，适合于日报或广播电视。
+②强度或临界值。凡是特别重要，或重要性陡增引起特别关注的事件，就有可能受到媒介青睐。后者通常存在于某种媒介监测情况，如对政府、财政或一场不断扩大的冲突的监测。
+③清晰性。一件事情的意义越清晰，越少受到怀疑，接受新闻处理的可能性越大。
+④文化接近性或相关性。一个事件越接近预期受众的文化和兴趣，就越有可能中选。这里的文化是指由种族（民族）、语言、宗教、社会制度等因素决定的文化和社会价值观。
+⑤一致性。符合某些既定期待和预想的事件，比那些与期待不一致的事件更有可能中选。例如，人们预测某国可能发生危机或冲突，与此相关的事情更能引起关注。
+⑥意外性。事情越不平常，越难预料，就越有可能中选。
+⑦连续性。一旦某个事件被确认具有新闻价值，就会引起对该事件或相关事件的持续关注。
+⑧组合性。新闻事件的选择必须考虑媒介内容的整体构成和平衡，一些事件因作为对照而入选。
+⑨社会文化价值观。除了上述新闻要素外，社会、受众群体或记者、编辑的社会价值观也会影响新闻选择。`},
+  {ch:2, type:"essay", q:`结合资料简述广告对企业和消费者有哪些影响和作用（6分）。`, a:`（1）广告对企业的影响和作用
+①沟通产销信息，促进商品销售
+广告活动是伴随着商品经济的繁荣而逐步兴起的。企业要把生产的产品和劳务尽可能地让消费者消费和使用，就必须使消费者充分了解有关商品信息，才能获得被选择的机会。广告是运用一定的媒体传递信息的，是“扩散的销售促进”，超越时空限制，把商品和劳务等信息及时、有效地传达渗透给目标，多次、重复、“强迫”消费者注意，促进销售。
+②激发竞争活力，推动企业发展
+广告能增加竞争的声势、向消费者提供选择和比较、激发活力。广告把生产信息公布于众，必然促进企业开发市场，扩大生产，从而降低成本，提高市场竞争能力。与此同时，企业要在激烈竞争的市场中得到生存和发展，还要加快产品更新换代，积极采用新技术，开发新品种，以提高广告的质量和力度。广告
+反过来激发企业加固核心竞争力，以得到更强有力的广告诉求点。
+（2）广告对消费者的影响和作用
+①提供商品信息，帮助选择消费
+广告通过传播媒体，把有关商品信息发布传送给广大消费者，速度快、范围广、形象真。人们能够通过广告，知悉新的产品、品牌、服务；获取购买上的便利，扩大商品选择的范围，节省时间，减少失误。
+②刺激和引导消费，影响消费观念变化
+广告具有比较强的信息传递功能，总是在强化人们的需求，促使产生消费动机和购买欲望，采取购买行动。广告具备较大的引导作用，能够创造流行、时尚，提倡和推动新的生活方式，促进商品大量销售，降低企业成本和售价。广告还具有给予消费者宣传教育的功能。`},
+  {ch:2, type:"essay", q:`广告策划应包括哪些内容、应注意哪些问题（8分），并据此对海飞丝及清扬的广告策划做出评价（8分）。`, a:`（1）广告策划的内容和应注意的问题
+①确定广告目标。
+广告策划的首要任务，就是明确广告传播活动将要实现的目标。这需要考虑企业所面临的市场机会，目标消费者进入市场的程度，产品的生命周期和广告效果指标。
+需要注意的问题：a.不能与企业总体目标相背离；b.切实可行、具体实在，可操作和可衡量；c.能与其他部门尤其是营销部门协调配合；d.即效性和迟效性的统一。
+②明确广告对象。
+广告对象即为广告目标市场，也就是现实的和潜在的商品购买者。广告目标市场以企业目标市场为基础，并根据市场的变化和产品生命周期的不同阶段，需要及时加以调整。
+需要注意的问题是：确定广告目标市场，不应与企业目标市场有较大的偏差。广告目标市场应有一定的市场潜力；广告媒体可以到达，能使目标消费者最大程度地接触到广告信息。
+③提炼广告主题。
+广告主题是广告的中心思想，对广告主题进行构思、提炼，要以广告的宏观环境分析为基础，还要分析研究企业的内部经营环境。即企业的经营状况，商品特性，同时，竞争商品的有关信息也要考虑。
+④制订广告战略。
+广告战略是指按广告目标的要求，确定广告活动的方式方法，包括广告表现战略和广告媒体战略。广告表现战略通过广告创作来实现，广告媒体战略主要包括媒体的选择、确定广告发布日程和方式等项内容。
+⑤进行广告预算。
+正确编制广告预算，是广告策划的重要内容之一，是企业广告得以顺利开展的保证。
+⑥进行广告效果测定。
+（2）评价
+①不同的受众定位
+a.牢牢把握品牌年轻基调的清扬，目标锁定年轻精英白领。这与以去屑为主要诉求的消费者息息相关。相关研究表明，20～55岁年龄段的消费者中，有83％的人正受到不同程度的头屑困扰。头屑的滋长与新陈代谢有关，20-30岁的男人正值新陈代谢旺盛之际，此年龄段的消费者才是去屑市场的消费主力军。
+b．从去屑概念的全新定义到终端促销战略，从斥巨资邀请“天价C罗”代言到创新运用清扬科技2.0的男士系列升级上市，清扬坚持自己的年轻、张扬、专业的品牌个性。
+c.海飞丝通过成熟代言人这一符号，力图维护忠诚的中老年主顾。新品牌最大的市场武器是新，新是代表了新鲜、新颖、个性；但海飞丝20年积累起来的口碑、培养出来的用户忠诚度和强大的品牌信任度。2007年，以成熟稳重的形象深入人心的梁朝伟成为海飞丝的第一位男代言人，虽然期间海飞丝也尝试转型，但最终还是回归“熟男”形象，启用近五十岁的甄子丹为海飞丝男士新品代言。
+②相似的情感和心理诉求
+a.“做有销售力的广告”，是许多企业评判广告片好坏的标准。清扬广告片旨在寻找到最能打动目标消费者的功效诉求，即专注于具有双重强健头皮，持久去屑功效的清扬科技2.0上。加以运用C罗时尚、健康、活力的形象来呈现，十分符合清扬品牌定位及所要传达的高效去屑概念。精湛的球技及其在事业上的巨大成功使其成为众多球迷争相效仿的偶像。而清扬此次重金邀请C罗为品牌代言人，正是意在征服更多年轻、有作为的消费群。不仅成功要趁早，去屑也要像C罗一样“抢占先机”的明确定位为“双雄之争”增加了竞争筹码。最后不忘彰显清扬固有的张扬调性，“去赢、去征服”一句话，道出年轻精英白领内心的呼喊，找到消费者买点的再现。
+b.相比清扬年轻的品牌定位与清晰的去屑功效定位，海飞丝此次由甄子丹代言的男士广告，诉求点则稍显模糊。由于最能打动目标消费者的去屑功能诉求已经被对手把持，并传播得火热，海飞丝选择挖掘目标受众心中的第二需求点予以应对。然而全新提出的“强根健发”概念似乎削弱了海飞丝作为老牌去屑洗发水的一贯定位，更让人不禁有“防脱发产品”之联想。由甄子丹代言的男士广告，以“男人专心于大事”的职场男性心理切入，由此与男人的感性选择对话，力求在情感战中有所斩获。
+③销售市场各有千秋a.广告战已让此次双雄争霸进入白热化阶段，而终端市场才是短兵相接的前线。清扬的货架产品陈
+列几乎全部紧挨海飞丝。一时间，各个终端货架上通用与男士系列蓝白分明，令人炫目，清扬也逐渐通过视觉上的差异化在终端吸引并巩固起自己的用户群体。
+b.作为国内第一个提出“男性头皮并不相同”的品牌，清扬高调推广男女区分的去屑概念，并率先推出了清扬男士去屑洗发露，而如今最新升级的新清扬男士系列更是创新运用清扬科技2.0，使细分的四款男士产品更好地满足消费者去屑的功能诉求。自上市以来，清扬男士凭借与通用洗发水有别的炫蓝瓶设计，争抢了更多的消费者。据卖场促销员反映，清扬统一且具张力的瓶身颜色，第一时间吸引了前来购买的消费者眼球。这无疑为清扬在终端站增添了进一步扩大了男性市场的竞争优势。与此同时，清扬也将其品牌主色调黑色做得更为深入人心，无论是代言人的系列广告还是渠道宣传的品牌曝光及店内陈列，黑色酷炫的形象设计随处可见，对于消费者而言，这无疑也大大增加了清扬品牌的良好记忆度和辨识度。
+c．自2007年海飞丝全新包装的月牙形流线设计面市以来，市场曾经一片哗然，销量也提升显著。而海飞丝推出的新品男士强根健发洗发水仍旧沿用了月牙形流线设计，采取了和以往去屑系列同样的包装设计。针对市场反应，海飞丝在男士产品的瓶子上，立即贴上了代言人甄子丹的标识以弥补产品包装上的不足。虽然不知道目前海飞丝的销售情况，但从市场上来看，海飞丝显然已经感受到了巨大的压力，很多配套的促销活动，也是针对清扬做的。`},
+  {ch:2, type:"essay", q:`整合营销传播的含义和特点是什么（4分），结合案例资料分析海飞丝和清扬采取了哪些整合营销传播方式（4分）。`, a:`（1）整合营销传播的含义和特点
+整合营销传播是指统筹运用各种传播方式并加以最佳组合，以特定的目标群体为传播对象，传送基本一致的营销信息，促进联系和沟通的系统传播活动。
+整合营销传播的特点：
+①以消费者为中心，重在与传播对象的沟通。
+②注重各种传播方式的整合，使受众获得更多的信息接触的机会。
+③突出信息传播以“一个声音”为主。
+④强调传播活动的系统性。
+（2）海飞丝和清扬采取的整合营销传播方式
+整合营销传播方式通常是“推广组合”，即把人员推销、广告、公共关系和促销活动，正确而有效地组合成在一起的整体传播活动。
+①海飞丝采取的整合营销传播方式
+a．广告。海飞丝“有头屑，不行”，“头屑去无踪，秀发更出众”，“7大功效，彻底去屑”等广告层出不穷。面对清扬活跃的广告攻势，海飞丝打出“信任牌”，更换了新的广告诉求“从第一次开始就能有效去屑”，广告结束语为“谁的洗发水能做到？当然海飞丝”让消费者对海飞丝再次充满信心。6月，请梁朝伟拍摄新的广告片，主题是“信任海飞丝”。
+b．公共关系。2007年5月，针对清扬有关“20年谎言”的挑战，海飞丝调动自己的媒体公关力量，
+各大论坛上开始出现一些对清扬不利的论调，一些网站上开始出现质疑清扬产品功效以及清扬法国技术中心是否存在的话题。6月海飞丝联合中国皮肤医师协会、中国健康教育协会在桂林召开了首届全国头部皮肤健康峰会暨去屑技术高级研讨会。“信任海飞丝”的广告片与之相结合。
+c.促销活动。海飞丝利用自己长久以来对终端的影响力，积极扩大重点零售终端的自然陈列和付费陈列位置，抢订阶段性促销排期，占据重要卖场核心促销摊位。另外，海飞丝进行降价促销，使得清扬和海飞丝的价差进一步加大。
+②清扬采取的整合营销传播方式
+a．公共关系。2007年4月27日联合利华在北京召开新闻发布会，高调推荐该公司十年以来推出的第一款新产品，首款男女区分的去屑洗发水“清扬”。根据2007年3月中国保健协会公布的《中国居民头皮健康状况调查报告》数据：20年来，中国消费者受头屑困扰的人群比例由原来的70％上升为83％，清扬在日后的公关活动中广为引用，暗指这个“20年谎言”的缔造者是海飞丝。
+b．广告。锁定年轻人士，由台湾主持人小S代言，针对“海飞丝20年去屑谎言”，打出“说话算数”的去屑广告语。
+c．促销活动。清扬在全国大规模招聘促销员，提供比其他品牌促销员高出2倍的薪资标准。2007年3月上市到5月，清扬全国300个大卖场的促销员几乎没有下过终端。4月在全国核心城市超过300家店建立去屑现场体验区。6月与沃尔玛等核心大卖场开展清扬环保行动，鼓励以旧换新。`},
+  {ch:4, type:"noun", q:`《常识》`, a:`《常识》是促使美国从不列颠帝国中独立出来的出版物。作者托马斯·潘恩1774年在富兰克林的帮助下到达北美大陆，投身于北美的独立事业，并在1776年以“一个英国人”的名义发表了《常识》。《常识》成为北美人民的斗争纲领，其思想被随后的《独立宣言》所吸收。“在1776年的北美大陆，几乎人手一本《常识》。在当时的英国，它是《圣经》之后影响力最大，流传范围最广的一本书。整个世界、整个的现代政治文明都从这本书里得到启蒙。”它鼓舞了美国人民战斗的决心和勇气，被认为是独立战争的响
+亮号角。`},
+  {ch:4, type:"noun", q:`红色中华通讯社`, a:`红色中华通讯社，简称“红中社”，是新华社的前身，是临时中央政府机关通讯社，1931年11月
+7日在瑞金成立，每日发稿一两千字，主要为临时中央政府文告、宣言、红军战报和根据地建设消息。还利用红军电台抄收国民党“中央社”电讯和外国通讯社英文稿，经编辑后油印为“参考消息”（曾用名《无线电材料》《每日电讯》），供中央机关参阅。1934年10月随红军长征，途中新闻广播中断，但抄报未停，1935年11月在陕西瓦窑堡恢复新闻广播。1937年改名为新华社，新中国成立后不断发展壮大。`},
+  {ch:4, type:"noun", q:`《京话日报》`, a:`《京话日报》是一份以市民读者为主要对象的时事性政治报刊，是辛亥革命以前北京最重要、最有影响力的白话报。《京话日报》于1904年8月16日在北京创刊，由彭翼仲创办并自任社长，1906年9月28日被清廷查封，彭翼仲被流放新疆。`},
+  {ch:4, type:"noun", q:`布鲁默的“自我互动”理论`, a:`布鲁默的“自我互动”理论是布鲁默在1968年出版的《象征互动论》中提出的一种理论。该理论认为，人能够与自身进行互动，即自我互动。人是拥有自我的存在，人在将外界事物和他人作为认识和行动的对象的同时，也把自己作为认识和行动的对象。在这个过程中，人能够与自己进行沟通与传播，并能够对自己采取行动。布鲁默认为，“自我互动”在本质上是与他人的社会互动的内在化。不过，“自我互动”并不是与他人的社会互动在头脑中的简单再现，而是一个能动的、创造性的过程，经过这个过程不断改变原来的自我，形成新的意志和行为主体。布鲁默的这个观点说明，人内传播是现实社会传播关系的反映，通过自我互动或自我传播，人能够在与社会、他人的联系上认识自己、改造自己，不断实现自我的完善和发展。`},
+  {ch:4, type:"noun", q:`“两面提示”`, a:`“两面提示”是指对某些存在对立因素的问题进行说服或宣传，通常会有两种做法：一种是仅向说服的对象提示自己一方的观点或于己有利的判断材料，称为“一面提示”；另一种是在提示己方观点或有利材料的同时，也以某种方式提示对立一方的观点或不利于自己的材料，称为“两面提示”。“两面提示”由于给对立观点以发言机会，给人一种“公平”感，可以消除说服对象的心理反感，但由于同时提示对立双方的观点，论旨变得比较复杂，理解的难度增加，在提示对方观点之际如果把握不好分寸，反而容易造成为对方做宣传的结果。`},
+  {ch:4, type:"noun", q:`作为权利主体的受众`, a:`作为权利主体的受众是指：当把受众看作社会成员和公众时，受众拥有各种各样的正当权利。受众不仅仅是传媒信息的使用者或消费者，他们还是构成社会的基本成员，也是参与社会管理和社会公共事务的公众。受众在大众传播过程中享有的基本权利包括：①传播权。传播权是构成社会的每个成员所享有的基本权利之一，在传统上称为表现自由或言论自由的权利。②知晓权。广义上，知晓权是指社会成员获得有关自身所处的环境及其变化的信息、保障社会生活所需的各种有用信息的权利，从这个意义上而言，它也是人的生存权的基本内容之一。狭义上，知晓权是指公民对国家的立法、司法和行政等公共权力机构的活动所拥有的知情或知察的权利，这是公民的一项基本政治权利，也意味着公共权力机构对公民负有信息公开的责任和义务。③媒介接近权。即一般社会成员利用传播媒介阐述主张、发表言论以及开展各种社会和文化活动的权利，同时，这项权利也赋予了传媒应该向受众开放的义务和责任。`},
+  {ch:4, type:"noun", q:`非商业广告`, a:`非商业广告，是指为了达到某种宣传的目的而做的广告，不含有商业性质，不获取盈利，如政治的、法律的、文化的广泛宣传，以及通知、公告、说明、启事等，亦称非经济广告。非商业广告主要三类：政治广告、公益广告和个人广告。非商业广告和商业广告有以下几点不同：①非商业广告与商业广告最明显的差异在于广告的内容及赞助者即广告主之不同。②商业性广告的盈利公司，他的广告内容通常为有形的商品或劳务，反之，非商业性广告通常强调动机、创意、态度及观点。③两者的广告目标更有显著的不同，商业广告是期待销售产品或劳务，非商业广告则是企图改变大众态度，或使社会运动普及。`},
+  {ch:4, type:"noun", q:`购买方式`, a:`购买方式是指消费者购买行为的特点和表现，由消费者的购买决策所决定形成多种购买方式。主要包括：①复杂性购买，当消费者初次选购价格昂贵、购买次数较少的、冒风险的和高度自我表现的商品时，由于对这些产品的性能缺乏了解，为慎重起见，他们往往需要广泛地收集有关信息，并经过认真地学习，产生对这一产品的信念，形成对品牌的态度，并慎重地做出购买决策。②和谐型购买，消费者购买一些品牌差异不大，但价格高的商品时，虽然他们对购买行为持谨慎的态度，但他们的注意力更多地是集中在品牌价格是否优惠、购买时间、地点是否便利，而不是花很多精力去收集不同品牌间的信息并进行比较，而且从产生购买动机到决定购买之间的时间较短。③多变型购买，消费者购买的商品品牌间差异大，但价格低，可供选择的品牌很多时，他们并不花太多的时间选择品牌，专注于某一产品，而是经常变换品种。④习惯性购买，消费者有时购买某一商品，并不是因为特别偏爱某一品牌，而是出于习惯。`},
+  {ch:4, type:"noun", q:`中国公共关系联合会`, a:`中国公共关系联合会是中华人民共和国公共关系联合会的简称。中国公共关系联合会旨在坚定不移地走中国特色的社会主义道路，以科学发展的态度，加强公共关系的理论研究，促进中国特色的社会主义公共关系事业的发展，联络国内外公共关系组织、相关机构和人士，增进相互了解，大力弘扬中华文化，开展国际文化交流和经济合作，并积极参与国际、国内公共关系活动，全面促进中国大陆与港、澳、台以及世界各国公共关系事业的交流发展，积极推动全世界人类社会的和平与进步谋福祉，为中国特色社会主义建设服务，为提升国家国际形象、祖国统一，让世界了解中国，让中国走向世界出谋划策，为构建全人类和谐社会的伟大目标，并最终为实现中华民族的伟大复兴做出贡献。`},
+  {ch:4, type:"noun", q:`潜在公众`, a:`潜在公众与现实公众相对应，是指将来有可能与组织发生直接利益关系的公众。潜在公众是由非公众转化而来的。对潜在公众可以有两种理解：一种是指有待开发，但尚未与组织发生任何利益关系的那部分公众，或称“潜在顾客”“潜在用户”；另一种是指已经和组织发生了某种关系，并由此出现了某些问题，但自己尚未意识到问题存在的公众群体。`},
+  {ch:4, type:"short", q:`如何运用传播实例解释“两级传播”理论？`, a:`（1）“两极传播”理论的含义
+“两极传播”理论由拉扎斯菲尔德等人提出，他们在伊里调查中发现大众传播并不是直接“流”向一般受众，而是要经过意见领袖这个中间环节，即“大众传播-意见领袖-一般受众”。这即是两级传播概念的产生。
+（2）实例分析“贾君鹏”事件是网络口碑营销的一个经典案例。2009年7月16日，有人在网上发帖：“贾君鹏你妈妈喊你回家吃饭”。这样一个12字网帖莫名蹿红，短短两天回复数达300621，点击数达760万。正是娱乐至死这样一个时代造就了一次成功的网络口碑营销。
+该事件是由重庆一家传媒公司的CEO、网络营销专家敖春华主导的。他曾服务于各大知名品牌，他率领公司的10名员工们进行两个月的反复思量和流程设计，动用了四个执行席媒介，轮班监测执行情况，两小时一次电话汇报。总计动用网络营销从业人员800余人，注册ID2万余，回复10万余。大量的网络任务交给兼职的网民去完成。在引发轰动效应后，策划团队撤出，他们的回帖只占真正网络回帖的3％。根据这个赚了“6位数”的网络口碑营销个案，可以对两级传播论进行进一步的分析。
+人际传播比大众传播更经常并且更有效。舆论领袖，在“贾君鹏”事件中可具体到兼职网民，在人际传播中的作用不可小视，他是一个告知者、说服者和证实者，在一定的领域发挥作用，他们容易被接触，混迹于各大MSN，SNS 发布消息，很容易引起注意，而且其言论很容易被与其同阶层的人接受，它既是受众的一部分，又影响着其他大批受众，同时舆论领袖又同宣传媒体和各种交易的中间商联系紧密，舆论领袖正是网络口碑营销的核心。信息，媒体，受众三合一的两级传播论是网络口碑营销的理论支持。`},
+  {ch:4, type:"short", q:`如何正确认识“把关人”的理论与实质？`, a:`（1）“把关人”的理论
+①“把关人”这个概念，最早是美国社会心理学家、传播学奠基人之一的库尔特·卢因提出的。1947
+年，卢因在《群体生活的渠道》一书中再次论述了这个问题，认为在群体传播过程中存在着一些“把关人”，只有符合群体规范或“把关人”价值标准的信息内容才能进入传播的渠道。
+②1950年，传播学者怀特将这个概念引进新闻研究领域，明确提出了新闻筛选过程的“把关”模式。这个模式说明：社会上存在着大量的新闻素材，大众传媒的新闻报道不是也不可能是“有闻必录”，而是一个取舍选择的过程。在这个过程中，传媒组织形成了一道“关口”，通过这道“关口”传达到受众那里的新闻只是众多新闻素材中的少数。
+（2）“把关人”过程的实质
+怀特的“把关”模式只是对新闻信息的取舍选择过程的一种简单概括，它指出了经过大众传媒这道关口，某些新闻入选、某些新闻遭到舍弃这一事实，但并没有说明哪些新闻会人选或遭到舍弃，而正是后面这个问题，才涉及“把关”过程的实质。
+①传媒进行这种取舍选择的标准，首先涉及新闻信息的客观属性问题。新闻信息有两个本质属性：a.新闻信息必须有真实性，它传达的是客观的事实而不是虚构或捏造的事物；b.新闻信息必须具有及时性和新意，过时的事件、历史的回忆等，不能成为新闻。不具有这两个属性的信息，不能作为新闻加以传播。
+②新闻的选择受到新闻制作中的业务标准和新闻传播中的市场标准的制约。这主要从新闻价值和新闻要素上理解。新闻价值，是指对一个事件能否成为新闻所做的价值判断。新闻要素，即构成这种价值判断的各种因素，包括时新性，重要性，显著性，接近性，趣味性。
+③新闻价值或新闻要素研究，揭示了市场标准是新闻选择中“把关”的重要标准，理解这一点具有重要意义。但市场标准并不是唯一的“把关”标准。传媒组织除了具有经营目标以外，还有自己的宣传目标或社会目标。
+综上所述，大众传媒对新闻和信息的选择或“把关”活动是一个复杂的过程。在理解把关活动的实质之际，人们不应仅止于新闻价值或新闻要素分析，而是应该把政治、经济和意识形态因素考虑在内。其原因，具体如下：
+第一，大众传媒的新闻或信息的生产与传播并不具有纯粹的“客观中立性”，而是依据传媒的一定立场、方针和价值标准所进行的一种有目的的取舍选择和加工活动。
+第二，新闻和信息的选择受到媒体的经营目标、受众需求以及社会文化等多种因素的制约，但是，与媒介的方针和利益一致或相符的内容更容易优先人选、优先得到传播。
+第三，传媒的“把关”是一个多环节、有组织的过程，其中虽然也有记者、编辑个人的活动，但在媒介内部控制机制的作用下，个人因素所起的作用是有限的。“把关”过程及其结果，在总体上是传媒组织
+的立场和方针的体现。`},
+  {ch:4, type:"short", q:`简述处理社区关系的一般做法。`, a:`社区作为组织的经营场所和办公地点的所在地，是组织赖以生存的环境。处理好与社区的关系是组织公关工作的重要任务。
+（1）社区关系的含义
+社区是一个社会性的概念，是指由共同生活于一定区域的人们因利益关系紧密而构成的一种社会集体。具体地说，居住于一定区域、具有共同联系并彼此交往的人们，就构成了一个社区。例如村庄、集镇、街坊邻居、城市的一个市区或郊区，甚至整个城市，都是在规模上大小不一的社区。
+社区是一个相对独立的地域性社会，每个社区都有其特定的人口和特定的地理区域，其居民之间有着某些共同的利益，以及重要的社会交往。社区关系亦称“区域关系”“地方关系”。它是指社会组织与其所在地的地方政府、社会团体和其他组织以及当地居民之间的邻里关系。
+（2）建立良好社区关系的意义
+建立良好的社区关系，是为了争取社区公众对组织的了解、理解和支持，为组织创造一个稳固的生存环境；同时体现组织对社区的责任和义务，通过社区关系扩大组织的区域性影响，其意义表现在以下几个方面：
+①社区关系之间影响着组织的生存环境。
+社区如同组织扎根的土壤，没有良好的社区关系，组织就会失去立足之地。社区公众是由特定的活动空间所确定的，区域性、空间性很强。地方性组织的活动直接受社区公众的制约，社区关系便直接影响着组织其他各方面的关系，如员工家属关系、本地顾客关系、地方的政府关系和媒介关系风。跨区域的组织也不能脱离特定的区域，甚至要善于同各种不同背景的社区公众打交道，以争取社区提供各种地方性的服务和支持，使跨区域性组织能够在各种完全不同的社区环境下生存和发展。
+②社区关系之间影响着组织的公众形象。
+社区公众涉及当地社会政治、经济、文化、教育等各个方面和阶层，类型繁多，涉及面广，对组织客观上存在着各种不同的感受、要求和评价；由于处在同一社区，对组织的某一种评价和看法又极容易相互传播，形成区域性的影响，从而形成组织的某一种公众形象。组织的社区关系好坏，直接影响着组织的社会公众形象。
+（3）处理社区关系的方法
+①树立居民意识。
+从社区公众的角度来看，不论组织的性质、规模等方面如何，但有一点是共同的，那就是每个组织都是社区的一员。因此，组织应自觉遵守社区的各种规定，服从社区公约、行为规范，承担为社区应尽的各种义务。
+②为社区建设尽职尽责。
+组织在社区除了尽量做好一个好“居民”外，还需要为社区建设尽职尽责，充分利用自己的技术、资金、人才和设备等方面的优势，积极支持社区的全面发展和建设，多为社区提供无偿的服务。
+③维护社区的生态环境。
+随着全球对环境危机的日益关切以及政府对环境的重视，生态环境问题已成为当前组织所面临的一项重大问题。组织应当树立公众利益优先的思想，在生产经营过程中应树立环保的新形象。为此，组织应花大力气改革传统的工艺流程，减少各种污染，包括水污染、空气污染、噪音污染等，并积极参加绿化工程，开发绿色环保产品，适应绿色消费，通过各种活动来保护环境。`},
+  {ch:4, type:"short", q:`简述公共关系传播有哪些目的？`, a:`（1）公共关系传播的含义
+公共关系传播，就是指社会组织综合运用多种传播媒介和传播方式，系统地、有计划地与相关公众以及所在社会进行双向的信息交流，以沟通双方的认识，协调双方的关系，树立起良好的组织形象，进而促进社会文明的建设和社会整体的发展。
+（2）公共关系传播的目的
+①向公众提供组织的有关信息。
+社会组织要使公众对自己的工作、行为、目标有所理解和支持，要使组织中公众中建立起良好的形象，其根本前提就是要让公众对组织的行为、目标有所了解。这就要求公共关系人员必须借助于最有效的传播和沟通手段，经常地向公众提供及时、准确和有说服力的关于组织的最新信息和情况。同时，要想向人们提供有关组织的准确信息，还必须借助沟通渠道了解公众对组织的有关信息，以便使公共关系传播向公众提供的信息更有针对性和说服力。
+②影响和改变公众对组织的态度。
+社会组织自身形象的好坏直接体现在公众对组织持有的态度之中。公众态度可以分为正态度和负态度，前者是对组织的肯定性评价，后者则是对组织的否定性评价。虽然人们的态度一旦形成就会具有相对稳定的特征，但是随着信息的不断交流和外界条件的变化，人们的态度也是可以转变的。公共关系传播活动就是运用各种传播手段和媒介来促使公众对组织产生好感，由负态度转变为正态度。
+③引起社会组织所期待的公众行为。
+公共关系传播除了向公众提供信息，改变公众的态度以外，更主要的是促使公众对组织采取理解和支持的行为。公共关系传播的功能就在于要社会组织适应公众环境，要公众环境适应社会组织，从而使社会组织同公众之间达到完美和谐的统一。`},
+  {ch:4, type:"essay", q:`试述1949年以来香港报业的发展过程及其阶段性特征。`, a:`（1）随错综复杂的政治斗争报业逐渐发展
+①战后香港医治战争的创伤，报业逐渐复苏并得以发展。从二战结束到60年代中期，是香港当代报业的第一阶段，这一时期影响香港报业布局和报纸内容的主要因素是中国的政治局势。1949年前后中国共产党和台湾国民党都在香港布置宣传阵线，香港的报业因此而形成左右对峙、左中右三派并存的局面。战后左派爱国报纸发展很快，主要有《大公报》《文汇报》《新晚报》《晶报》《香港商报》，在五六十年代全盛时期，它们曾三分香港报业的天下。香港《大公报》创办于1938年，战后直到年代中，主要由费彝民等负责该报以报道则一经新闻为主，以工商界人士为主要读者对象。《大公报》同时着力经营副刊，并曾一度刊载市民喜闻乐见的武侠小说、马经等内容，创出了特色。香港《文汇报》创刊1948年，其宗旨是以文会友、以文报国，宣传中华文化、促进内外文化的交流，内容重心放在文教方面，以文员和学生为主要读者对象。
+②五六十年代香港的右派报纸也颇具竞争力。台湾国民党在香港的宣传喉舌《香港时报》，主要进行反共宣传及宣扬国民党的成就。该报创办于1949年，在台北设有分社，报纸半数销往台湾，《香港时报》的业务特点是，着重经营体育版，体育新闻吸引不少读者。香港还有一些拥护或倾向国民党的商办报纸，其中以《工商日报》为代表。这家大报战前在香港已举足轻重，战后一度与《华侨日报》《星岛日报》几成“三报鼎立”之势。该报支持和拥护台湾国民党政府的重大政策，其读者主要是商界的亲台人士、亲台的“自由工会”的职工。此外，香港部分中间报纸的立场也倾向台湾，在报眉上印有“中华民国”的字样，较有名的有《华侨日报》《星岛日报》。《华侨日报》较注重台湾消息，称台湾为“自由中国”，不过该报在报道手法上能保持中立，允许刊登一些有利于中国大陆的新闻。
+（2）在快速腾飞的经济带动下市场化报纸兴盛
+①70年代到中英谈判之前，是当代香港报业的第二个发展阶段。香港经济的起飞，为报业的蓬勃发展提供了条件。就报社数量而言，70年代堪称香港报业发展史上最兴旺的时期。随着香港社会本土意识的增强，一批以本地意识为价值取向的商业化报纸，成为香港报业的主流，其中尤以走大众化路线的报纸影响最大。这些报纸较多报道富刺激性或阴暗面的内容，如灾难、犯罪、暴力、性等，并以提供娱乐内容为主，文字上简洁通俗、常用方言俚语。《成报》在二十多年里，一直是办得最成功的一张大众化报纸，销量冠全港报纸之首，但70年代末，创办不到十年的《东方日报》后来者居上，成为近年来香港销量最大的报纸。此外《天天日报》《新报》《快报》等，都是较有影响的大众化报纸。这些大众化报纸以赚钱为目的，奉行在商言商的宗旨，迎合读者的需要，提供不少消遣娱乐的内容和社会环境方面的消息，但同时对社会风气和各层次的读者，也形成负面的影响，对青少年影响尤其大。
+②70年代严肃类报纸也在发展，这些报纸注重政治、经济、国际关系、社会福利等内容，比较关心社会事务，重视分析和评论，有较高的采编水平，不搞煽情宣传。在香港，严肃报纸能够生存，主要因为它们创出了特色，《明报》是一个代表。《明报》最主要的特色是其着力经营的中国报道。从60年代开始，该报的中国新闻和有关言论就开始引人注目，内地“文化大革命”中，该报大量刊登文革消息，是除左派报纸外，首家开辟中国消息专版的报纸，并在副刊开辟多个专栏刊登有关中国的“内幕新闻”，备受读者注意。70年代《明报》销量跻身于日报的第三位，仅次于大众化的《东方日报》和《成报》。这个时期专业性报纸也开始发展，香港经济的飞速发展和股市的空前兴旺，给财经类报纸提供较大的发展空间。
+（3）过渡时期香港报业异彩纷呈
+①过渡时期香港新闻界的社会责任意识逐渐增强，各报对前途的关注就是表现之一。在中英谈判前后，香港报纸纷纷报道“前途新闻”，热闹一时。中英联合声明签署之后，香港报纸的活跃情况和对未来的关注，达到空前的程度。所有报纸均将香港基本法的起草、筹备委员会的工作以及未来特区政府的运作等，作为重大新闻。同时中英对香港事务的安排，如新机场问题、交接仪式事务，也受到传媒的广泛注意。
+②过渡时期“中国因素”又开始受到重视。内地改革开放以后，香港报纸获得内地新闻的渠道更广。中英就香港前途的会谈掀起香港记者到大陆采访的第一个热潮，多家报纸开始创设“中国组”，一批采访“两地关系”的记者应运而生。英文《南华早报》《虎报》在报道中国新闻上竞争激烈，中文报纸也更重视中国新闻的质量。香港报纸对中国新闻的报道，内容逐渐多元化，经济消息和软性新闻所占比重增加，而经济报道的重点逐渐从宏观政策转向微观动态。
+（4）报业管理的香港化
+进入新时期，有关香港新闻传媒的话题，成为香港人谈论的热点之一，其中讨论最多的是新闻自由问题。新闻自由涉及传媒与政治的互动、传媒与政府的关系、新闻法规、新闻道德、新闻自律等多方面的问题。香港有充分的新闻自由，香港的新闻自由又是在多种矛盾中求生存。港英政府制定严苛的管制新闻媒介的法令，但奉行的则是立法严，执法宽的政策，让媒介享有较多的新闻自由。`},
+  {ch:4, type:"essay", q:`论述马克思恩格斯的精神交往理论。`, a:`（1）精神交往论的含义
+①交往是一个体现人的总体活动之关系性的概括性范畴。在生产力发展的一定阶段上的一切物质交往，是指以物为媒介的人与人的交往关系。观念、思维、人的精神交往，是指以语言为媒介的人与人的精神交往关系。
+②马克思、恩格斯把交往作为与生产力和分工同等重要的范畴来看待。他们认为交往与生产，从人类诞生起就存在着密不可分的关系，没有生产，就不会有交往；没有交往，也就不会有生产。分工产生于生产的需要，而交往则是实现生产和分工的保障。生产力、分工和交往的发展程度，不但决定着一个社会或民族的内部结构，而且制约着他们的外部关系。
+③人类的生产活动可以分为两类：一类是物质生产，即生产必需的物质生活资料的生产，与此相应的是人与人之间的物质交往活动；一类是精神生产，即表现在某一民族的政治、法律、道德、宗教、形而上学等的语言中的生产，与此相应的则是人与人之间的精神交往。
+④物质生产和精神生产构成了人类生产活动的总体，而物质交往和精神交往则构成了人类交往活动的总体。
+（2）精神交往与现代传播间的关系
+①联系
+精神交往是指以语言为媒介的人与人的社会关系，而在现代传播学当中，传播指的是以信息为媒介的人与人的社会关系，两者涉及的对象和范畴并没有多大差异。
+②区别
+a.在行为主义传播学里，传播基本上作为孤立的精神或心理现象来看待，他们往往单纯地就信息研究信息、就传播研究传播，而马克思主义精神交往理论则要求把精神交往放在人类社会交往的大系统中加以考察，不但要研究人的精神活动本身，而且要研究精神活动与物质活动的关系、与物质生产和物质交往的关系，有助于我们从更广阔的视野来观察人类社会的传播活动和传播关系。
+b.马克思、恩格斯认为，精神交往是与精神生产相联系的，离开了精神生产，就没有精神交往。精神生产既然属于一种生产，必然也存在着生产力和生产关系的辩证运动，因此，人们的精神交往关系也与一定阶段上的精神生产力发展水平以及精神生产资料的占有方式密切相关。美国的行为主义传播学有意无意地回避这些重大问题，因而不能从根本上揭示人与人之间的传播关系的本质。
+c.从马克思主义观点来看，精神生产既然是一种生产，就必然有它的产品。精神生产的产品在现代社会更多地表述为信息，从事精神产品生产的行业称为信息产业。物质产品的消费大多是一次性的，而信息产品的消费则一般是多次性的。精神内容的生产与一定的思想、观念、意识、道德、政治、法律、宗教和意识形态相联系，这是马克思主义的一个基本观点。美国行为主义传播学虽然不否认信息中包含着思想观念和价值倾向，然而却不想从信息的生产过程和生产结构中去寻找这些倾向产生的原因。
+（3）精神交往论的启示
+①一定的精神生产和精神交往与一定的物质生产和物质交往相适应。
+人类的精神生产和精神交往起源于物质生产和物质交往活动，物质生产力的发展水平对精神生产和精神交往起着重要的制约作用，精神生产和精神交往关系反映着物质生产和物质交往关系。研究现代信息社会，决不能忽视精神生产资料的占有方式和社会制度对信息生产和信息传播的制约作用。
+②精神生产和精神交往除了受到物质生产和物质交往制约，还有其独立性和能动性。
+这主要表现在精神生产和精神交往的发展，反过来也推动着物质生产和物质交往的发展。在物质生产达到一定的发达程度之际，精神生产的状态如何将会成为制约社会发展的主要矛盾。精神生产和精神交往既然与物质生产和物质交往相区别，那么它就具有与物质生产和物质交往不同的特殊规律。`},
+  {ch:3, type:"essay", q:`什么是广告战略？（4分）案例中所说的王老吉的蓝海战略的实质是什么？（6分）`, a:`（1）广告战略是指在一定时期内指导广告活动的带有全局性的宏观谋略。广告战略是广告发布者在宏观上对广告决策的把握，它是以战略眼光为企业长远利益考虑，为产品开拓市场着想。广告战略具有全局性、指导性，对抗性、目标性、稳定性的特征。它规范着广告活动的实施并对各个广告环节有指导作用。
+广告战略的目的是提高广告宣传效果，使企业以最低的开支达到最好的营销目标。在当今市场竞争日趋激烈的情况下，一个企业、一种产品要在市场上取得立足之地，或者为了战胜竞争对手以求得发展，几乎都与正确地运用广告战略有着密切关系。广告战略是依据市场营销战略，为广告活动策定包含如下内容的基本计划：①以市场营销战略为核心，具有明确的广告目的；②选定为达成其目的的目标市场；③设定诉求主题；④媒介组合；⑤与其他促销活动相互配合，相互协调。
+广告战略经过周密的调查研究，高瞻远瞩，审时度势，从战略的眼光出发，进行长远的全局的谋划，不失时机地为着实现企业总的战略目标服务的。正确的营销战略，是广告战略的基础；敏锐的战略眼光，是制定有效的广告战略的前提。
+（2）王老吉的蓝海战略的实质
+王老吉公司的蓝海战略提出了其准确的定位，包括其产品、广告主题以及包装价格等。从此以后王老吉不再陷于药饮和普通饮料难以界定的尴尬局面，而是将自身定位为具有预防上火功效的饮料。王老吉采用了差异化战略，从一种新角度来满足市场需求，开创新的市场空间，提升其产品的核心竞争力。同时在准确定位的基础上，通过央视以及地方强势媒体的组合进行大规模宣传，使其顺利地引起消费者注意，迅速在饮料市场占有了一席之地。王老吉的蓝海战略打破了价格与成本之间的常规法则，在实现差异化的同时，还实现了规模化和低成本，并且协同和提升了整个企业经营活动。`},
+  {ch:3, type:"essay", q:`请结合案例说明广告定位与广告战略的关系。（6分）`, a:`（1）广告定位是广告代理和企业根据消费者的需求、关注点和偏爱，确定准备宣传的商品的市场地位，也就是在市场上树立产品的恰当形象，确定其所扮演的角色。定位的重点在于对潜在消费者的心理施加影响，使其产生一种符合广告主心愿的印象。
+（2）广告战略是广告定位的基础和前提，广告战略根据营销计划和前期的调查与分析确定目标受众，了解目标受众、受众特点、受众对产品类别和产品品牌的态度及使用习惯。王老吉将其产品定位为功能型饮料是在寻求差异化广告战略的前提下提出，是差异化广告战略的有力体现和诠释。
+（3）广告定位是广告战略的细化和提升。王老吉确定了功能型饮料的新市场定位，使其广告战略更加清晰和形象化，因此凭借该定位提出了“怕上火，喝王老吉”的广告主题。通过广告宣传在消费者心目中快速形成品牌认知，为王老吉的广告战略进一步推广和实施添足了马力，强化了战略实施的可操作性。`},
+  {ch:3, type:"essay", q:`请结合红罐王老吉的做法，说明广告定位的方法有哪几种？（6分）请用你自己的理解，阐述“怕上火，喝王老吉”这一新的广告定位与原来相比有哪些优势？（8分）`, a:`（1）广告产品定位策略包括实体定位策略和观念定位策略两大类。
+①实体定位
+a.功效定位。功效定位就是在广告活动中突出产品的特异功效，使该产品在同类产品中有明显区别，以增强选择性需求。它是以同类产品的定位为基准，选择有别于同类产品的优异性为宣传重点，以增强产品的竞争力。
+b.品质定位。品质定位是通过强调产品具体的良好品质而对产品进行定位。其实质也就是通过广大消费者对产品品质的认识来启动自己的需求欲望和购买欲望并在其心目中确定了产品的位置。
+c.市场定位。市场定位是市场细分策略在广告中的具体运用，将产品定位在最有利的市场位置上。它又称目标市场定位。
+d.价格定位。价格定位是指因产品的品质、性能、造型等方面与同类产品相近似，没有什么特殊的地方可以吸引消费者，在这种情况下，广告产品便可以运用价格定位策略，使商品的价格具有竞争性，从而击败竞争对手。
+②观念定位
+a.逆向定位。逆向定位是借助于有名气的竞争对手的声誉来引起消费者对自己的关注、同情和支持，以便在市场竞争中占有一席之地的广告产品定位的方法与策略。
+b.是非定位。是非定位是从观念上人为地把产品市场加以区分的定位方法。
+c.品牌定位。产品的高级阶段是形成该行业的品牌，也就是说品牌是对所有产品信息的综合。这个过程正是广告的用武之地。
+（2）王老吉新广告定位的优势
+①王老吉新广告展现了王老吉从“凉茶”到“功能性饮料”的功效定位变迁及准确诉求，是王老吉深度差异化战略的有力诠释，富有成效地把竞争者一步步甩开，开拓了一片竞争较小的市场空间，开拓了功能性饮料的蓝海市场，获得了差异化和低成本的复合效果，实现了产品的价值创新，赢得了强大的市场竞争优势，夯实了自身的品牌实力。
+②“怕上火，喝王老吉”新的广告定位，利用了产品本身药用价值，提高了王老吉的品牌势能，在受众心目中形成了强烈的产品及品牌认知，王老吉是可以祛火的功能观念在消费者的消费过程中逐步变得根深蒂固。
+③“怕上火，喝王老吉”新的广告定位所带来的消费者心理需求上的满足，更增加了王老吉在市场竞争上的成功砝码。当今中国社会正处在改革开放及经济发展的转型时期，与此同时，伴随着信息技术革命所带来的全球化也使公众从心理上感受到了更多的不确定因素，这内外双重叠加的不确定性，使得公众承受了超乎以前任何时代的心理压力，从而演变成了一种心理“上火”所导致了精神焦虑。“怕上火，喝王老吉”的广告诉求，从深层次和潜意识里可以帮助公众在一定程度上消除这种焦虑，使消费者在实体价值之外得到了心理、情绪等方面的更大满足和安慰，这是王老吉新定位的隐性优势，也是更为强大的优势。`},
+  {ch:5, type:"noun", q:`小报`, a:`小报最早出现于北宋末年，盛行于南宋，是中国古代的非法报纸。其内容以邸报还没有发表或不准备发表的“朝廷之差除，台谏百官之章奏”为主，旨在为关心政局的官僚士大夫提供参考；小报所刊载的消息，不完全可靠；有时被利用来作为党同伐异的材料。发行小报的是一部分驻在首都负责传送邸报的各地进奏官、个别政府中下级官员、一部分坊间书肆的主人。宋朝的封建统治者严禁小报的出版，但难为禁绝。元明清等朝也出现过类似小报的出版物，当时称为“小本”“小钞”或“报条”，同样遭到封建统治者的查禁。`},
+  {ch:5, type:"noun", q:`《法兰西共和国公报》`, a:`《法兰西共和国公报》是巴黎公社时期最重要的报纸。它原是梯也尔政府机关报，1871年3月18日起被法国国民自卫军接管，巴黎公社成立后成为公社机关报，共出版66期。该报除发布重要宣言、法令、决议和指示外，还澄清事实真相，戳穿敌人的谎言。后该报印刷发行业务落入私人之手，文风刻板，不太关心群众利益。`},
+  {ch:5, type:"noun", q:`“黄色新闻”`, a:`黄色新闻是指以煽情手法炮制的新闻。它是建立在煽情主义基础上，注重犯罪、丑闻、流言蜚语、离婚、性的问题，强调灾害和体育新闻的报道。黄色新闻报道的特殊做法包括：①使用大字号煽动性标题（黑体字或套红色印刷），经常对不甚重要的新闻加以渲染、夸张，整个报纸版面给人以耸人听闻的虚感；②滥用照片，以至偷窃和伪造照片；③种种欺骗手法，如捏造访问内容和新闻报道，歪曲性的标题，假科学，假学术；④星期日增刊，登载彩色滑稽连环画和肤浅的文章；⑤标榜同情“受压迫者”，发动运动反对平民所遭受的欺辱。`},
+  {ch:5, type:"noun", q:`传播过程的直线模式`, a:`传播过程的直线模式是指描述传播过程的“5W模式”和“香农-韦弗”的数学模式通称为。这种模式的缺陷是没有考虑到传播的反馈因素和体现社会传播因素的双向性。1948年，哈罗德·拉斯韦尔在其《传播在社会中的结构与功能》一文中提出这个模式，被视为传播过程研究的经典模式，称之为“拉斯韦尔公式”。该模式将传播过程分为以下五个基本要素（谁who、说什says what、通过什么渠道in which channel、对谁 to whom、取得什么效果 with what effect），并按照一定的结构顺序将它们排列。1949年，C．香农（ClaudShannon）和W.韦弗（Weaver）在《传播的数学理论》中提出的用以解释电报通信过程的传播模式。他们认为，整个传播过程中存在与通道中的噪音干扰可能会导致发出的信号与接收的信号之间产生差别，从而使得由信源发出的讯息与由接收器还原并到达信宿的讯息二者的含义可能不一样。数学模式把传播描述成一种直线的单向传播过程，整个过程由5个环节和一个不速之客 噪音构成。“噪音”概念的引入，是这一模式的一大优点。`},
+  {ch:5, type:"noun", q:`媒介控制`, a:`媒介控制通常包括国家和政府的政治控制，利益群体和经济势力的控制，广大受众的社会监督控制，传媒的内部控制等。①国家和政府的政治控制是媒介控制的主要方面。这种控制的目的，是通过规定大众传播体制，制定有关法律、法规和政策，来保障媒介活动为国家制度、意识形态以及各种国家目标的实现服务。②媒介控制中存在着种种社会利益群体和经济势力的控制。由于这些控制也是在一定社会制度和传播制度的范围内进行的，因此也带有明显的制度性因素。社会群体能够通过自己的媒介来维护自身的利益，传播自己的主张。资本主义制度下，除了垄断资本和少数大利益集团外，一般社会群体的传播权利是不能得到保障的，传播媒介的控制权主要掌握在垄断资本手中。③许多传播内容会直接影响到受众的利益。因此，广大受众对传播媒介的活动拥有进行社会监督的正当权利。受众进行社会监督控制的手段包括：
+a.个人信息的反馈。b.结成受众团体，以群体运作方式对媒介活动施加影响。c.诉诸于法律手段。d.通过影响媒介的销售市场来制约媒介活动。④传媒的内部控制。传媒的内部控制是指大众媒介的编辑方针，是大众传媒的自律。`},
+  {ch:5, type:"noun", q:`意见领袖`, a:`意见领袖是指活跃在人际传播网络中，经常为他人提供信息、观点和建议，并对他人施加个人影响的人物。他们在大众传播效果的形成过程中起着重要的中介或过滤的作用，由他们将信息扩散给受众，形成信息传递的两级传播。意见领袖一般颇具人格魅力，具有较强综合能力和较高的社会地位或被认同感。在社交场合比较活跃，与受其影响者同处一个团体并有共同爱好，通晓特定问题并乐于接受和传播相关信息。在信息传播中，信息输出不是全部直达普通受传者，有的只能先传达到其中一部分，而后再由这一部分人把讯息传递给他们周围的最普通的受众。有的讯息即使直接传达到普通受众，但要他们在态度和行为上发生预期的改变，还须由意见领袖对讯息做出解释、评价和在态势上做出导向或指点。`},
+  {ch:5, type:"noun", q:`购买决策过程`, a:`购买决策过程一般由引起需要、收集信息、评价方案、决定购买和购买后行为五个阶段构成。①引起需要，从购买者对某一问题或需求的认识开始。内在的和外部的刺激因素都可能引起需求。②收集信息，一位被唤起需求的消费者可能会去寻求更多的信息。消费者信息来源主要有个人来源（如家庭、朋友、邻居、熟人）、商业来源（如广告、推销员、经销商、包装、展览）、公共来源（如大众传播媒体、消费者评审组织等）、经验来源（如处理、检查和使用产品）等。③评价方案，消费者的评价方案包括：a.产品属性；b.属性权重；c.品牌信念；d.效用函数；e.评价模型。④决定购买。⑤购买后行为。消费者在购买产品之后会体验某种程度的满意感和不满意感。营销者必须监视购后满意、购后行为、购后产品的使用和处理。购买者的满意感是其产品期望和该产品可认知绩效之间的函数。`},
+  {ch:5, type:"noun", q:`地方性广告`, a:`地方性广告是针对本地的广告。地方性广告强调价格、可获得性、地理位置以及营业时间等信息。地方性广告主是积极的整合营销传播的倡导者。地方性广告的传播范围更窄，市场范围更小，选用的媒介多是地方性传播媒介，如地方报纸、电台、电视台、路牌、霓虹灯等。地方性广告多为配合密集型市场营销策略的实施，广告宣传的重点是促进人们使用地方性产品，或认店购买。`},
+  {ch:5, type:"noun", q:`《舆论明鉴》`, a:`《舆论明鉴》是爱德华·伯奈斯（或译为爱德华·伯内斯）所著的第一本公共关系专著。1923年出版，它的出版标志着系统的公共关系学科研究的开始。该书首次提出并论述“公共关系咨询”的概念，并阐述了“公共关系咨询”的两个作用：①推荐导致商业界和工业界执行合理的社会行为的对策；②通过宣传这些政策和行为，为其委托人赢得公众的支持和好感。该著作在公共关系理论的发展史上具有重要意义。`},
+  {ch:5, type:"noun", q:`危机公关的“3T”原则`, a:`危机公关的“3T”原则是危机处理的一个法则，有三个关键点，每个点以“T”开头，所以称之为“3T”原则。具体包括：①Tell You Own Tale（以我为主提供情况）。强调政府牢牢掌握信息发布主动权。②Tell It Fast（尽快提供情况）。强调危机处理时政府应该尽快不断地发布信息。③Tell It All（提供全部情况）。强调信息发布全面、真实，而且必须实言相告。该原则由英国危机公关专家里杰斯特（M.Regester.Michael）在《危机管理》（Crisis Management）一书提出，强调危机处理时把握信息发布的重要性。`},
+  {ch:5, type:"short", q:`简述传播制度如何体现“全部社会结构和社会关系的复杂性”。`, a:`（1）大众传播概述
+大众传播是一个具有强大影响力的社会信息系统，任何一个国家和社会都会把它纳入社会制度的轨道，
+因此大众传播也是一种制度化的传播。
+大众传播在特定的社会制度条件下进行。传播制度是现代社会结构的重要组成部分。社会制度，是指在特定的社会活动领域中围绕着一定目标形成的具有普遍意义的、比较稳定的和正式的社会规范体系，包括政治法律制度、经济制度和思想文化制度等。一定的社会制度对大众传播的控制，体现为一定形态的传播制度，因此，传播制度也就是社会制度中对大众传播活动直接或间接地起着制约和控制作用的部分。
+（2）传播制度作为社会制度的反映，反映着现代社会诸多社会关系
+其内容十分复杂，它体现了社会制度或制度性因素在各个方面对传播媒介活动的制约和影响。传播制度中既包括媒介与政府的关系问题，也包括媒介与社会群体以及广大受众的关系问题；既包括言论出版的自由与权利问题，也包括言论出版者所应承担的社会责任和义务问题。
+（3）传播制度体现了全部社会结构和社会关系的复杂性
+传播制度从国家和政府的政治控制、各种利益群体和经济势力对传播媒介的控制，以及广大受众的社会监督控制这三个方面对大众传播起着控制和制约作用的社会规范体系。`},
+  {ch:5, type:"short", q:`简述群体传播的社会功能。`, a:`人以群体的形式进行活动，是人的社会性的体现。每一个人都生活在一定的群体之中，是群体传播的参与者。
+（1）群体传播具有重要的社会功能，即群体是将个人与社会相联结的桥梁和中间纽带。群体是社会的中观系统，是社会的组成部分，或是“局部社会”。
+（2）个人在参与社会活动之际，首先是作为局部社会-群体的一员出现，一个人如果不能做一个合格的群体成员，同样也做不了合格的社会成员。群体帮助个人完成社会化过程，训练和分配社会角色，形成社会规范和准则，调节和控制个人的行为。
+（3）群体传播，有助于社会秩序的维持，使社会秩序的连续性得到保证。
+（4）群体通过社会分工与协作，将分散的个人力量集结起来，能够完成个人所不能完成的社会工作和事业。因此，群体同样是推动社会发展的重要力量。`},
+  {ch:5, type:"short", q:`我国当代广告业的发展经历了哪几个阶段？`, a:`我国当代广告业的发展经历了以下几个阶段：
+（1）初步恢复阶段
+从20世纪50年代一直到70年代末“文化大革命”结束，这段时间由于计划经济体制和政治环境的影响，中国的广告业处于停滞甚至消亡的状态。户外广告被拆除，换成政治宣传标语；报纸数量减少，报纸广告逐渐消失。
+中国共产党第十一届三中全会召开，会议提出将全党的工作重心转向社会主义现代化建设，这标志着改革开放时代的到来。1979年初，报纸媒体率先恢复广告业务。广告解禁，并逐步被社会接受。广告管理逐渐规范化。1981年，中国对外经济贸易广告协会成立。1982年，国家工商总局下设广告司，国家工商总局颁布《广告管理暂行条例实施细则》。国有大型广告公司组建。1981年，中国广告联合总公司成立，它是我国第一家集团性广告公司。广告研究和广告教育起步1983年，厦门大学开办广告学专业，这是我国高等院校开办的第一个广告学专业。
+（2）补偿性发展阶段
+经过了复苏时期的发展，20世纪80年代中期到90年代中期的中国广告业进入到一个以“低起点、高速度”为特点的补偿性发展阶段。市场上存在着大量中小型公司，在经营过程中也有很多不规范的行为。
+在这个阶段，不少国内企业逐步认识到广告的作用，在广告特别是电视广告上的大量投入造就了一批知名品牌，这些品牌包括燕舞、大宝、太阳神、健力宝、郑州亚细亚等。尽管此时广告主的广告活动还相对单一，但是市场反应却非常好。在经历长期的物资短缺经济之后，这些率先进行广告宣传的企业，很容易就在消费者的空白心智中留下了深刻的印象。这一阶段从广告中得到好处的企业正在经历它们与广告的
+“蜜月期”。
+从20世纪80年代中期以来，全球顶尖的广告公司陆续登陆中国，这些公司最初进入中国市场的直接理由是它们代理的国际品牌客户进入了中国市场。
+（3）转型发展阶段
+20世纪90年代中期以来，上一个10年出现在中国广告市场的那种高速发展已发生明显的转变，在大多数年份，广告营业额的增长都在10％～20％之间。广告市场营业额增长率的趋缓。
+经过长时间的酝酿之后，《中华人民共和国广告法》于1994年颁布，并于次年正式实施。
+在本阶段，作为广告主体重要组成部分的媒介格局发生很多变化，这些变化包括报纸扩版、省级卫视上星、互联网渗透率提升、楼宇广告等新型广告形式涌现等等。广告主趋向成熟。国际化广告公司在这个阶段完成了从登陆到布局到占据领导地位的过程。广告行业格局的这种变化是经济全球化的必然结果。`},
+  {ch:5, type:"short", q:`简述公共关系传播的模式。`, a:`（1）公共关系传播是指特定的社会组织为实现公共关系目标，综合运用各种传播方式和传播媒介，有计划地与公众进行信息交流沟通的活动过程。
+（2）公共关系传播的基本模式
+对于公共关系实践中所形成的传播模式，美国的葛罗尼格（J.E.Gruning）和亨特（T.Hunt）把它概括为四种模式：宜传型、公共信息型、双向非对称性、双向对称型。
+①宣传型模式。这种模式旨在通过新闻宣传制造轰动效应，以吸引公众的注意力，传播性质为单向。
+②公共信息型模式。传播组织的真实情况，以便公众了解组织，传播性质为单向
+③双向非对称型模式。这种模式目的在于通过科学方法，诱导和劝服公众接受组织的某种观点，并进而支持组织的行为方式，此传播模式性质虽为双向，但其在组织和公众之间的效果并不均衡，它相对来说只有利于组织，公共关系人员作为信息的提供者吸引公众的反馈意见仅为提高诱导劝服工作的有效性。
+④双向对称型模式。它强调对话，注重坦诚、完整、准确的双向交流，目的是促进相互理解，其传播性质是双向的，且在组织和公众之间的传播效果是均衡的。
+（3）公共关系传播模式的发展趋向
+从历史的、发展的角度来分析这四个传播模式，还可看到人类对公共关系传播这一事物的认识发展趋向。这种发展趋向主要表现为：
+①对公共关系传播功能的认识，从主观宜扬，客观提供信息，科学诱导，到促进相互理解的发展趋向。
+②对公共关系传播方式的认识，从线性的单向传播、利用反馈的双向沟通，到双向传播沟通的发展趋向。
+③对公共关系传播关系的认识，从任意支配公众、不对称的双向沟通关系，到双向对等共享信息的传播关系的发展趋向。`},
+  {ch:5, type:"essay", q:`以埃德加·斯诺为例，简述早期外国记者对中国社会的客观报道及其积极作用。`, a:`（1）埃德加·斯诺在中国的活动
+①埃德加·斯诺简介
+埃德加·斯诺，美国新闻记者、作家，1928年秋来到中国，1928年9月至1930年3月，在美国人办的报纸《密勒氏评论报》任助理编辑、代理主编等职，兼任美国《芝加哥论坛报》驻远东记者，发表不少新闻作品，描绘了中国人民的苦难生活。1933年至1935年，任燕京大学新闻系讲师，同时兼任美国《纽约太阳报》和英国《每日先驱报》特约记者。“一二·九”运动爆发后，积极支持爱国的学生运动。
+②斯诺在革命根据地的采访活动
+1936年6月，斯诺在中国共产党地下组织的联系与协助下，离开北平到达西安，后进入陕北革命根据地。斯诺在陕北根据地进行了广泛的采访，见到了毛泽东、周恩来等中共领导人，又到甘肃、宁夏红军前线部队访问彭德怀等军队领导人。毛泽东多次同他长谈，包括他的革命经历和长征的经过等。斯诺还拍摄了许多照片，其中有著名的毛泽东头戴缀有五角红星的八角帽的照片。
+③《西行漫记》的出版
+1937年，在这些报道的基础上，他写成《红星照耀中国》一书，中文版书名为《西行漫记》。由于这
+部书较早地公开介绍了中国共产党的革命斗争及其领导人的情况，出版后广泛流传，影响巨大，成为传诵一时的名著。
+（2）早期外国记者对中国社会的客观报道及其积极作用
+早期的外国进步记者，怀着崇高的职业使命感，以极大的勇气，甚至冒着生命危险深入革命根据地域进行采访报道。他们的报道对中国的抗战胜利、统一战线的维护以及取得国际的支持等方面都起到了重要的作用。纵观早期外国记者对中国社会的客观报道，其积极作用主要体现在以下三个方面：
+①打破了国民党的新闻封锁，展现了革命根据地的真实面貌。
+抗战的大部分时间，国民党一直对革命根据地实行严密的新闻封锁，企图割断解放区与外界的联系。与此同时，国民党顽固派还用一切不实之词对共产党中央及八路军、新四军进行造谣、诬蔑。而外国记者对于革命根据地的采访报道，打破了国民党的新闻封锁，戳穿了国民党的造谣、诬蔑，向世人展现了中共和根据地的真实面貌。
+②架起沟通之桥，推动中国共产党为世界舆论所接受。
+由于国民党的新闻封锁和造谣、诬蔑，使得美英等盟国对中国共产党缺乏基本的认识。他们对于中共的抗战情况只能得到一些片面的、间接的甚至是国民党当局编造出来的虚假信息。而外国记者对共产党的报道就成为盟国政府官员了解中共的重要渠道，也成为盟国政府对华决策过程中的一个重要信息来源。
+③制约了国民党当局的反共图谋，维护了抗日民族统一战线。
+抗日民族统一战线是中华民族抗战取得胜利的根本保证，而国民党顽固派却不断挑起事端破坏统一战线，致使统一战线多次面临破裂的危险。共产党为维护抗日民族统一战线，与国民党顽固派进行斗争的同时也做出了巨大的牺牲。对共产党的这些正义之举，外国记者进行了大量的报道，并积极呼吁维护统一战线，国共共同抗日。
+外国记者关于国共关系与统一战线的报道、呼吁形成了有利于统一战线的舆论氛围，这种舆论氛围在一定程度上制约了国民党当局的反共图谋，维护了抗日民族统一战线。`},
+  {ch:5, type:"essay", q:`以快速发展着的新媒体为背景，阐述你的“受众观”。`, a:`网络等新媒体以一种势不可挡的态势在急速发展，传统的受众观在新时期出现了融合的现象，受众不再是单纯的某一种受众，而是多种受众群体的集合。新媒体背景下的受众观表现为以下几种：
+（1）作为社会群体成员的受众
+①受众作为社会群体的成员，并不是孤立的存在，而是分属于不同的社会集团或群体，有着不同的社会背景。受众对大众传媒的接触虽然是个人的活动，但这种活动通常受到他的群体归属关系、群体利益以及群体规范的制约。
+②传播学研究表明，受众的群体背景或社会背景是决定他们对事物的态度和行动的重要因素，这种影响有时甚至超过大众传播的影响。拉扎斯菲尔德等人进行的IPP指数分析就证明了这一点。
+③政治既有倾向假说。拉扎斯菲尔德等人提出了“政治既有倾向假说”，即在人们就选举或其他政治问题做出决定之际，这种决定并不取决于一时的政治宣传和大众传播，而是基本上取决于他们迄今所持的政治倾向。
+④选择性接触假说。受众在接触大众传播的信息时并不是不加选择的，而是更愿意选择那些与自己的既有立场和态度一致或接近的内容加以接触，而对与此对立或冲突的内容有一种回避的倾向。
+（2）作为“市场”的受众
+①麦奎尔认为，如果从市场的角度考虑问题，受众可以定义为特定的媒体或讯息所指向的、具有特定的社会经济侧面像的，潜在的消费者的集合体，即把受众看作是信息产品的消费者和大众传媒的市场。
+②“受众即市场”的观点，反映了传媒活动的某些特性，如经营性、商品性和竞争性，也能够揭示受众作为消费者某些行为特点。但是，从传播学的角度来看，这个概念是不完善的。不能将受众简单地等同于物质商品的消费者，也不能将传媒简单地等同于生产和提供物质商品的企业，归根到底，这由精神产品的生产和消费过程的特殊性所决定。
+（3）作为权利主体的受众
+受众不仅仅是传媒信息的使用者或消费者，他们还是构成社会的基本成员，也是参与社会管理和社会
+公共事务的公众。当把受众看作是社会成员和公众时，受众拥有各种各样的正当权利。受众在大众传播过
+程中享有的基本权利包括：
+①传播权
+传播权是构成社会的每个成员所享有的基本权利之一，社会成员是社会实践和社会生活的主体，他们
+有权将自己的经验、体会、思想、观点和认识通过言论、创作、著述等活动表现出来，并有权通过一切合
+法手段和渠道加以传播。
+②知晓权
+从广义上来讲，是指社会成员获得有关自身所处的环境及其变化的信息、保障社会生活所需的各种有用信息的权利。
+从狭义上来讲，知晓权是指公民对国家的立法、司法和行政等公共权力机构的活动所拥有的知情或知察的权利，这是公民的一项基本政治权利，也意味着公共权力机构对公民负有信息公开的责任和义务。
+③传媒接近权
+传媒接近权即一般社会成员利用传播媒介阐述主张、发表言论以及开展各种社会和文化活动的权利，同时，这项权利也赋予了传媒应该向受众开放的义务和责任。`},
+  {ch:6, type:"noun", q:`《大清报律》`, a:`《大清报律》是清末时期清政府颁布的一部关于规定报纸出版印发的律例。1908年3月14日，《大清报律》奉旨颁行，至1911年1月29日经修改并改名为《钦定报律》再次颁行。该报律共45条，险岩前些时候制定与颁行的报刊禁载的规定全部收入外，还新增了不少限制性条款，1910年清政府再次修订（大清报律》，并将修订本交资政院和军机处审议。1911年修订后的《钦定报律》共38条，另有4个附条保存了原报律的主要内容。`},
+  {ch:6, type:"noun", q:`《向导》周报`, a:`《向导》周报是中共中央第一个政治机关报，1922年9月13日在上海创刊，蔡和森为第一任主编。《向导》周报以报道评论国内外时事政治为主要内容，致力于阐释贯彻中国共产党制定的反帝反封建的民主革命纲领，国共合作后大力宣传中国共产党关于建立各个革命阶级统一战线的政治主张，1927年7月18日终刊。`},
+  {ch:6, type:"noun", q:`斯克里普斯报团`, a:`斯克里普斯报团是指美国第一个，也是世界上第一个报业集团。该报团形成于1885年，由著名报人爱德华·斯克里普斯创建。斯克里普斯报团下的报纸大多是廉价的大众报，在报纸业务方面，创办人斯克里普斯坚持用小标题和短消息，省去多余的字句，使报纸刊登尽可能多的消息和评论。报纸基本上代表了下层民众的利益。现在名称为“斯克里普斯-霍华德报业公司”。作为美国最老的报团，仍是美国较大的报团之一，一共拥有20多家报刊和十几家广播电视台，它的报刊业与电子传播产业的比例是7：3。`},
+  {ch:6, type:"noun", q:`流言`, a:`流言是指一种信源不明、无法得到确认的消息或言论，通常发生在社会环境具有较高的不确定性、正规的传播渠道不畅通或功能减弱的时期。流言的传播方式一般是口头的、非正式的、非官方的。在这些方面它与谣言有共同之处，但流言一般不是故意去伤害某人。某些流言具有消极的作用，甚至引起社会混乱，但它在动机和目的上与谣言是有区别的。集合行为中的主要信息形式是流言，但它与常态下的流言不同，其特点是流言信息的快速增殖，流言信息的回流和恶性循环，流言中伴随着大量的谣言。`},
+  {ch:6, type:"noun", q:`集合行为`, a:`集合行为是指在某种刺激条件下发生的非常态的社会集合现象。多以聚集、恐慌、流言、骚动的形态出现，往往对正常的社会秩序造成严重的干扰和破坏。集合行为不属于群体行为，其传播受到若干特殊传播机制的制约，包括群体暗示和群体感染。集合行为发生的基本条件有五个：①环境条件。即物质条件或必要的社会条件。②结构性压力。指经济萧条、自然灾害、失业等社会因素对社会一般人产生的心理压力，部分社会成员企图摆脱这种压力是产生集合行为的原因。③诱发因素。是指民众对社会的信任程度越来越低。④正常社会传播系统的功能减弱。⑤流言等非常态的传播机制活跃化。`},
+  {ch:6, type:"noun", q:`拟态环境`, a:`拟态环境是说明大众传播社会影响力的重要概念，由美国学者李普曼提出。拟态环境即传播媒介通过对象征性事件或信息进行选择、加工并重新结构化以后向人们提示的环境。李普曼认为，在大众传播产生之后，人与环境的互动关系发生了明显的变化，传统社会中人的行为是对环境的直接反应，而在现代社会，“人与其环境之间插入了一个拟态环境”，人的行为在很大程度上成了对拟态环境的反应。`},
+  {ch:6, type:"noun", q:`中华广告公会`, a:`中华广告公会是民国时期成立的广告协会。1927年在上海成立的中国广告公会，是我国广告同业的最早组织。1927年，上海“维罗”“耀南”等六家广告社组织发起成立了中华广告公会，创办人是维罗广告社的王梓濂和耀南广告社的郑耀南，当时组织广告公会，主要是为解决同业之间的纠纷和争取共同的利益，是当时规模较大、持续时间较长、产生一定影响的广告行业组织。`},
+  {ch:6, type:"noun", q:`广告战略调查`, a:`广告战略调查帮助广告公司明确广告活动针对的目标市场、目标市场中消费者的特征和偏好、市场竞争状况、品牌在消费者心目中的形象，以及对该类产品而言重要的因素等。广告战略调查决定广告“对谁说”“说什么”的问题。研究广告战略的目的是提高广告宣传效果，使企业以最低的开支达到最好的营销目标。`},
+  {ch:6, type:"noun", q:`公共关系要素`, a:`公共关系是指某一组织为改善与社会公众的关系，促进公众对组织的认识，理解及支持，达到树立良好的组织形象，促进商品销售的目的的一系列公共活动。它本意是社会组织、集体或个人必须与其周围的各种内部、外部公众建立良好的关系。公共关系由三个要素组成：①社会组织，在公共关系的三大构成要素中，处于主体地位，它具有主导性；②公众，是公共关系的客体，具有权威性；③传播，是构成公共关系的中介，它具有效能性。`},
+  {ch:6, type:"noun", q:`积极型公共关系状态`, a:`积极型公共关系状态是指组织机构有目的、有计划地实施各种活动之后所形成的公共关系状态。人们一般把公关状态分为“消极型”与“积极型”。“消极型公共关系状态”是指各方在无意识中形成的公共关系状态。任何一个社会组织，不论自觉与否，在社会生活中都有一个相对固定的关系状态，也是特定时期组织在公众心目中的形象。`},
+  {ch:6, type:"short", q:`简述“文化帝国主义”。`, a:`（1）文化帝国主义的含义
+文化帝国主义，是指个别文化高压国家凭借文化优势利用各种手段，大力拓展和占领世界文化市场。利用先进的科学和发达的国民教育使文化始终居世界领先地位，大力开拓和占领世界文化市场，企图将这种一国的文化优势变成世界性的文化优势，它是以一种文化模式来取代世界文化的多元性和多样性的过程，是现代帝国主义总过程的一部分。
+（2）文化帝国主义的特点
+①它以强大的经济、资本实力为后盾，主要是通过市场而进行的扩张过程。
+②它是一种文化价值的扩张，即通过含有文化价值的产品或商品的倾销而实现的全球性文化支配。
+③由于信息产品的文化含量最高，因此这种文化扩张主要是通过信息产品的传播而得到实现的。
+（3）文化帝国主义的实质
+在文化扩张的过程中，由于大众传播媒介是一种最有力的制度化手段，因而文化帝国主义也称为媒介帝国主义。对文化帝国主义表示担忧的已不仅仅是发展中国家，不少发达国家也对此引起了警惕，从而积极制定措施来维护自己的民族文化和传统文化。`},
+  {ch:6, type:"short", q:`如何看待大众传媒的公共性与公益性。`, a:`（1）大众传媒是传递新闻信息的载体，包括报纸、通讯社、广播、电视、新闻纪录影片和新闻性期刊的总称。大众传媒活动的制约因素除了社会制度和意识形态以外，主要来自于它的公共性和公益性。
+①大众传媒的公共性是指它们作为社会公众了解沟通外界的重要信息来源，是为整个社会所共有的，不仅新闻工作者具有使用参与大众传播的权利，社会公众也具有使用大众传媒进行监督、批评、请愿等权利。
+②大众传媒的公益性是指大众传媒是某些稀有公共传播资源的受托使用者，作为公共财产的使用人，它们必须对社会和公众承担相应的责任和义务。
+（2）公共性和公益性的依据包括三个方面：
+①大众传媒是现代社会必不可少的信息生产者和提供者，在满足社会的普遍信息需求方面起着一种公共服务的作用。
+②大众传媒的信息传播活动对社会的政治、经济、文化、道德具有广泛而强大的影响，这种影响涉及普遍的社会秩序和社会公共生活。
+③大众传媒是某些稀有的公共传播资源的受托使用者，必须对社会和公众承担相应的义务和责任。
+公共性和公益性是大众传媒的权利的基础，也是其责任和义务的依据。`},
+  {ch:6, type:"short", q:`简述广告与市场营销的关系。`, a:`（1）广告活动和市场营销都是商品经济发展到了一定程度的产物。作为一门学科的建立，是市场经济孕育的结果。从一开始，这两门学科就紧密地结合在一起，相互影响，密不可分。
+（2）广告与市场营销的关系可以体现在如下两个方面：
+①广告活动是营销活动的组成部分。
+作为一种组织职能，市场营销传统上由四类活动构成，分别是生产、定价、分销和促销，广告是营销组合中促销活动可能采用的多种手段之一。广告策略要服从于市场营销策略，作为营销活动的先导，在市场营销的总体目标下发挥作用，体现了一种整体与局部的关系。
+②广告在“创造、沟通和传递顾客价值”中扮演重要角色。
+顾客价值不仅仅是由产品或者服务本身创造的，广告对于品牌的塑造是形成消费者价值感知的重要来源。`},
+  {ch:6, type:"short", q:`简述公共关系传播的原则。`, a:`公共关系传播的原则包括：
+（1）目的明确原则
+公共传播是带有明确目的性的传播，它的总目标是树立、改善组织形象，形成有利的舆论环境，获得各界的支持。公共传播根据传播效果四层次理论，可分为四种：
+①引起公众注意。
+②诱发公众兴趣。
+③取得公众的肯定态度。
+④促发公众的支持行为。
+（2）双向沟通原则
+双向沟通原则是指传播双方互相传递、互相理解的信息互助原则。具体包含以下内容：
+①沟通必须由两人以上进行。
+②沟通双方互为角色。
+③沟通双方相互理解并有所交流。
+（3）平衡理论原则
+平衡理论原包括两种方式：
+①A-A式平行沟通。公共传播就是要创造A-A式平行沟通，即双方均以成人状态参与沟通，并随时注意公众反应，不断调节。
+②感情沟通。平衡理论要求在沟通中诉诸情感，通过情感互动和思想交流，产生接近与认同，达到状态一致和关系平衡。
+（4）有效沟通原则
+有：
+公共传播追求的是有效沟通，即通过沟通使公众理解、喜爱、支持组织。影响与公众有效沟通的因素
+①信息的真实性与信息量的大小。坚持公关信息传播的真实性原则。传播中的所有信息和所进行的各种活动必须是真实的。
+②传播者的方式与态度。
+③传播内容的制作技巧与传播渠道的畅通。
+（5）符合公众利益、注重社会效益的公关传播伦理原则
+传播中坚持组织利益和公众利益一致的原则。`},
+  {ch:6, type:"essay", q:`分析廉价报纸产生的社会历史条件及其特征。`, a:`（1）廉价报纸产生的社会历史条件
+①廉价报刊是指工业革命后各国先后出现的面向社会中下层的通俗小报，因售价低廉而得名。
+②廉价报纸出现的原因在于：社会经济飞速发展，城市化进程加快，人口迅速集中，为报纸大量发行流通提供了条件；经济的发展需要普遍高劳动者素质，于是教育有所普及，粗通文字的平民增多，形成了新的广大读者群；阶级力量发生新的变化，工业资产阶级和工业无产阶级同时在扩大，这就推动了各国政治变革的进程，使办报的政治环境逐步改善；高速轮转印刷机的产生，降低了印刷成本，报纸印得更快更多；随着工商业的繁荣，广告数量大为增加，广告费收入成为报社的主要来源，报纸廉价销售成为可能。
+（2）廉价报刊的特征
+①政治上标榜独立，不受制于某个政党。
+②经济上自主经营，不依赖政府或政党的津贴。
+③读者对象为平民大众，也称大众化报纸，这是一种新兴的资产阶级商业报纸。
+④内容上注重地方新闻、社会新闻以及各种消闲性、趣味性的软新闻。
+⑤形式上文字通俗，版面活泼，可读性强。
+⑥经营上完全商业化，大量刊登广告，以此来降低售价，扩大发行，进而赢得更多的广告。
+廉价报纸的出现使商业报纸更加兴盛，逐步成为资产阶级报业的主体，并为其向现代报业演变奠定了基础。`},
+  {ch:6, type:"essay", q:`从提升中国国际传播力的角度阐述“信息主权”问题。`, a:`（1）信息主权的含义及内容
+信息主权是指一个国家对本国的信息传播系统进行自主管理的权利，是信息时代国家主权的重要组成部分。
+它包括三方面的内容：
+①对本国的信息资源进行保护、开发和利用的权利。
+②不受外部干涉，自主确立本国的信息生产、加工、储存、流通和传播体制的权利。
+③对本国信息的输出和外国信息的输入进行自主管理和监控的权利。
+（2）信息主权的问题及其重要性
+冷战结束后，个别超级大国并没有放弃制霸全球的战略，反而加速了实施这一目标的步伐。其主要策略是：
+①直接使用军事手段对其他主权国家实行高压政策。
+②使用经济制裁、经济掣肘或制造金融动荡来左右别国经济局势。
+③使用信息手段来干预别国内政、煽动民族矛盾、制造社会混乱。在跨国传播技术十分发达的今天，信息手段成了个别霸权国家干涉别国内政的最常用、最廉价手段。
+随着世界格局的变化和全球信息化的发展，跨国传播中的信息主权以及文化冲突问题成为人们新的关注内容。对信息主权的重视和保护，已成为各国规划和建设本国信息系统的重要指导思想。
+（3）信息主权与国家主权和提升国际传播力的关系
+①信息主权的概念是在全球信息化、国家主权面临新的威胁因素的背景下提出来的。全球信息化使各国国内信息系统与全球信息系统连成一体，国内系统受到国外因素更为直接的影响。来自外部的信息干扰，有可能使一国的信息系统遭到破坏，使国家失去危机管理能力而陷于混乱。尤其是在世界信息单向流通的不平衡结构下，传播弱国的信息主权没有任何保障，这种状况使它们在政治、经济、文化各个领域处于极为不利的状态。
+②信息主权是国家主权的有机组成部分，是提升国际传播力的重要保证。一个国家对自己的信息传播资源和传播制度应该拥有主权，这是在信息时代保障国家主权完整的重要条件。对于中国这样一个发展中大国来说，掌握信息主权，是保障国家主权完整，提升国际传播力的必要条件。`},
+  {ch:5, type:"essay", q:`阅读案例材料，并回答下列问题：`, a:`（1）对“网络公关”的特征进行分析。（5分）
+分）（2）结合此案例谈谈中央外宣办等四部门联合开展整治非法网络公关行为专项行动的必要性。（10
+据媒体报道，2010年7月16日，某报刊登了一篇所谓“深海鱼油造假严重”的新闻，随即网上相继出现大量宣传“深海鱼油不如地沟油”的攻击性文章。
+之后，网络攻击深海鱼油的行动有组织地向深层次发展，攻击添加深海鱼油的产品不能食用，最后矛头直指伊利实业集团股份有限公司生产的“QQ星儿童奶”，煽动消费者抵制加入了深海鱼油的伊利“QQ星儿童奶”。
+随后，相关文章纷纷出现在我国大型门户网站论坛、个人博客和百度等主流网站的问答栏目。
+伊利集团公司迅速向呼和浩特市公安局经济技术开发区分局报案，呼和浩特市警方随即立案侦查。
+警方经过为期两个多月的缜密侦查发现，这起看似商战的事件，实为“一网络公关公司受人雇佣，有组织、有预谋、有目的、有计划，以牟利为目的实施的”损害企业商业信誉案。
+警方证实：2010年7月14日，蒙牛“未来星”品牌经理安勇与北京博思智奇公关顾问有限公司共同商讨炒作打击竞争对手-伊利“QQ星儿童奶”的相关事宜，并制定网络攻击方案。
+据警方介绍，这些网络攻击手段包括：寻找网络写手撰写攻击帖子，并在近百个论坛上发帖炒作，煽动网民情绪：联系点击量较高的个人博客博主撰写文章发表在博客上，并“推荐到门户网站首页”“置顶”“加精”等操作，以提高影响力；以儿童家长、孕妇等身份拟定问答稿件，“控诉”伊利乳业公司，总计涉及费用约28万元。网络炒作历时一个月，其中点击量最高的一个帖子点击数达20余万人次。警方表示，这起案件目前已告破，涉案人员已被刑拘。
+（1）“网络公关”的特征
+①网络公关是指利用互联网的高科技表达手段营造企业形象，为现代公共关系提供新思维方式、策划思路和传播媒介的方式。
+②“网络公关”的特征：
+a.“网络公关”具有聚焦性。
+网络传播已经成为目前公共关系传播的主要形式之一。网络公关的本质还是传统公共关系学，承载在“网络”媒介形态上，应用了互联网这一新媒体平台，运用了传播的技巧和互联网新媒体来进行的一项专业公关服务。网络的特殊性使得危机的信息传播比危机本身的发展要快得多。
+b.“网络公关”具有破坏性。
+网络公关营销依靠互联网作为特殊载体，网络公关具有极为广泛的传播性、即时性、信息长期残留性等特点。由于危机的出现具有突然性，必然不同程度地给企业造成破坏，造成混乱和恐慌，而且由于决策的时间以及信息有限，往往会导致决策失误，从而带来无可估量的损失。
+c.“网络公关”具有急迫性。
+危机一旦爆发，其破坏性的能量就会被迅速释放，并呈快速蔓延之势，如果不能及时控制，危机会急剧恶化，使企业遭受更大损失。在网络公关的过程中，网络公关的主体最好不是企业，而是用第三方去影响第三方，有点类似于口碑营销。
+d.“网络公关”具有意外性。
+意外性是指在网络环境下，时间和空间范围得到了最大程度的延伸和扩展。危机的源头无处不在，危机爆发的具体时间、实际规模、具体态势和影响深度，都是始料未及的。
+（2）开展专项行动的必要性
+①开展专项活动有利于打击不法竞争行为。
+近年来，一些企业和个人采用违法违规手段开展网络公关活动，社会上出现了一大批非法网络公关机构。例如“网络水军”“网络推手”“灌水公司”“删帖公司”“投票公司”等。非法网络公关机构利用不正当手段打击竞争对手、歪曲捏造事实并进行敲诈勒索，有些机构甚至通过话题炒作制造虚假网络民意牟利、从事私下交易牟取非法利益等。非法网络公关行为败坏了网络环境，破坏了市场经济秩序，损害社会公众利益，广大人民群众对此强烈不满，要求政府有关部门依法进行整治。
+②专项行动有利于整治违法违规的非法网络公关行为。
+通过专项行动，有利于查处非法网络公关重大案件，曝光隐藏的违法违规事件；有利于清理网上非法网络公关
+信息，遏制非法网络公关信息发布，使互联网传播秩序和市场经济秩序得以维护；有利于阻断非法网络公关传播途径，规范网络传播秩序和网络公关行为；有利于为我国经济社会发展构建规范有序、文明诚信的网络环境。`},
+  {ch:7, type:"noun", q:`《中国女报》`, a:`《中国女报》是中国近代第一份宣传民主革命的妇女刊物。1907年1月14日在上海创刊。秋瑾、陈伯平任编辑兼发行人。该报以妇女为主要读者对象，以争女权、争独立、争解放为宗旨。主要撰稿人有黄公、陈志群、徐寄尘等。宣称致力于宣传爱国、革命和女权，比同时期其他妇女刊物态度激进，具有鲜明的民主革命倾向，是中国早期妇女刊物中的一面旗帜。设有“社说”“译编”“传记”“文苑”“新闻”等栏目，文言白话并用。1907年3月4日出版了第2期。当第3期已拟就目录，并征集到部分稿件时，因秋瑾被捕遇害而停刊。`},
+  {ch:7, type:"noun", q:`《每日纪闻》`, a:`《每日纪闻》是公告式的官方公报。公元前59年，尤利乌斯·恺撒当选为罗马执政官后，下令每日公布元老院及公民大会的议事记录，并将其用尖笔书写在罗马议事厅外一块涂有石膏的特制木板上。当时的名称是“阿尔布（Album）”，后来人们称之为《每日纪闻》。其内容多为政府要事，政治性强，目的在于争取民众支持，扩大政治影响。罗马帝国的灭亡，部分原因是《每日纪闻》的停办，传播组织远落后于军事、商业、行政等社会组织的发展，无法协调复杂的活动。`},
+  {ch:7, type:"noun", q:`KDKA电台`, a:`KDKA广播电台是美国第一家广播电台，1920年11月2日，由西屋电器公司在匹斯堡开办，被认为是美国广播事业的开始。该台首次广播的内容，是关于哈定和考克斯在总统竞选中的得票数。其时效之快，使美国报界大吃一惊。KDKA电台的成功，标志着广播事业的正式诞生。从此，新兴的电台如雨后春笋般地涌现。播出内容有当地新闻、邀请艺人现场表演、为临睡前的孩子们朗读故事等。`},
+  {ch:7, type:"noun", q:`“政治既有倾向”假说`, a:`“政治既有倾向”假说，由拉扎斯菲尔德等人提出。政治既有倾向，是指人们在接触传媒宣传之前已有的政治态度。在“伊里调查”中，研究人员根据调查对象的社会经济地位、宗教信仰和居住区域设计了一个IPP指数（政治既有倾向指数）作为显示他们的原有政治态度的综合指标。IPP指数分析的结果揭示，投共和党票的人大多原来就是共和党的支持者，而投民主党票的大多原来就是民主党的支持者。根据这一结果，拉扎斯菲尔德等人认为，人们在就政治问题进行决策之际，这种决策的性质并不取决于一时的政治宣传和大众传播，而是基本上取决于人们既有的政治立场和态度，他们把这个观点称为“政治既有倾向”假说。`},
+  {ch:7, type:"noun", q:`拉斯韦尔的“三功能说”`, a:`在传播学研究史上，最早对传播的社会功能做出较全面分析的是拉斯韦尔。他在1948年发表的《传播在社会中的结构与功能》一文中，将传播的基本社会功能概括为三个方面：①环境监视功能；②社会联系与协调功能；③社会遗产传承功能。拉斯韦尔的上述观点被称为传播的“三功能说”。这三项功能是包括人际传播、群体传播、组织传播在内的一切社会传播活动的基本功能，大众传播不仅具备这些功能，而且起着突出重要的作用。
+循环模式
+1954年，施拉姆在《传播是怎样运行的》一文中，在C·E．奥斯古德的观点启发的基础上，提
+出了一个新的过程模式，称为“循环模式”。该模式与直线模式有明显的不同：①这里没有传播者和受传者的概念，传播双方都作为传播行为的主体，通过讯息的授受处于你来我往的相互作用之中。②该模式的重点不在于分析传播渠道中的各个环节，而在于解析传播双方的角色功能；参加传播过程的每一方在不同阶段都依次扮演着译码者（执行接收和符号解读功能）、解释者（执行解释意义功能）和编码者（执行符号化和传达功能）的角色，并相互交替着这些角色。奥斯古德和施拉姆的循环模式强调了社会传播的互动性，并把传播双方都看作是传播行为的主体，这无疑是正确的。③这个模式也有其本身的缺陷：a.它把传播双方放在完全对等或平等的关系中（至少从模式本身看来是如此），则与社会传播的现实情况有不符之处。在现实社会中，由于传播双方在政治、经济和文化地位、传播资源以及传播能力等方面通常存在着差异，这种完全对等或平等的传播关系与其说具有普遍性，不如说是极少见的。b.这个模式能够体现人际传播特别是面对面传播的特点，却不能适用于大众传播的过程。`},
+  {ch:7, type:"noun", q:`艾耶父子（N·W·Ayer＆Son）广告公司`, a:`艾耶父子广告公司是第一家现代意义的广告代理公司。当时年仅20岁的青年人F．魏兰德·艾耶（F．waylandAyer）向他父亲借了250美元，开办广告公司，由于害怕别人认为他年轻不可信，便打出了他父亲的名义，即艾耶父子广告公司。起初，艾耶也是做中介生意，在1890年左右，他设计了一份公开的广告费率，告诉客户自己购买版面的底线和包括自己佣金在内的转变价。他为客户提供设计、撰写文案、
+建议和安排适当媒介等多种服务。因此，艾耶广告公司被广告历史学家称为“现代广告公司的先驱”。`},
+  {ch:7, type:"noun", q:`广告的媒介策划`, a:`广告的媒介策划是指在广告活动推出之前，针对媒体的选择、媒体的刊播时间、广告量在各媒体上的分布等所做的通盘性计划。它决定了广告作品是否能够被看到、被哪些人看到、在什么背景下被看到以及看到的次数等与广告效果相关的关键问题。`},
+  {ch:7, type:"noun", q:`边缘公众`, a:`边缘公众是指对问题还没有明确态度和明确倾向的公众群体。按公众对组织的态度可以将公众划分为：①顺意公众，即其意见和态度与组织的看法一致或基本一致的公众群体。②逆意公众，即其意见和态度与组织的看法相悖或基本相悖的公众群体，以及边缘公众。③边缘公众，介于顺意公众和逆意公众之间。`},
+  {ch:7, type:"noun", q:`爱德华·伯尼斯（Edward1 Bernays）`, a:`爱德华·伯尼斯是公共关系学科化的先驱者。出身维也纳的奥地利裔美国人爱德华·伯尼斯是著名心理学家弗洛伊德的外甥，1912年大学毕业后从事新闻工作，1913年他21岁时受聘担任福特汽车公司公关部经理；1919年他和夫人在纽约开办了一家正式的公共关系公司。1923年，他以教授的身份首次在纽约大学讲授公共关系课程，同年出版了被称为公共关系理论发展史的“第一个里程碑”的专著-《公众舆论的形成》。在书中，爱德华·伯尼斯详细地阐述了“公共关系咨询”这一概念，并提出了公共关系的原则、实务方法和职业道德守则等；1928年，他写出了《舆论》一书；1952年，他又写出了《公共关系学》教科书。爱德华·伯内斯在其将近80年的公关生涯中撰写的公共关系书籍达16部之多，他的主要贡献就在于一生都致力于公共关系学的学科化建设；他把公共关系学理论从新闻传播领域中分离出来，并对公共关系的原理与方法进行较系统的研究，使之系统化、完整化，最终成为一门相对独立完整的新兴学科。`},
+  {ch:7, type:"short", q:`简述“媒介进化与社会发展”的关系。`, a:`在当代社会，媒介技术的发展及其引起的巨大社会变化是最为引人注目的现象。关于“媒介进化与社会发展”的关系，存在着以下三种不同的观点或立场：
+（1）技术决定论
+在技术决定论者看来，技术是一种按自身逻辑发展的独立力量，它虽产生于人的需求，但它一旦成为气候，便很容易脱离人的控制而成为脱缰野马，因而，技术的后果内在于技术，而不取决于人的意志。
+同时，技术塑造人类发展而不是服务于人类的目的，一种技术产生以后，人和社会在享受它提供的有限“自由”的同时，更多的是处处受到它的限制：人必须被动地适应技术条件或技术环境的制约，按照技术的逻辑改变自己的工作、生活方式，甚至是观念价值体系。
+（2）社会决定论
+这种立场的核心观点：技术起源于社会生活，产生于人的特定的价值的需求。没有人的社会需求，就不会有技术，这表明了人对技术的主体性-人是技术的主人而不是奴隶。
+同时，技术不仅仅是工具和手段，它们也是伦理、政治和文化价值的体现，而社会的政治、经济制度则对技术的产生和发展有着最终的决定作用。
+决定技术的最好例证。
+从社会决定论的立场来看，中国的四大发明终究没能发展成影响力巨大的工业技术，恰恰是社会制度
+（3）技术与社会互动论
+无论是技术决定论还是社会决定论，都有把一方的作用绝对化的倾向，在对技术与社会的关系的看法上，互动论更能够全面地反映这种关系的实质。互动论者认为科学技术与社会政治是相互区分而又紧密联系的交互作用关系；科技作为生产力对社会政治具有推动和决定作用，而社会需要是技术的源泉与动力，政治和经济制度也反过来制约和决定技术。
+从马克思主义辩证唯物论和历史唯物论的基本原理来观察技术发展与社会变革，我们也会发现二者处于辩证互动的关系之中。
+①技术属于生产力的范畴，它通过推动经济成长改变社会利益关系和利益结构，掌握新技术的阶层属于新生产力的代表，随着其实力的上升，会与旧的制度发生矛盾，并要求实现社会变革。根据梅赛尼的研究，技术引发社会变革有两个途径：创造新机会、产生新问题。前者引发产业结构和社会结构的变化，后者推动新的制度转型。因此，技术发展引发社会变革是必然的，关键是建立一种通过技术发展来推动社会进步的良性机制，把技术的负面影响减少到最低限度。
+②社会制度与社会形态对技术的发展也有重要的制约作用，这主要表现在：任何技术都有它产生和发展的社会根源，这里既包括社会需求，也包括文化价值的导向；社会制度和政策为技术的发展提供保障和约束，并在技术及它的社会结果之间起调节作用；新技术蕴含着各种各样的可能性，善用则善，恶用则恶，其可能性能否实现及实现程度，在很大程度上取决于它所存在的社会条件和制度环境。归根到底，技术是人类的主体活动的创造物，人如何利用和控制技术，社会占有结构、所有制关系如何，也反过来规定着技术的特点和性质。这个原理，同样适用于我们对媒介技术的考察。`},
+  {ch:7, type:"short", q:`简述“意见领袖”理论在当今的发展。`, a:`（1）“意见领袖”的含义
+意见领袖，是指活跃在人际传播网络中，经常为他人提供信息、观点或建议，并对他人施加个人影响的人物。意见领袖在传播效果形成过程中起着重要的中介和过滤作用。
+意见领袖的特点包括以下方面：
+①与被影响者处于平等关系而非上下等级关系。
+②广泛分布在社会各个阶层。
+③影响领域分为“单一型”和“综合型”。
+④意见领袖的社交范围广，信息渠道多，大众传播信息接触量大。
+（2）“意见领袖”理论在当今的发展
+当今，在许多领域都存在“意见领袖”的说法。尤其是微博开通后，许多专家、学者、明星甚至是草根都成为某一圈子的“意见领袖”。
+他们经常在微博中为他人提供信息、观点或建议，并对他人产生一定的影响。这些名人的微博粉丝量都达到万人以上，他们在微博中所提出的观点可能会影响上万人，甚至是千万人。`},
+  {ch:7, type:"short", q:`简述新媒体对广告活动的影响。`, a:`（1）新媒体对广告主的影响
+新媒体的有效传播途径使其到达率较高，能与受众深度沟通和互动。相对于电视媒体而言，新媒体的传播成本较低，有效覆盖率高。这种高性价比的广告效果对于广告主有非常大的吸引力，因此不少广告主会选择将企业的广告投放在新媒体上。
+新媒体对传统媒体的影响
+首先，在经营、服务、盈利的方式上，新媒体与传统媒体存在着同质化。新媒体分割传统媒体的广告
+市场，直接影响传统媒体的原有利益格局。其次，新媒体跨越传统媒体的形态壁垒和行政边界，以纯粹信息和纯粹商业的姿态，形成跨媒体传播和跨行政区域传播的竞争态势，进一步加剧媒体间的市场竞争。
+新媒体对广告公司的影响
+随着新媒体的不断发展，新的营销模式以及广告形式也应运而生。广告主将眼光投入在新媒体的市场
+上，这导致广告公司必须顺应新媒体的发展，通过创意产生更多适应新媒体投放的广告。
+（4）新媒体对受众的影响
+广告的传播通常带有一定的强制性，但是新媒体的产生在某些方面削减了广告的强制性。新媒体改变了传统媒体向受众单向传播信息的模式，所采取的更多的是与受众互动式的传递信息，使得广告活动能更有效地传播。
+（5）新媒体对管理模式的影响
+新媒体的管理机制相对模糊，其广告内容和播出长度可以任其发挥，并且其商业化门槛则相对较低，任何人都有机会利用新媒体投放广告。`},
+  {ch:7, type:"short", q:`简述公共关系的基本观念和工作原则？`, a:`（1）公共关系的基本观念和工作原则的含义
+①公共关系的基本观念，是指人们在公共关系实践中逐渐丰富、不断完善所形成的，对社会组织如何处理与公众关系的基本认识，是如何开展公关工作的基本指导思想。
+②公共关系工作的基本原则，则是在这种基本思想观念指导下，根据公关活动客观规律和要求而提出的基本的工作方法和准则。公关的基本工作原则是公关基本观念在公关实践中的具体化。
+（2）公关观念与工作原则的主要内容
+①树立公开性的观念，坚持提高透明度的工作原则。
+②树立珍视信誉的观念，坚持公关传播工作的真实性原则。
+③树立制度化的观念，坚持立足平时的工作原则。
+④树立平等沟通的观念，坚持双向交流的工作原则。
+⑤树立注重行为的观念，坚持首先自我完善的工作原则。
+⑥树立科学的观念，坚持以调查研究为基础的工作原则。
+⑦树立公众利益的观念，坚持公关工作的互惠原则。`},
+  {ch:7, type:"short", q:`分析维新派的办报思想以及维新派报刊的历史进步作用。`, a:`（1）维新派的办报思想
+①维新派早期的新闻思想
+a.关于报纸的性质。
+第一，把报纸视为一种强有力的舆论“利器”；第二，公开承认报纸的党派性。
+b.关于报纸的作用问题。
+第一，十分重视报纸的宣传鼓动作用；第二，十分强调报纸的沟通传播作用；第三，重视报纸的启蒙教育作用。
+②维新派后期的新闻思想
+a.提出报馆两大天职说：一是对于政府而为其监督者；二是对于国民而为其向导者。
+b.提出衡量报纸好坏的四条标准：一是宗旨高而定；二是思想新而正；三是材料富而当；四是报事确而速。
+c.提出比较全面的舆论观。
+d.提出两种相辅相成的宣传方法，即浸润法和煽动法。浸润法即“旦旦而浸之，月月而润之”；煽动法即“故作惊人之语，造成极端之词”，使读者猛醒。
+（2）维新派报刊的历史进步作用
+①维新派的报刊宣传是新兴的资产阶级及其知识分子向中国两千多年的封建政治、思想和文化发起的一次重大冲击。从此，封建政治、思想和文化的传统地位开始动摇。维新派报刊宣传活动作用极大，主要表现在以下方面：a.向读者进行了救亡图存的爱国主义教育。b.向读者进行了资产阶级思想启蒙教育。c.推动了维新运动的发展，促进了变法的实现。
+②维新派的报刊活动对我国近代新闻事业做出的主要贡献：a.冲破了封建统治者的言禁。几千年来的封建言禁被冲垮。后来尽管发生了戊戌政变，但是封建统治者垄断新闻事业的时代毕竟结束了。b.开了政治家办报的先河。康梁以后，报人、报刊的社会地位空前提高，办报的政治家也愈来愈多了。c.创造了报刊新文体，推动了政论写作的发展。以康梁为代表的维新派报刊政治家继承王韬报刊政论的传统，在政论写作中不断突破，锐意革新，逐渐形成了一种新的报章文体。这种文体的特点：疾呼救亡，直陈时弊，介绍西学，要求变法，谈古论今，条理清晰，感情充沛，语言半文半白，有时还夹有口语、俚语及外国语法，因而平易畅达，易于表现新思想。这种文体以梁启超在《时务报》上发表的政论最为典型，故被称为“时务文体”。`},
+  {ch:7, type:"short", q:`结合当前“自媒体”迅猛发展的现状，谈谈你对“使用与满足”理论的新认识。`, a:`使用与满足理论是起源于20世纪40年代的一种有关受众对媒介的使用动机的传播理论。传播学
+家E·卡茨的《个人对大众传播的使用》是这一理论的代表作。
+（1）“使用与满足”理论的主要内容
+使用与满足理论把受众成员看作是有特定需求的人，把他们的媒介接触活动看作是基于特定的需求动机来“使用”媒介，从而使这些需求得到“满足”的过程。
+该理论认为，受众面对大众传播并不是完全被动的。实际上，受众总是主动地选择自己所偏爱和需要的媒介内容和讯息，而且不同的受众还可以通过同一媒介讯息来满足不同的需要，达到不同的目的。因此，不是媒介在操纵人，而是人在使用媒介。而人使用媒介说到底只是为了满足其需要而已。使用与满足理论从受众角度出发，通过分析受众的媒介接触动机以及这些接触满足了他们的什么需求，来考察大众传播给人们带来的心理和行为上的效用，开创了从受众角度考察大众传播过程的先河。
+（2）“使用与满足”理论的新认识
+当前，“自媒体”迅猛发展，人们进入自媒体时代。自媒体时代是指以个人传播为主的媒介时代，人人都有麦克风，人人都是记者，人人都是新闻传播者。这种媒介基础凭借其交互性、自主性的特征，使得新闻自由度显著提高，传媒生态发生了前所未有的转变。自媒体时代，受众的“使用与满足”理论得到了新的发展。受众更加处于主动的地位，不仅仅是主动通过媒介选择需要的媒介内容和信息，而是通过媒体发布信息。
+新媒体出现后，信息的发布不再垄断在一个高门槛的专业机构手中，越来越多的普通人可以自由发布信息、传播信息。从论坛、社区到博客，再到微博，媒体变得越来越个性化、个人化，公众发言的自由空间越来越大。微博对许多重点、热点事件都起到了重要的推动作用。受众在这一过程中充当信息发布者和信息获取者的双重角色，不仅满足自己获知信息的需要，也满足了自己分享信息的需要。而且自己发布信息这一举动同时又能满足他人获知信息的需要。所以，自媒体时代，“使用与满足”得到新的发展。`},
+  {ch:8, type:"noun", q:`《常识》`, a:`《常识》是托马斯·潘息（Thomas Paine，1737～1809）于1776年1月以“一个英国人”的署名而发表的政论小册子，在这本小册子里，他竭力主张北美殖民地脱离英国而独立，认为谈论和平是“荒唐透顶的说法”，“应该用武器这个最后的手段来解决争议”。《常识》集中反映了资产阶级革命派的观点，在舆论上起了极大的动员作用。《常识》是促使美国从不列颠帝国中独立出来的出版物，该书的出版深刻揭露了英国的黑暗与压迫本质，使得很多人最终下定决心与英国决裂，极大地鼓舞了美国独立士气，建立独立的美利坚合众国。同时它也是一本当代青年不可不读的经典名著。`},
+  {ch:8, type:"noun", q:`史沫特莱`, a:`艾格尼丝·史沫特莱，美国著名记者、作家和社会活动家，一个杰出的与众不同的女性。1892年，史沫特莱出生于美国密苏里州的奥斯古德。早年当过侍女、烟厂工人和书刊推销员，曾在《纽约呼声报》任职。1918年因声援印度独立运动而被捕入狱6个月，1919年起侨居柏林8年，积极投身印度民族解放运动，曾在柏林会见尼赫鲁。史沫特莱1928年底来华，在中国一待就是12年，抗战初、中期，她目睹日本对中国侵略，向世界发出了正义的声音，2007年，中共党史出版社出版的《联共（布）、共产国际与中国苏维埃运动（1931-1937）》第十五卷公布了一封尘封70年的密函，引出了一段鲜为人知的陈年往事史沫特莱可能是苏联派到中国的间谍。`},
+  {ch:8, type:"noun", q:`新生事件`, a:`新生事件是指发生在抗日战争时期的一场以《新生》周刊为阵地的抗日运动。1934年2月，《新生》周刊创刊，杜重远任编辑兼发行人。它重新举起抗日的火炬，实际上是《生活》的继续。1935年5月，《新生》刊载《闲话皇帝》一文，泛论古今中外的君主制度，其中说到现阶段日本的天皇空有其名而无实权。日本驻沪总领事向国民党政府提出强烈抗议和无理要求，国民党政府当即查封《新生》周刊社，判处主编杜重远徒刑一年零两个月。国民党中央还电令其各级党部及新闻出版界，加紧查禁抗日言论，取缔抗日运动。这就是中日反动派合伙制造的“《新生》事件”。`},
+  {ch:8, type:"noun", q:`沉默的螺旋`, a:`“沉默的螺旋”是传播效果理论重新回归到强大效果论的代表理论之一。“沉默的螺旋”最早是由诺依曼于1974年在《传播学刊》上发表的一篇论文中提出的，1980年以德文出版的《沉默的螺旋：舆论我们的社会皮肤》一书，对这个理论进行了全面的概括，诺依曼通过“沉默的螺旋”理论，重新提示了一种“强有力”的大众传播观。这个假说包括几个要点：①舆论的形成是大众传播、人际传播和人们对“意见环境”的认知心理三者相互作用的结果；②经大众传媒强调提示的意见由于具有公开性和传播的广泛性，容易被当作“多数”或“优势”意见所认知；③这种环境认知所带来的压力或安全感，会引起人际接触中的“劣势意见的沉默”和“优势意见的大声疾呼”的螺旋式扩展过程，并导致社会生活中占压倒优势的“多数意见”-舆论的诞生。`},
+  {ch:8, type:"noun", q:`布鲁默的“自我互动”理论`, a:`布鲁默的“自我互动”理论是布鲁默在1968年出版的《象征互动论》中提出的一种理论。该理论认为，人能够与自身进行互动，即自我互动。人是拥有自我的存在，人在将外界事物和他人作为认识和行动的对象的同时，也把自己作为认识和行动的对象。在这个过程中，人能够与自己进行沟通与传播，并能够对自己采取行动。布鲁默认为，“自我互动”在本质上是与他人的社会互动的内在化。不过，“自我互动”并不是与他人的社会互动在头脑中的简单再现，而是一个能动的、创造性的过程，经过这个过程不断改变原来的自我，形成新的意志和行为主体。布鲁默的这个观点说明，人内传播是现实社会传播关系的反映，通过自我互动或自我传播，人能够在与社会、他人的联系上认识自己、改造自己，不断实现自我的完善和发展。`},
+  {ch:8, type:"noun", q:`热媒介`, a:`热媒介是麦克卢汉关于媒介分类提出的一个概念。“热媒介”传递的信息比较清晰明确，接收不需要动员更多的感官和思维活动氧能理解，它本身是“热”的，人们在进行信息处理时不必进行“热身运动”：而“冷媒介”则相反，它传达的信息含量少而模物，在理解时需要动员多种感官的配合和丰富的想象力，麦克卢汉认为书翰、报刊、广播、无声电影、照片等是“热媒介”，因为它们都作用于一种感官而且不需要更多的联想：而漫画、有声电影、电视等属于“冷媒介”，因为它们作用于多种感官，需要丰富的联想和参与，这个观点，在于说明载介作用于人的形式不同，引起的心理和行为反应也不同。`},
+  {ch:8, type:"noun", q:`公众`, a:`公众是与特定的公共关系主体相互联系及相互作用的个人、群体或组织的总和，是公共关系传播沟通对象的总称，公众是除自己及与自己有相当关系或一定交往的人（或团体）外的人群，具有排他性。而与自己有相当关系或一定交往的人就是自己的特成群体，如亲戚、朋友、同学、邻居、同事、员工、合作伙伴或单位等等，法律意义上的公众必须是狭文上的公众，如果法律意义上的公众是广义上的公众，则立法毫无意义、司法会出现严重的逻辑错误和法理混乱，从而造成冤、假、错案。`},
+  {ch:8, type:"noun", q:`IPRA`, a:`IPRA是国际公共关系协会 Imtemational Puibli： Relstins Asviaion的缩写，它于1955年在英国伦教成立，当时只有来自16个国家的数百名公关专家参NTM会，现在这一组织已拥有60个国家的会员。也的召开的第二届世界大会制定并通过了《国际公共共办，15年在希腊雅典召开的第三届世界大会又通过了《国际公共关系的会世界大会行为年在否罚世界大会上通过的《垦西路宜言）对公共关系职业复范化和交流都起了积权的准9年在了金纸奖”和“总统奖”，出版不定期的（国际公共关系协会通讯》和季刊《国际外共，微会评论），该协会在世界各地积极开展工作，为世界公关事业的发展做出了巨大的贡献。`},
+  {ch:8, type:"noun", q:`广告调查`, a:`广告调查是指通过系统地信息收集和分析，提供广告决策所需的相关信息，帮助广告公司制定或评估广告战略，并对广告效果做出评价的一种调查极式。它是代情训在的一组成部分，是整个广告活动的开端和基础。广告调查具有以下特点：①目标明码：②操作性理：③注意保志；③具有累积性。广告调查的内容主要有四个方面：①广告战略调查：②广告创意概念调查：②广告媒介调查：④广告效果调查。`},
+  {ch:8, type:"noun", q:`广告活动的参与者`, a:`广告活动的参与者是指广告主、广告经营者、广告发布者、广告受众、广告管理者。参与广告活动的各方，在广告活动中扮演着不同的角色，彼此之间相互依存。但分工又有所不同。其中，广告受众占有举足轻重的地位，广告活动中的其他角色，基本上是围绕广告受众来各行其责的。广告主的经营以他们为转移，广告经营者和广告发布者的工作受其检验，广告管理者为其服务。开展广告活动，实际上是以消费者（广告受众）为中心来进行的。`},
+  {ch:8, type:"short", q:`简述“把关人”理论及其实质。`, a:`（1）“把关人”理论的含义
+把关人（gatekeeper）理论是传播学先驱者库尔特·卢因通过对大众媒介“传播者”角色的研究而得出的一种传播理论。把关人又译为“守门人”，是指那些在新闻媒介系统中居于决断性的关键位置，对信息进行过滤和加工的人或组织，而这种对信息进行的过滤和加工的过程就是把关。1947年，卢因在《群体生活的渠道》一书中系统论述了这个问题，认为群体传播中存在着一些把关人，只有符合群体规范或把关人价值标准的信息才能进入传播渠道，1950年，传播学着环特将这个概您引入新闻研究，明确提出了新闻神选过程中的“把关”模式，这一模式说明，新闻报道是一个对事实加以取舍的过程，传媒内部存在着一系列的把关环节，把关是一种有组织的活动。
+（2）“把关”过程的实质
+①大众传媒的新闻报道与信息传播并不具有纯粹的“客观中立性”，而是根据传媒的立场、方针和价值标准而进行的取舍选择和加工活动。
+②新闻和信息的选择尽管受到媒体的经营目标、受众需求以及社会文化等多种因素的制约，但是与煤介方针和利益一致或相符的内容更容易优先入选、优先得到传播。
+③媒介的“把关”是一个多环节、有组织的过程，其中虽有记者，编辑个人的活动，但“把关”的结果在总体上是传媒组织的立场和方针的体现。`},
+  {ch:8, type:"short", q:`简述选择性接受假说。`, a:`选择性接受是受众在处理信息之际的选择性倾向之一，即受众在接触信息后，保留在记忆中的往往是那些与自己的既有兴趣，需求，立场，态度或观点一致或接近的内容，选择性接受的倾向，在实验心理学中也得到了证明。它与选择性接触，选择性认知一样，都是制约传播效果的重要因素。选择性接受包括三个方面：
+（1）选择性接触
+选择性接触是指受众在接触大众传播活动之际，并不是不加区别地对待任何媒介和内容，而是更倾向于接触与自己的既有立场、观点、态度一致或接近的媒介或内容，而有意无意地回避那些与自己既有倾向相左的媒介或内容。选择性接触行为更容易在强化受众既有立场和态度的方向上起作用，而不是导致它们的改变。这个概念由美国传播学家拉扎斯菲尔德等人在《人民的选择》中最早提出。
+（2）选择性理解
+选择性理解是指受众总要依据自己的价值观念及思维方式对接触到的信息做出独特的个人解释，使之同受众固有的认识相互协调而不是相互冲突。选择性理解是选择性定律的重心所在，受众对信息的选择性处理主要体现在选择性理解上。信息中包含的意义不是由传播者硬塞到受众手中的，而是由受众根据主观意愿自己从中发现的。即在对信息如何理解上主动权掌握在受众手中，而不是掌握在传播者手中。
+（3）选择性记忆
+选择性记忆是受众在处理信息之际的选择性倾向之一，即受众在接触信息后，保留在记忆中的往往是那些与自己的既有兴趣、需求、立场、态度或观点一致或接近的内容，选择性记忆的倾向，在实验心理学中也得到了证明。它与选择性接触、选择性认知一样，都是制约传播效果的重要因素。`},
+  {ch:8, type:"short", q:`简述广告策划的特性。`, a:`广告策划是企业经营管理活动的一个重要组成部分，是一个有着特殊规律的系统工程，要遵循一些共有的基本属性。广告策划具有以下几种特性：
+（1）目标的明确性
+每次广告活动只能实现其中一两个目标，必须明确本次活动的主要目标，为达到特定的目的而采取相应的战略战术。明确目标，能把广告活动的各个环节串联起来，把广告活动的各种功能调动起来，把广告传播过程中的无序转化为有序。明确的目标必须正确。
+（2）运作的层次性
+应善于把握广告策划活动的性质、职能、特点和运动规律，分清和把握好层次结构，既发挥各层次的能动作用，又确保在整体方针指导之下，依照严格的程序进行运作。既调动个人的积极主动性，又注意集体智慧的整体融合。
+（3）筹划的全局性
+广告策划需要涉及广告活动的方方面面，是指导整个传播活动的纲领，要多从全局和长远着眼。整个计划一旦确定下来，一般不要随意变动。
+（4）决策的事前性
+广告策划是建立在对整个广告活动充分了解把握的基础上。要注意做好调查研究工作，要有预见性。
+（5）变动的调适性
+要随时注意影响广告活动的各种因素的发展变动，需要因时而变，因势而动，能够相应地做适当修正和调整。`},
+  {ch:8, type:"short", q:`简述艾维·李对公共事业的主要贡献。`, a:`艾维·李是公共关系早期的开拓者。1904年，艾维·李与派克合资成立了“派克·李氏”公司，不仅开创了一项事业，而且以自己卓有成效的工作，奠定了公关职业的基础。艾维·李对公关事业的主要贡献：
+（1）他首创了现代公关事业的模式，出卖劳务而收费。
+（2）发现企业管理人性化的众应，把员工及社区列为公关的主要对象，改变了新闻代理人只注重新闻界关系的偏颇。
+（3）倡导以事实为根据进行客观报道：通过积极沟通，促进企业的改革，达到改善企业形象的目的。人们对按时开会很在意，但对会议什么时间结束却显得漠不关心，这样，浪费的时间与节约下来的时间实际上是均衡的，我们节省时间的目的并未达到，所以，会议主持者应严格遵守会议的开始与结束时间。如果会议引发了许多问题不能按时结束，那么最好的方法就是再补充一些时间，对这些问题进行进一步探讨。事实上，短而精的会议效果往往远远胜过那些枯燥而冗长的会议。
+（4）他提出的“说真话”的思想和“公众应当被告知”的原则，奠定了早期现代公关理论的基础。越是高层的管理人员就越吝惜自己的时间，想要完成任务，首先得有时间。艾维·李方法设定了这一天需要完成的目标，无论你怎么做，这一天总是会结束的。这时候，管理人员又该坐下来，拿出你所列的几项任务，在疲倦的同时反思：这一天究竟都发生了什么事，自己又做了什么-也就是说对照实际对一天的工作做个小结。`},
+  {ch:8, type:"essay", q:`分析《循环日报》的历史地位。`, a:`（1）《循环日报》的含义
+《循环日报》是我国第一批国人自办报纸中影响最大的报纸，由我国早期资产阶级维新派思想家王韬在香港主编。1874年2月4日，《循环日报》在香港创刊，王韬任该报主笔。该报以“强中以攘外，诹远以师长，变法以自强”为办报宗旨，是我国近代最早宣传资产阶级维新变法思想的报纸之一，首创了一种以政论为灵魂的报纸。该报开创了中国近代报刊的政论文体。王韬的政论文章，后汇编为《弢园文录外编》。
+（2）《循环日报》的历史地位
+①1864年王韬曾任香港中文报《近事录编》编辑，但报纸所有权和经营方针完全掌握在英国人罗郎手中，王韬深感必须有一份“华人资本、华人操权”的日报才能表达华人的声音和代表华人在香港的利益。
+②中外新闻出版史学者公认《循环日报》是中国报刊历史上第一份“华人资本、华人操权”日报，林语堂1936年在芝加哥以英文出版的《中国报刊与舆论史》一书中推崇王韬为“中国新闻报纸之父”。
+③王韬用他的笔杆子在《循环日报》发表的政论，为变法强国制造舆论，树立了文人不一定要“学而优则仕”在清朝官府当官才能影响政治的榜样，开创“文人论政”的先河。
+洪深在1934年《申报总编纂“长毛状元”王韬考证》一文中认为王韬是政论高手，即使在二十世纪新闻界也未有人能超越他。
+④《循环日报》还大胆改革文体，建设报刊文体，王韬为《循环日报》撰写的政论，立场鲜明，短小精悍，深入浅出，通俗易懂，而且富于感情，后来发展成为一种报章文体，对当时的文坛和以后的维新派报人有很大的影响。`},
+  {ch:8, type:"essay", q:`结合当下国际传播形势，论述国际新闻选择中的价值标准。`, a:`运用个体认知心理学原理研究跨文化传播中的差异、冲突和障碍问题的基础上，新闻传播学术界有人提供了一套用以判断国际新闻新闻价值量的标准：
+（1）时间跨度
+与时效性概念接近，但强调不同媒介组织的不同时效要求。例如，在几小时内发生或完成的事件，适合于日报或广播电视。
+（2）强度或临界值
+凡是特别重要或者重要性陡然猛增以至引起了特别关注的事件，就更有可能受到媒介的青睐。重要性陡然猛增的事件通常存在于某种媒介监测的情况，如对政府或财政的监别，或对一场不断扩大的冲突的监测。
+（3）清晰性
+一个事件的意义越清晰，越少受到怀疑，接受新闻处理的可能性就越大。
+（4）文化接近性或相关性
+一个事件越接近预期受众的文化和兴趣，就越有可能中选，在这里，文化通常指由种族（民族）、语言、宗教、社会制度等因素决定的文化价值观和社会价值观。
+（5）一致性
+符合某些既定期待和预想的事件，比那些与期待不一致的事件更有可能中选。例如，人们预料某国近期可能发生危机或冲突，与此相关的事件更有可能引起关注。
+（6）意外性
+事件越不平常和越难预料，就越有可能中选。
+（7）连续性
+一旦某个事件被确认具有新闻价值，就会引起对该事件或相关事件的持续关注。
+（8）组合性
+新闻事件的选择必须考虑媒介内容的整体构成和平衡，一些事件因作为对照而中选，
+（9）社会文化价值观
+除了上述新闻要素以外，社会、受众群体或记者、编辑的社会价值观也会影响新闻选择。`},
+  {ch:9, type:"noun", q:`“竖三民”`, a:`“竖三民”是指革命报人于右任创办的《民呼日报》《民吁日报》和《民立报》，这三份报纸都用“民”字打头，创办时间相衔接，风格和基调协同，为同一人创办，故称“竖三民”，1909年5月15日，《民呼日报》在上海诞生，于右任担任社长，该报以主要篇幅揭露清廷出卖路权、矿权，斥之“以傀儡自待”：井大揭官场黑幕，抨击官僚腐败，1909年10月3日，《民吁日报》在上海创刊，报名有两个含义：①“民不敢声，故仅吁耳”；②“吁”即“呼”去两点，暗喻民众即便被反动当局挖掉双眼，仍要呼喊。《民立报》于1910年10月11日在上海问世，将矛头直指清廷，斥之为“倒行逆施”之政府。在反对袁世凯的斗争中，《民立报》也是重要舆论阵地。`},
+  {ch:9, type:"noun", q:`埃德加·斯诺`, a:`埃德加·斯诺，美国新闻记者、作家，1928年秋来到中国，曾任欧美几家报社驻华记者、通讯员，发表不少新闻作品。1933年至1935年，任燕京大学新闻系讲师，同时兼任美国《星期六晚邮报》和英国《每日先驱报》特约记者。“一二·九”运动爆发后，积极支持爱国的学生运动。1936年6月斯诺访问陕甘宁边区，写了大量通讯报道，成为第一个采访红区的西方记者，1937年出版的《红星照耀中国》，后改名为《西行漫记》，引起极大轰动。新中国成立后，斯诺三次访华。`},
+  {ch:9, type:"noun", q:`北岩报团`, a:`北岩报团形成于1908年，由哈姆斯沃思创办，是英国第一个现代报团。因为北岩拥有多种报刊，并组成了庞大的报业帝国，故被称为“舰队街的拿破仑”，哈姆斯沃思创办《回答》杂志后，又创办了《每日邮报》《每日镜报》，购买了《观察家报》（1905），控制了《泰晤士报》（1908），以及多种地方报刊，开创了富有英国特色的大众化报刊的事业，被称为“舰队街的拿破仑”，组成了庞大的报业帝国，并开始了英国报业的垄断化进程。他的弟弟H．哈姆斯沃思（1914年受封罗瑟米尔勋爵），继承了该报团的大部分报刊，但《泰晤士报》转让给了阿斯特家族，随后《每日镜报》于1931年分离出去。以后该报团称“罗瑟米尔报团”或联合报业公司。`},
+  {ch:9, type:"noun", q:`传播障碍`, a:`传播障碍是指在传播活动过程中，由于传播系统本身存在的结构性和功能性障碍，而导致的传播行为受到阻碍。传播障碍包括结构与功能障碍，如传播制度是否合理、传播渠道是否畅通、信息系统的各部分的功能是否正常等。传播障碍的存在是妨碍社会发展的重要因素，会造成社会成员的认知、判断、决策和行动的混乱，带来一系列的社会问题，这些问题如果不及时妥善地解决，必会影响社会的和谐和正常发展，严重的甚至造成社会混乱和国家解体。`},
+  {ch:9, type:"noun", q:`知沟假说`, a:`答，知沟假说是1970年美国学者卡茨曼，蒂奇诺等人在一系列实证研究的基础上，提出的一种理论
+袖是指在人际传播的网络中，经常为他人提供信息，同时为他人“施加影响”的活跃分子，他们在大众传播效果的形成过程中起着重要的中介和过滤作用，由他们将信息传播给受众，形成了信息的两级传播。`},
+  {ch:9, type:"noun", q:`媒介关系`, a:`媒介关系是组织机构与报纸、电视、电台、杂志等大众传播媒介的关系，主要是与新闻界的关系。良好的媒介关系可以把组织机构需要输出的信息最大限度地传播出去，同时，又从媒介方面获取组织需要的信息，媒介关系是公共关系工作对象中最敏感、最重要的一部分，也是现代传媒和社会公共科学的研究系列之一：一方面，新闻媒介是组织与公众实现广泛、有效沟通的必经渠道，具有工具性；另一方面，新闻媒介人员又是组织必须特别重视的公众，具有对象性。`},
+  {ch:9, type:"noun", q:`公关效果评估`, a:`公关效果评估是指对公共关系活动的效果进行评估。是整个企业公共关系活动流程的最后一个阶段，同调查研究阶段首尾相连，使企业公共关系活动呈现出一个有始有终的完整过程。主要包括覆盖率、有效率、千人成本、准确性、传播力度、传闷率、公关指数提升、销售提升等方面。`},
+  {ch:9, type:"noun", q:`脉冲式媒介排期`, a:`脉冲式媒介排期是指依品牌需要，加强在重点期间露（播）出的强度，是持续性排期和起伏式排期的结合体。好处在于其可持续累积广告效果，而其缺点是广告费用较高。采用这种排期时，广告主全年都维持较低的广告水平，但在销售高峰期采用时段性脉冲增强效果。采用这种方式的产品主要有软饮料、空调等产品，这些产品的消费具有显著的季节性。消费者的购买周期越长，越适合采用脉冲式排期。`},
+  {ch:9, type:"noun", q:`营销组合`, a:`营销组合即营销手段，是指公司在目标市场上用来追逐其营销目标的一系列营销工具的综合运用。包括产品、价格、地点（分销或渠道）和促销等，是开展普销的工具和手段，可以整合到营销计划中以争取目标市场的特定反应。从另一方面说，营销组合又称整合营销，是指充分利用好每一种营销方式的优势，进行优势整合，以达到营销的最大目的。`},
+  {ch:9, type:"short", q:`怎样理解“作为权利主体的受众”的观点？`, a:`受众不仅仅是传媒信息的使用者或消费者，他们还是构成社会的基本成员，拥有各种各样的正当权利。受众在大众传播过程中享有的基本权利包括：
+（1）传播权
+传播权是构成社会的每个成员所享有的基本权利之一，在传统上称为表现自由或言论自由的权利。
+（2）知晓权
+知晓权广义上是指社会成员获得有关自身所处的环境及其变化的信息、保障社会生活所需的各种有用信息的权利：狭义上是指公民对国家的立法、司法和行政等公共权力机构的活动所拥有的知情或知察的权利，是公民的一项基本政治权利。
+（3）媒介接近权
+媒介接近权即一般社会成员利用传播媒介阐述主张、发表言论以及开展各种社会和文化活动的权利，其中的一项重要内容是反论权。
+（4）媒介监督权
+媒介监督权是指大众传播的信息生产和传播活动涉及受众广泛的利益，有权通过各种形式对传媒的活动进行监督。`},
+  {ch:9, type:"short", q:`简述“媒介规范理论”。`, a:`媒介规范理论包含以下几种理论：（1）极权主义理论
+极权主义理论又称权威主义理论，是欧洲中世纪后期极权主义制度下的产物，现代仍有其残余，其最大特点是主张媒介必须一切以权力或权威的意志为转移，一切必须为统治者服务。主要内容包括：①报刊必须对当权者负责，维护国王和专制国家的利益；②报刊必须绝对服从于权力，不得批判占统治地位的道德和政治价值：③政府有权对出版物进行事先检查，这种检查是合法的：④对当权者或当局制度的批判属于犯罪行为，给予严厉的法律制裁。
+（2）自由主义理论
+自由主义理论是在欧美资产阶级革命中形成的媒介规范理论，其核心反映了资产阶级自由主义的观点。主要内容包括：①任何人都拥有出版自由的权利而不必经过政府的特别许可：②除人身攻击外，报刊有权批评政府和官吏：③新闻出版不应接受第三者的事先检查：④在涉及意见、观点和信念的问题上，“真理”和“谬误”的传播应该同样得到保证；⑤自由主义理论有两个原则，一是“言论的公开市场”原则，二是“自我修正”原则。
+（3）社会责任理论
+社会责任理论作为对自由主义理论的一种修正，由美国新闻自由委员会于20世纪40年代后期提出的一种理论。社会责任理论是对自由主义理论的改良。其主要内容包括：①大众传播具有很强的公共性，媒介机构必须对社会和公众承担一定的义务和责任：②媒介的新闻报道和信息传播应该符合真实性、正确性、客观性、公正性等专业标准；③媒介必须在现存法律和制度的范围内进行自我约束：④公众有权要求媒介从事高品位的信息传播，这种干预是正当的。
+（4）民主参与理论
+20世纪70年代以后在西方国家出现的新的媒介规范理论，它的背景是社会信息化的发展和受众权利意识的提高。民主参与理论要求大众传媒向一般民众开放，允许受众的自主参与，其主要观点有：①任何个人和弱小群体都拥有知晓权、传播权和媒介接近权。②媒介应主要为受众而存在，而不应主要为媒介组织、职业宣传家或广告赞助商而存在。③与大规模的、单向的、垄断的大媒介相比，小规模的、双向的、参与的媒介更合乎社会理想。民主参与理论的核心价值是多元性、小规模性、双向互动性、传播关系的平等性。
+（5）发展中国家的媒介规范理论
+20世纪70年代以来，发展中国家的媒介制度和理论受到了人们的注目，大多数发展中国家经济比较落后，发展经济是国家的首要目标；政局不稳，有些国家甚至经常面临内战、政变和外来颠覆的威胁；从大众传播的状况而言，在硬件和软件两个方面对西方发达国家依赖程度都很高。发展中国家的媒介制度和理论大致反映了这种现实状况。其要点包括：①大众传播活动必须与国家政策保持同一轨道，以推动国家发展为基本任务。②媒介的自由必须伴随相应的责任和义务。③在传播内容上要优先本国文化、优先使用本民族语言。④在新闻和信息合作领域，优先发展同地理、政治和文化比较接近的其他发展中国家的关系。⑤在事关国家利益和社会稳定的利害问题上，国家有权对传播媒介进行检查、干预、限制乃至管制。
+（6）我国的社会主义传播制度和媒介规范理论
+我国的社会主义媒介制度及其规范理论正在发展和探索过程当中。就目前而言，它包括了以下几个方面的内容：①新闻传播事业实行社会主义公有制，防止私有资本垄断，保障社会主义新闻自由。②新闻传播事业是中国共产党领导下的事业，必须坚持党性原则。③执行报道新闻、传播信息、引导舆论、提供娱乐等多方面的社会职能。④通过沟通生产、流通和消费服务于国民经济发展，其本身也是新兴的信息和知识产业的重要组成部分。`},
+  {ch:9, type:"short", q:`简述公共关系传播的基本模式。`, a:`（1）公共关系传播是指特定的社会组织为实现公共关系目标，综合运用各种传播方式和传播媒介，有计划地与公众进行信息交流沟通的活动过程。
+（2）公共关系传播的基本模式
+对于公共关系实践中所形成的传播模式，美国的葛罗尼格（J.E.Gruning）和亨特（T.Hunt）把它概括为四种模式：宣传型、公共信息型、双向非对称性、双向对称型。①宜传型模式。这种模式旨在通过新闻宣传制造轰动效应，以吸引公众的注意力，传播性质为单向。
+②公共信息型模式，传播组织的真实情况，以便公众了解组织，传播性质为单向。
+③双向非对称型模式。这种模式目的在于通过科学方法，诱导和劝服公众接受组织的某种观点，并进而支持组织的行为方式，此传播模式性质虽为双向，但其在组织和公众之间的效果并不均衡，它相对来说只有利于组织，公共关系人员作为信息的提供者吸引公众的反馈意见仅为提高诱导劝服工作的有效性。
+④双向对称型模式。它强调对话，注重坦诚、完整、准确的双向交流，目的是促进相互理解，其传播性质是双向的，且在组织和公众之间的传播效果是均衡的。
+（3）公共关系传播模式的发展趋向
+从历史的、发展的角度来分析这四个传播模式，还可看到人类对公共关系传播这一事物的认识发展趋向。这种发展趋向主要表现为：
+①对公共关系传播功能的认识，从主观宣扬，客观提供信息，科学诱导，到促进相互理解的发展趋向。
+向.②对公共关系传播方式的认识，从线性的单向传播、利用反馈的双向沟通，到双向传播沟通的发展趋
+③对公共关系传播关系的认识，从任意支配公众、不对称的双向沟通关系，到双向对等共享信息的传播关系的发展趋向。`},
+  {ch:9, type:"short", q:`简述广告对社会文化的影响`, a:`（1）广告对社会文化的积极影响
+营销人员认为广告能够给整个社会带来益处：广告能够提高生活水平，支持了大多数新闻媒体与艺术的发展，维护了新闻自由，为宣传重大的健康问题和社会问题提供了机会。
+①促进大众传播媒体发展
+广告为大众传媒提供了主要的财源，提供了可持续发展的条件。广告一方面使传媒获得发展资金，一方面使报刊大量印刷、普及发行成为可能：使广播电视节目得以丰富；促使大众传媒注重信息质量的改进，力求变化和创新，贴近生活、贴近受众（消费者）。
+②美化市容环境，丰富文化生活
+广告需要运用各种表现手法来反映和传送广告信息内容，广告创作使广告的艺术水平提高。广告要用较强的艺术感染力吸引和打动目标消费者，需要广告创作人员不断创新。设计新颖、构思奇巧的广告作品，实际上也是一件件艺术品，具有一定的欣赏价值和文化品位。广告文化已融入并推动着社会大文化的发展。广告也是现代化城市的一个重要标志，为美化市容环境做出了贡献。
+（2）广告对社会文化的消极影响
+①广告的欺骗问题
+广告通常会表现有利于广告主或者品牌的内容，人们对此有心理准备，多半不会在意。但是如果广告主越过了表达观点与制造骗局之间的界限，就会引发人们的反感，严重的情况下还会招致司法诉讼。
+②广告拥堵现象
+以美国为例，一个普通的消费者每天要接触1000条以上的广告。过多的广告会产生广告拥堵现象，这一方面会招致消费者的厌烦，另一方面也会大大削弱广告主的广告价值。
+③广告和程式化
+有人认为，广告在创造话题的同时，也形成了一些社会偏见与成见，铸就了人们对女性、老人、少数族裔等的刻板印象。
+④广告和消费主义
+消费主义是指人们消费的不是商品或者服务的使用价值，而是它们在一种文化中的符号象征价值。广告激发消费者欲望，倡导消费主义的生活方式。高消费的生活方式及其正当性经由广告传递给全体社会成员，造成与消费有关的身份焦虑。`},
+  {ch:9, type:"essay", q:`分析黄远生对中国近代新闻事业的贡献。`, a:`（1）黄远生个人简介
+①黄远生原名黄基，1885年1月15日出生在江西九江的一个书香世家，辛亥革命爆发后，在北京编辑《少年中国》周刊和《庸言》杂志，并担任上海《东方日报》《时报》《申报》等特约撰稿，经常在《东方杂志》《论衡》《国民公报》等处发表文章，与刘少少、徐彬彬在当时被称为“民初三大记者＂。
+②方汉奇先生称黄远生是“中国新闻史上第一位名记者”，宁树藩先生视之为“首批以新闻闻名于世的记者中最负盛名者”，其“远生通讯”更是被视为当年中国新闻界的一大品牌。从更深层的价值与更为深远的意义来说，他又是一位新文化的“先驱者。”
+（2）黄远生对中国近代新闻事业的贡献
+黄远生对中国近代新闻事业的贡献具体体现在以下几个方面：
+①通讯
+黄远生的通讯极具特色，深受欢迎，更慢慢变为一个专有名词，甚至是一种新闻体裁的名称。此文体始于1912年初的《申报》上以“远生”署名的“北京通讯”专栏，故称“远生通讯”，是指比消息更加详细和生动的报道事物或人物的新闻体裁。
+黄远生的通讯有以下几个特点：
+a.报道新近发生的事实。黄远生笔锋犀利，言辞充满正义志气，针砭时弊。对袁世凯的倒行逆施和官僚政客腐败痛加斥责。
+b.报道重要的人物事件。黄远生自幼受到良好教育，曾高中进士后留学日本，有过在前清为官的经历，人脉甚广，从而使他利于周旋于各界政要之间，并且熟悉民初政治，因此有利于他获得重要价值的新闻。
+c.抓住具体的场景细节，嬉笑怒骂，涉笔成趣。黄远生善于捕捉各种细节，描绘十分生动吸引。
+d.语言通俗生动。他白描式刻画、极具现场感的文字，广受读者追捧，而且深受欢迎。
+②新闻思想和见解
+a.强调报刊的舆论监督作用，强调新闻要真实、精确、客观、系统。
+黄远生报道的大多是政治上的人和事，强调记者在采访写作中必须要有尊重事实的作风与新闻道德。他主张新闻要掌握第一手资料，把新闻真实性当作金科玉律。他还反对在没有调查清楚事实前就乱下结论。这些新闻思想无论在什么时候看来，都是非常正确和有价值的。
+b.“四能说”，即新闻记者要“脑筋有想，腿脚能奔走，耳能听，手能写”
+第一，“调查研究，有种种修养”，是谓能想。
+第二，“交游肆应，能深知各方面势力之所存，以时访接”，是谓能奔走。
+第三，“闻一知十，闻此知彼，由显达隐，由旁得通”，是谓能听。
+第四，“刻画叙述，不溢不漏，尊重彼此之人格，力守绅士之态度”，是谓能写。
+黄远生这些新闻从业思想和“四能说”的提出在中国新闻采写理论上是一项超越前人的重大发展，对后人影响深远。
+c.重视采访，追求新闻的真实、客观、全面、公正
+黄远生提倡新闻写作要做到“诚实无欺”，要“归纳”、要“具证”，这就需要注重事实，注意收集第一手材料，以材料和事主对证，使报道准确。他写新闻通讯的材料，大都是亲自采访获得的，在没有充分的事实根据之前，他决不妄加言论，而且一旦发现先前报道的事实或发表的意见有误，以便及时更正。
+（3）黄远生对后世新闻事业的影响和贡献
+①黄远生是中国近代杰出的新闻工作者，在他短暂的生命里，为近代新闻事业做出了巨大的贡献。他的新闻思想，以及对当时社会的真实报道，不仅仅为是为新闻事业做出了贡献，更能通过他的报道启发民众。
+②黄远生更是一位新文化的先驱者，他针砭时弊，讽刺袁世凯的黑暗统治和旧官僚的腐败，是人民的喉舌。黄远生在这古与今、旧与新、中与西转折的焦点时刻，以其奔放的激情与深沉的忧患意识填补了时代的一个空白。是中国文艺启蒙运动的领导者之一。
+如何理解“提高我国国际传播能力”与建立世界信息传播秩序的关系。
+国际传播能力是文化软实力的组成部分，是维护国家形象的重要手段。构建现代传播体系，提高我国国际传播能力，是适应国际社会了解中国、提升国家文化软实力、塑造国家良好形象的必然要求，对于提升我国的国际影响和国际地位，加强我国媒体在国际舆论格局中的地位和作用具有十分重要的意义。新形势、新任务要求我们必须高度重视和大力加强国际传播能力建设。
+（1）提高国际传播能力，是顺应世界传媒发展趋势，实现我国媒体跨越式发展的需要。媒体全球化是与经济全球化的进程相伴而生并随着传播手段的成熟而不断发展的。
+这是媒体发展规律，也是媒体发展的必然条件。
+（2）提高国际传播能力，是更好地让国际社会了解中国、认识中国，向世界说明中国的需要。
+随着经济全球化的深入发展和我国改革开放的全面推进，中国的前途命运与世界的前途命运紧密地联系在一起。实践证明，传播力决定影响力。拥有强大的国际传播力，才能确保传播的自主性，让国际社会更好地了解认识中国。没有强大的国际传播能力，向世界介绍一个真实的中国、营造对我有利的国际舆论环境是难以做到的，
+（3）提高国际传播能力，是积极参与国际文化竞争，增强我国国际影响力的需要。
+国际传播能力作为软实力，是综合国力的重要组成部分其影响力也是国际竞争力的重要方面。当今激烈的国际竞争中，我国要全面实现对外发展目标，发展与世界各国交往合作关系，在加强经济实力的同时，必须大力加强包括国际传播能力在内的软实力，更加有力地应对国际舆论的新挑战。`},
+  {ch:10, type:"noun", q:`新闻信`, a:`新闻信是指传递、交流信息的公私信件。私人新闻信主要流行于上层社会，官方新闻信则时常务有传递政情、军情的性质。产生于罗马帝国时代，直到18世纪才逐渐被近代报纸所取代。与官方公报相比，新闻信虽然形式上有所变化、但它仍然是统治阶级和贵族阶层传递信息的工具。从性质上说，它与封建官报没有根本的区别。`},
+  {ch:10, type:"noun", q:`火星报`, a:`《火星报》是由列宁创办和领导的第一个马克思主义全俄政治报纸。1900年在德国菜比锡创刊，先后在基尼黑、伦教和日内瓦出版，该报在建立马克思主义新型政党、动员和组织工人群众进行革命斗争方面起过重大作用，是俄国社会民主工党形成时期马克思主义报纸的典范。坚定的党性、高度的思想性和鲜明的战斗风格是《火星报》的特色，也是它的革命传统。`},
+  {ch:10, type:"noun", q:`临聚型公众`, a:`临聚型公众是指因为某一级时事件，活动或某一共同问题而临时聚集起来的公众，如游行、展览、演讲时临时架集在一起的公众群体，公众是公共关系工作的对象客体，按照其稳定程度可以划分为临聚型公众、周期性公众和稳定性公众，这是制定公共关系临时对策、周期性政策和稳定策略的依据。每个组织都难以事先完全预测到某些实发事件的产生，往往会面对一些临聚型公众构成的额外压力，需要进行应急处理，因此需要有应变对策。`},
+  {ch:10, type:"noun", q:`拟态环境`, a:`拟态环境是指传播媒介通过对象征性事件或信息进行选择、加工并重新结构化以后向人们提示的环境。这是说明大众传播社会影响力的重要概念，由央国学者李普曼提出。李普曼认为，现代社会越来越巨大化和复杂化，人们由于活动范围、精力和注意力有限，不可能对与他们有关的整个外部环境和众多事物都保持经验性接触，对超出自己感知范围以外的事物，只能通过大众传媒去了解。大众传播以提示环境交化为已任，但它所提示的并不是环境的全部，而是一种报态环境，人的行为在很大程度上成了对拟态环境的反应。`},
+  {ch:10, type:"noun", q:`《生活》周刊`, a:`《生活》周刊是民国时期发行量最大的都市通俗文化生活杂志之一。1925年10月11日在上海创刊，1926年10月24日由邹韬奋接办后新辟《信箱》专栏，不断充实内容，革新版面，后又开辟《小言论》专栏，1928年发行量达40000份。邹韬奋接办《生活》周刊后，最重要的改革就是加强刊物的趣味性，强调选取“有趣味、有价值”的材料，这是当时《生活》周刊最显著的一个标志。由于当时广大读者最关心的是求学、就业、社交、恋爱、婚姻等问题，所以《生活》周刊此时刊登的这一类文章比较多。“九一八事变”后，《生活》周刊积极宜传抗日、民主思想。1933年12月，国民党政府下令查封《生活》周刊。`},
+  {ch:10, type:"noun", q:`集合行为`, a:`集合行为是指在某种刺激条件下发生的非常态的社会集合现象，多以聚集、恐慌、流言、骚动的形态出现，往往对正常的社会秩序造成严重的干扰和破坏。集合行为中的信息传播受到若干特殊传播机制的制约，包括群体暗示和群体感染。集合行为发生的基本条件有三个：①结构性压力，即经济萧条、自然灾害、失业等社会因素对社会一般人产生的心理压力，部分社会成员企图摆脱这种压力是产生集合行为的原因：②触发性事件；③正常社会传播系统的功能减弱，流言等非常态的传播机制活跃化。
+CIS
+CIS是企业形象识别系统（Corporate Identity System）的简称，是指一种通过规范组织、企业在传播中所运用的组织形象符号显征系统，如标志、色彩、字体、口号、行为等，从而使组织。企业的信息实现统一高效的传递，并在对象公众的心目中形成对组织、企业的形象识别，进而产生心理认同的组织形象管理方法。CIS由三个子系统构成：理念识别系统（MD），行为识别系统（BI）和视觉识别系统（VD）.`},
+  {ch:10, type:"noun", q:`消费主义`, a:`消费主义是市场经济社会中普通流行的一种社会价值观现象，是指导和调节人们在消费方面的行动和关系的原则、思想、愿望、情绪及相应的实践的总称。其主要原则是追求体面的消费，需求无节制的物质享受和消遣，并把这些当作生活的目的和人生的价值，消费主又体现了当下资本主义社会的一些内在逻辑：①商品消费面前人人平等：②消费不仅仅体现在物质文化上，更体现在文化含义上，消费体现个人身份：③人们消费的不是商品或者服务的使用价值，而是它们在一种文化中的符号象征价值。`},
+  {ch:10, type:"noun", q:`循环模式`, a:`循环模式是由奥斯古德和施拉嫣提出的一个新的传播过程模式。该模式没有传播者和受传者的概念，传播双方都作为传播行为的主体，通过讯息的授受处于你来我往的相互作用之中：参加传播过程的每一方在不同阶段都依次扮演着译码者（执行接收和符号解读功能）、解释者（执行解释意义功能）和编码者（执行符号化和传达功能）的角色，并相互交替着这些角色。循环模式强调了社会传播的互动性，并把传播双方都看作传播行为的主体，具有进步意义，但这个模式把传播双方放在完全对等或平等的关系中，与社会传播的现实情况有不符之处。另一方面，这个模式能够体现人际传播特别是面对面传播的特点，却不能适用于大众传播的过程。`},
+  {ch:10, type:"noun", q:`基本需求刺激式广告`, a:`基本需求刺激式广告又称普通需求刺激式广告，是为了使人们增加对某类商品的一次需求为目的而进行的广告。广告的一个潜在功能是刺激基本需求，刺激基本需求的广告往往由行业协会和倡导性团体而非某一个生产商来发布。广告中，广告主努力为整个产品品种创造需求，告诉潜在消费者某种产品的基本价值，而不是强调某类产品中某种具体品牌的价值。`},
+  {ch:10, type:"short", q:`公共关系的基本特征。`, a:`（1）公共关系的概念
+公共关系是指社会组织运用信息传播沟通的手段处理自身的公众关系问题，以达到组织与公众的相互了解、相互适应、优化组织社会生态环境目的的管理活动。
+（2）公共关系的基本特征
+①以公众为对象
+公共关系是一定的社会组织与其相关的社会公众之间的相互关系。社会组织必须着眼于自己的公众，才能生存和发展。公共关系活动的策划者和实施者必须始终坚持以公众利益为导向。
+②以美誉为目标
+塑造形象是公共关系的核心问题。组织形象的基本目标有两个，即知名度和美誉度。知名度是指一个组织被公众知道、了解的程度，以及社会影响的广度和深度。美誉度是指一个组织获得公众信任、赞美的程度，以及社会影响的美、丑、好、坏。在公众中树立组织的美好形象是公共关系活动的根本目的。
+③以互惠为原则
+公共关系是以一定的利益关系为基础的。一个社会组织在发展过程中要得到相关组织和公众的长久支持与合作，就要奉行互惠原则，既要实现本组织目标，又要让公众得益。
+④以长远为方针
+一个社会组织要想给公众留下不可磨灭的组织形象，不是一朝一夕之功所能及的，必须经过长期的、有计划、有目的的艰苦努力。
+⑤以真诚为信条
+以事实为基础是公共关系活动必须切实遵播的基本原则之一。社会组织必须为自己塑造一个诚实的形象，才能取信于公众。真诚能产生最大的说服力。唯有真诚，才能赢得合作。
+⑥以沟通为手段
+没有沟通，主客体之间的关系就不会存在，社会组织的良好形象也无从产生，互惠互利也不可能实现。要将公共关系目标和计划付诸实施，只有双向沟通的过程，才是公共关系的完整过程。`},
+  {ch:10, type:"short", q:`广告定位主体有几种？`, a:`（1）广告定位
+广告定位是指通过广告的沟通，为企业、产品或品牌在消费者心目中确定独特位置的系统活动。广告定位是进行成功广告的基础和前提，为广告作品创作提供了方向和题材；也是与消费者沟通和促成购买行动的关键，有利于消费者识别商品，有利于进一步巩固企业的产品定位。
+（2）广告定位主体
+定位是一种定位主体有目的的行为过程，主要包括塑造客体形象和传播形象这两个有意行为，这种塑造是由定位主体依据主体目的和客体特征进行的行为。因此，广告定位主体就是广告主体，是企业、政府或其他私人组织所宣传的某种产品、劳务或观念、企业、政府组织通过付费的方式传播自己的观念或者改变受众的某种观念，促使受众产生某种购买欲望。
+按照表现形式的不同，广告主体可分为商品类、品牌类、劳务类、节目类、观念类和形象类六大类型。
+主体。①商品类广告主体，是指可以通过媒介广告进行促销宣传，以便在市场上销售的商品，是最主要的广告
+②品牌类广告主体，是指一类商品中因为技术、功能、风格等因素而分化出来的个性化商品。
+③劳务类广告主体，是指一种可以被购买和被消费的有偿服务。
+④节目类广告主体，是指一种有娱乐表演性质或游戏性质的专题性的有偿服务。
+⑤观念类广告主体，是指为推销商品、改善自身形象而推向社会的观念。
+⑥形象类广告主体，主要指企业、政府或组织的形象。`},
+  {ch:10, type:"short", q:`简述“文化帝国主义”。`, a:`（1）文化帝国主义的概念
+文化帝国主义是指个别文化高压国家利用各种手段，以一种文化模式来取代世界文化的多元性和多样性的过程，是现代帝国主义总过程的一部分。在文化扩张的过程中，由于大众传播媒介是一种最有力的制度化手段，因而文化帝国主义也称为媒介帝国主义。
+（2）文化帝国主义的特点
+①它以强大的经济、资本实力为后盾，主要是通过市场而进行的扩张过程。
+②它是一种文化价值的扩张，即通过含有文化价值的产品或商品的倾销而实现的全球性文化支配。
+③由于信息产品的文化含量最高，因此这种文化扩张主要是通过信息产品的传播而得到实现的。`},
+  {ch:10, type:"essay", q:`《新青年》对新文化运动的影响。`, a:`1915年9月15日，由陈独秀主编的《青年杂志》第1卷第1号在上海正式出版发行。不久，为避免与基督教上海青年会主办的《上海青年》杂志混名，遂从第2卷第1号起易名为《新青年》。《新青年》与新文化运动及五四爱国运动紧密联系在一起，并对中国现代社会的走向起着重要的作用。
+（1）《新青年》的创刊标志着新文化运动的兴起，它擂响了思想解放运动的战鼓。
+《新青年》创刊之后，在一年多的时间里，它首先紧紧抓住思想文化问题，如陈独秀创办《新青年》，就以“除旧布新”作为方向。这一时期，刊物上发表的易白沙的《孔子平议》、胡适的《文学改良刍议》、鲁迅的《狂人日记》和吴虞《吃人与礼教》等文章带给中国思想界的震撼，对于思想解放所起的重大作用，是当时其他报刊上的政治、时评性文字所不可比拟的。
+（2）《新青年》是新文化运动的一面旗帜。
+《新青年》除了以一般性言论指导全国进步人士之外，还针对性地以通信形式来回答各地青年提出的种种问题。这些回信绝大部分随即发表在《新青年》上，回信是陈独秀作为新文化运动的统帅视不同情况而发出的具体的思想指令，在当时所起的积极作用极大，当时不少青年，如王统照，叶挺、俞颂华等都曾致函《新青年》，在与陈独秀书信往来中，受到启发与鼓励，思想日益进步，投身于新文化运动，为中国革命做出了重要的贡献。
+（3）宣传马克思主义，培养新一代青年。
+1920年9月，即从8卷1号起，《新青年》改组为中国共产党上海发起组的机关刊物，积极进行马克思主义理论宣传，成为在中国传播马克思主义的主要阵地，在广大革命知识分子中发生了广泛的影响，对中国共产党的成立和中国革命运动的发展做了思想上的准备。《新青年》1915年创刊到1922年体刊的7年。是中国知识分子，尤其是青年知识分子思想大解放的年代，是新旧思潮大激线的年代，也是中国由旧民主主义革命开始向新民主主义革命转变的年代。《新青年》适应了时代的要求，指引着这个时代前进的步伐，培育了新一代的青年。`},
+  {ch:10, type:"essay", q:`“意见领袖”理论在新媒体环境下的变化和发展。`, a:`（1）“意见领袖”理论的含义和特点
+意见领袖是指活跃在人际传播网络中，经常为他人提供信息、观点或建议，并对他人施加个人影响的人物。意见领袖在传播效果形成过程中起着重要的中介和过滤作用。
+意见领袖的特点包括以下方面：①与被影响者处于平等关系而非上下等级关系：②广泛分布在社会各个阶层：③影响领域分为“单一型”和“综合型”；④意见领袖的社交范围广，信息渠道多，大众传播信息接触量大。
+（2）“意见领袖”理论在新媒体环境下的变化和发展
+当今，在许多领域都存在“意见领袖”的说法。例如，微博开通后，许多专家、学者、明星甚至是草根都成为某一圈子的“意见领袖”。他们经常在微博中为他人提供信息、观点或建议，并对他人产生一定的影响。这些名人的微博粉丝量都达到万人以上，他们在微博中所提出的观点可能会影响上万人，甚至是千万人。
+根植于互联网络虚拟平台的意见领袖，既具有传统社会意见领袖的本质特征，即选择性地传播有利于自己观点的信息，通过提供建议和观点影响他人，又因为其不同于现实社会的特殊生存环境，而具有一些不同的特点：
+①网络意见领袖与受其影响者处于同一虚拟群体并拥有共同的兴趣爱好。与传统社会意见领袖一样，网络意见领袖与受其影响者处于同一群体并拥有共同的兴趣爱好。不同的是，他们所属的同一群体是存在于网络社会的虚拟群体，这些虚拟群体是基于短时的共同兴趣而建立的。
+②网络意见领袖与受其影响者之间的关系缺乏稳定性。网络意见领袖与受影响者之间对彼此的现实社会身份和背景所知甚少，缺乏全方位的认识和印象。交往环境的虚拟性使意见领袖与受影响者之间的关系具有某些虚拟成分。加之虚拟群体成员与现实社会群体相比往往具有更高的流动性，因此与传统社会相比，网络意见领袖与受影响者之间的关系缺乏稳定性。
+③网络意见领袖的参与行为表现非常活跃。积极的网络参与行为是网民成为意见领袖的前提条件，通过积极的参与行为，网民才能扩大个人的社交范围，提高自己的曝光度。
+④网络意见领袖都具有出色的表达能力。网络虚拟空间中的人际交流是一种基于文本的计算机中介交流，在交流的过程中，人们无法根据年龄、性别、教育程度、收入、职业等社会线索来确定社会身份，意见领袖在网络中的个人形象主要依靠文本等符号来塑造，个性化的文字表达成为意见领袖脱颖而出的必备条件。
+⑤网络意见领袖都具有某种专长。互联网的平权性尽管为每位参与者提供平等传播信息和发表意见的权利，但只有那些在某一方面拥有知识和专长，并在此基础上具备独到的话题分析能力，能够提供真知灼见的人才可能成为网络意见领袖。`},
+  {ch:11, type:"noun", q:`《向导》周报`, a:`《向导》周报是中共中央第一个政治机关报，1922年9月13日在上海创刊，蔡和森为第一任主编，该刊以报道评论国内外时事改治为主要内容，致力于阐释贯彻中国共产党制定的反帝反封建的民主革命纲领，国共合作后大力宣传中国共产党关于建立各个革命阶级统一战线的政治主张，1927年7月18日终刊，`},
+  {ch:11, type:"noun", q:`《法兰西共和国公报》`, a:`《法兰西共和国公报》是巴黎公社时期最重要的报纸。它原是梯也尔政府机关报，1871年3月18日起作为国民自卫军中央委员会的机关报，巴黎公社成立后成为公社机关报，共出版66期。该报版面篇幅分为官方和非官方两个部分，除发布重要宜言、法令、决议和指示外，还澄清事实真相，做穿敌人的请言。但该报印刷发行业务掌握在私人手里，文风刻板，不太关心群众利益，且价格较贵，所以销量不高，远低于当时公社的其他报纸。`},
+  {ch:11, type:"noun", q:`埃德加·斯诺`, a:`埃德加·斯诺，美国新闻记者、作家、1928年秋来到中国。曾任欧美几家报社驻华记者、通讯员，发表不少新闻作品。193年至1935年，任燕京大学新闻系讲师，同时兼任美国《星期六晚邮报》和英国《每日先驱报》特约记者、“一二，九”运动爆发后，积极支持爱国的学生运动。1936年6月，斯诺访向陕甘宁边区，写了大量通讯报道，成为第一个采访红区的西方记者。1937年出版的《红星照耀中国》，后改名为《西行漫记》，引起极大变动。新中国成立后，斯诺三次访华。`},
+  {ch:11, type:"noun", q:`传播障碍`, a:`传播障碍是指在传播活动过程中，由于传播系统本身存在的结构性和功能性障碍，而导致的传播行为受到阻码，传播障码包括结构与功位码，如传系制度是否合理、传播渠道是否畅通、信息系统的各部分的功能是否正常等。传播码的存在是码社会发展的重要因素，会造成社会成员的认知、判断、决策和行动的混乱，带来一系列的社会问题，这些同意如果不及时妥善地解决，必会影响社会的和谐和正常发展，严重的甚至造成社会混乱和国家解体。`},
+  {ch:11, type:"noun", q:`知沟假说`, a:`知沟假说是指尽管大众传播可以带来整个社会文化水平的提高，但由于经济富有者能够比贫困者出。除经济条件外，产生“知沟”的主要原因还有；传播能力的差异、已有知识储备量的差异、社会交往范围的差异、信息的选择性接触、接受和记忆的因素、大众传播信息本身的性质等。“知沟”假说提出了信息社会的基本矛盾是“信息富有者”和“信息贫困者”之间的两极分化问题。在信息和知识成为重要资源和财富的今天，如何防止“知沟”的扩大已经成了关乎国家和社会发展的重大问题。`},
+  {ch:11, type:"noun", q:`两级传播`, a:`两级传播是指大众传播的信息不是直接流向一般受众，而是要经过意见领袖这个中介，即表现为“大众传媒一意见领袖一一般受众”的两级过程。这是关于“传播流”的一种理论，是拉扎斯菲尔德等人根据意见领袖在传播过程中的存在提出的。`},
+  {ch:11, type:"noun", q:`非公众`, a:`非公众是指处在某组织的影响范围中，但其观点、态度和行为不受这个组织的影响，也不对这个组织产生影响力的公众。这是从组织的公关问题所面对的对象公众群体进行分类延伸出的概念。`},
+  {ch:11, type:"noun", q:`员工关系`, a:`员工关系是组织的内部公共关系，做好组织的公共关系首先要协调好组织内部各种关系和力量，员工关系是一切社会组织的公共关系的起点，是其他一切类型的公众关系的基础和前提，建立良好员工关系的原则是：要有合作的诚意，要尊重员工及他们的劳动，给予员工生活，劳动的安全感，以诚实与公平的道德准则对待员工，给予员工发展的机会，让员工了解组织，树立须导楷模等，改善员工关系的主要方法是：征询员工意见与倾听员工建议：抓好管理人员，与意见领袖员工的沟通；举办定期演讲与员工会议：建立各种员工沟通媒介：完善职工记录，处理好职工职业生涯中遇到的问题等。`},
+  {ch:11, type:"noun", q:`心理细分`, a:`心理细分是根据消费者所处的社会阶层、生活方式及个性特征对市场加以细分，在同一地理细分市场中的人可能显示出迥然不同的心理特征，企业按照消费者的心理特征来细分消费者市场，心理因素十分复杂，包括生活方式、个性、购买动机、价值取向以及对商品供求局势和销售方式的感应程度等变量。`},
+  {ch:11, type:"noun", q:`中华广告公会`, a:`中华广告公会是1927年由上海“维罗”“耀南”等六家广告社组织发起成立的，是当时规模较大，持续时间较长、产生一定影响的广告行业组织。中华广告工会的主要功能是解决同业之间的纠纷和争取共同的利益，对近代上海广告业的行业自治管理起到了一定的作用。`},
+  {ch:11, type:"short", q:`“媒介规范理论”的主要形式。`, a:`媒介规范理论是指大众传播媒介应当如何运作，或者人们期望媒介应如何组织，以及为了更广泛的公共利益和社会整体而进行运作的观念。该理论包含以下几种主要形式：
+（1）极权主义理论
+极权主义理论又称权威主义理论，是欧洲中世纪后期极权主义制度下的产物。其最大的特点是主张媒介必须以权力或权威的意志为转移，一切必须为统治者服务。主要内容包括：
+①报刊必须对当权者负责，维护国王和专制国家的利益。
+②报刊必须绝对服从于权力，不得批判占统治地位的道德和政治价值。
+③政府有权对出版物进行事先检查，这种检查是合法的。
+④对当权者或当局制度的批判属于犯罪行为，将给予严厉的法律制裁。
+极权主义传播制度及其理论随着资产阶级革命的胜利而崩溃。
+（2）自由主义理论
+自由主义理论是在欧美资产阶级革命中形成的媒介规范理论，其核心反映了资产阶级自由主义的观点。主要内容包括：
+①任何人都拥有出版自由的权利而不必经过政府的特别许可。
+②除人身攻击外，报刊有权批评政府和官吏。
+③新闻出版不应接受第三者的事先检查。
+④在涉及意见、观点和信念的问题上，“真理”和“谬误”的传播应该同样得到保证。
+自由主义理论有两个原则，一是“言论的公开市场”原则，二是“自我修正”原则。早期自由主义理论对打破封建专制制度，确立自由、平等和民权思想起了巨大作用。但随着资本主义发展到垄断阶段，它成了维护垄断资本利益的理论；在全球信息化的今天，进一步演变成了个别传播大国推行文化帝国主义的理论依据。
+（3）社会责任理论
+社会责任理论是对自由主义理论的一种修正，由美国新闻自由委员会于20世纪40年代后期提出。其主要内容有：
+①大众传播具有很强的公共性，媒介机构必须对社会和公众承担一定的义务和责任。②媒介的新闻报道和信息传播应该符合真实性、正确性、客观性、公正性等专业标准。
+③媒介必须在现存法律和制度的范围内进行自我约束。
+④公众有权要求媒介从事高品位的信息传播，这种干预是正当的。
+社会责任理论提出的目的有两个方面，一是为了防止传播事业高度垄断而引起的社会矛盾激化：二是为了防止由媒介内容的浅薄化、煸情化和刺激化而引起的社会道德和文化的堕落。
+（4）民主参与理论
+民主参与理论是20世纪70年代以后在西方国家出现的新的媒介规范理论，它的背景是社会信息化的发展和受众权利意识的提高。民主参与理论要求大众传媒向一般民众开放，允许受众自主参与。其主要观点有：
+①任何个人和弱小群体都拥有知晓权、传播权和媒介接近权。
+②媒介应主要为受众而存在，而不应主要为媒介组织、职业宣传家或广告赞助商而存在。
+③与大规模的、单向的、垄断的大媒介相比，小规模的、双向的、参与的媒介更合乎社会理想。民主参与理论的核心价值是多元性、小线模性、双向互动性、传播关系的平等性。
+民主参与理论的产生，反映了一般民众对社会责任理论的失望心理。
+（5）发展中国家的媒介规范理论
+20世纪70年代以来，发展中国家的媒介规范理论兴起。该理论反映了发展中国家面临的经济落后、政局不稳，在大众传播的硬件和软件两个方面对西方发达国家依赖程度很高的现实状况。其要点包括：
+①大众传播活动必须与国家政策保持同一轨道，以推动国家发展为基本任务。
+②媒介的自由必须伴随相应的责任和义务。
+③在传播内容上要优先选择本国文化、优先使用本民族语言。
+④在新闻和信息合作领域，优先发展同地理、政治和文化比较接近的其他发展中国家的关系。
+⑤在事关国家利益和社会稳定的利害问题上，国家有权对传播媒介进行检查、千预、限制乃至管制。
+（6）我国的媒介规范理论
+面的内容：
+我国的社会主义媒介制度及其规范理论正在发展和探索过程当中。就目前而言，它包括了以下几个方
+①新闻传播事业实行社会主义公有制，防止私有资本垄断，保障社会主义新闻自由。
+②新闻传播事业是中国共产党领导下的事业，必须坚持党性原则。
+③执行报道新闻、传播信息、引导舆论、提供娱乐等多方面的社会职能。
+分。④通过沟通生产、流通和消费服务于国民经济发展，其本身也是新兴的信息和知识产业的重要组成部`},
+  {ch:11, type:"short", q:`传播学批判学派的主要流派。`, a:`传播学的批判学派是在法兰克福学派的影响下，以欧洲学者为主发展起来的传播学学派。目前批判学派中较有影响的流派包括：政治经济学派、文化研究学派、意识形态“霸权”理论、哈贝马斯的批判理论等。
+（1）政治经济学派
+其代表是英国累斯特大学大众传播研究中心的G.默多克和P.格尔丁等人。该学派依据马克思关于若一个阶级是社会上占统治地位的物质力量，则同时也是社会上占统治地位的精神力量，支配着物质生产资料的阶级同时也支配着精神生产资料的观点，从经济基础对上层建筑的决定作用出发来揭示资本主义社会大众传媒支配与控制的现状。
+（2）文化研究学派
+文化研究学派又称伯明翰学派，以英国伯明翰大学现代文化研究所的S.霍尔、D.莫利等人为代表，主张从上层建筑和意识形态的相对独立性出发来研究资本主义社会的大众传播。
+文化研究学者的主要观点可以概括如下：
+①大众传播是资本主义社会系统的一个重要组成部分，它在规定社会关系、行使政治统治方面发挥着重要的意识形态功能，并具有相对的独立性。
+②大众传播可以分为两个部分：一是文化产品的生产过程：二是文化产品的消费过程。
+③讯息符号是与一定的价值体系或意文作系结合在一起的，上众传催的将号化活动，从本质上来说是按照支配阶级的价值体系为事物“赋子意义”。
+④受众的符号解读过程却不是完全核动的，由于符号的多文性和受众社会背景的多样性，受众可以对
+a.同向解读或“优先式解读”，即按照媒介慧子的意义来理解讯息。
+b.妥协式解读，即部分基于媒介提示的意义、部分基予自己的社会背景来理解讯息。
+c.反向解读或“对抗式解读”，即对媒介提示的讯息意义微出完全相反的理解。（3）意识形态“霸权”理论
+批判学派的学者把“霸权”看作是支配阶级在一定历史时期内为维护自身利益而行使社会主导权和文化主导权的能力，而实现“霸权”的手段不是通过直接的高压政策，而是通过决定国家的经济、政治和文化方向，使被支配阶级对现有权力结构和社会关系产生认同或从属意识。
+（4）哈贝马斯的批判理论
+①哈贝马斯认为西方理性化进程主要表现为技术理性的发展和在各个生活领域的全面渗透，然而技术理性本身无法解决生活世界的价值观问题，因此哈贝马斯提出了沟通理性的概念，试图通过沟通行为的理性化进程解决晚期资本主义社会面临的诸多危机。
+②1981年哈贝马斯提出了交往行为理论，他认为交往行为概念有四个功能：一是理解的功能，有助于把握知识：二是合作的功能，使社会形成一个有机的整体，以实现社会的目标：三是社会化功能，即能够使个体认同社会规范和价值取向，从而有助于形成某种价值导向：四是社会转型功能。因为前三种功能的总目的就是要重建历史唯物主义，重现资本主义国家的应有功能，实现资本主义社会的结构转型、结构交迁和社会进化。`},
+  {ch:11, type:"short", q:`公共关系传播的目的。`, a:`公共关系是指社会组织运用信息传播沟通的手段处理自身的公众关系问题，以达到组织与公众的相互了解、相互适应、优化组织社会生态环境目的的管理活动，要使少数的、特定的社会组织（公关主体）同众多的、不确定的社会公众（公关客体）之间建立、维持良好的关系，就需要采用社会公众普遍接受的手段和方法，依靠真实、有效的信息交流、传播、沟通来实现。公共关系传播的目的有以下几点：
+（1）构建有利于组织生存、发展的社会生态环境。
+人类社会发展的历史告诉我们，任何一个个人或组织，要想获得理想的社会环境，保证自己的社会地位，顺利地生产和发展下去，都要科学、合理地处理同自己密切相关的各种社会关系。只有科学、合理地处理好这些关系，才能创造出最佳的社会关系环境来保证事业的成功。不同的组织所开展的处理关系的活动具体目标虽有所不同，所针对的公众对象虽各有侧重，但其实质上都是在争取各自公众的理解与支持，都是力图处理好与自己公众的社会关系，本质上都是在为自己构建更好的生存和发展的社会空间。
+（2）监察社会环境的变化，确保组织决策适应社会变化，反映社会发展变化趋势。
+公共关系管理的这一目的主要是依靠日常的公关信息搜集、舆论监测分析等具体公关工作职责来实现的。公共关系工作首先要清楚了解变化运动着的环境信息，这样才有可能进一步达到对组织内部、外部环境及其变化趋势的了解。这对于社会组织所起的作用有如“雷达”：它向外可发出各种组织征询性或试探性的信息，向内可大量收集社会各方发出的信息，包括各方面对组织发出信息的反应，以此来评估社会舆论，了解和把握环境的变化情况。
+（3）协调各种力量，协助决策层解决经营管理中遇到的各种问题，消除各种偏见和误解。
+这一目标主要是依靠提供公关咨询建议、传播沟通管理、关系协调管理等具体公关工作职责来实现的。现代组织机构是一个具有内在联系，同时又与外界环境发生物质、能量、信息交换的开放系统。对于这样的一个系统，其内部各子系统、各要素间，以及系统与外部环境间的协调是非常重要的。只有协同才能使社会组织机构的系统成为一个结构稳定、发展有序、功能最优的有机整体。
+（4）增进组织经营管理活动的经济效益，确保组织经营管理活动的社会效益最大化。
+这一目标主要是依靠做好公关管理的每个环节，以及公关策划、形象管理、品牌管理、信誉管理等具体公关工作职责来实现的，在进行信息搜集、舆论监察时，注意发掘信息的使用价值，就能主动捕提到级营时机，直接为组织创造经济和带来社会数益，在策动信息传播沟通时，科学介绍组织，推动组织与公司的相互理解、相互造应，就能为组烈的经营管得创造最佳的社会生态环境，在组织内部关系协调上，公共关系可以努力创造竞争向上的组织文化机围，通过传播沟通激发员工的工作热情，提高工作效率，创造更高经营效益，同时，公共关系的舆论管理、形象管理、品牌管理、信誉管理等，都有助于实现创造溢价目标。`},
+  {ch:11, type:"short", q:`按报介划分广告的类型。`, a:`技传襦媒介划分，总体上可以将广告分为三类：
+（1）大众传播媒体广告
+大众传播媒体广告可分为视听广告和印刷广告，视所广告又称为电子媒体广告，包括电视广告和广播广告、印刷广告主要有报纸广告和杂志广告，电影广告也是一种大众传播媒体广告。
+（2）小众传播崔体广告
+相对于大众传播提体，还有很多理体役播范据验小，登众晋体较少，被称之为小众传播媒体。这些是体往往可以真接都响消费者的购买行为，弥补和配合大众保摄媒体的传播活动，有时也可统称为促销媒体。小众传播报体广告主要有三类：户外广告、直接广告、销售现场广告。另外还有促销广告（SP广告）、交通广告、报纸夹页广告等。
+（3）新兴媒体广告
+随載现代科学技术的发展进步资产生的新健体，互联网、数字电视以及各种移动终端等都可成为广告信息的传播载体，数字化使大众传播做体的功能得到进一步增强，更能适应广大受众对包括广告信息在内的各类信息的需求：可以促进待钱道体与数字提体的沟通互动，为传播广告信息提供更加优越的条件。`},
+  {ch:11, type:"short", q:`分析反“客里空”运动的作用和影响。`, a:`（1）反“客里空”运动始末
+反“客里空”活动是1947年6月《晋经日报》发起的以批评和自我批评方式对新闻失实现象进行的检查和纠正的运动。
+土地改革运动兴起后，土改宜传报道一度出现右的顿向。对此，中共中央晋绥分局机关报《晋绥日报》自1947年6月起率先检查其新报道工作中存在的右错识和阅失实问题。6月15日，《晋绥日报》刊登苏联鹏本《前线》中一个惯于弄虚作假，吹牛拍马的战地特泥记者客里空的情节，因而这场运动被称为反“客里空”运动。
+之后，《晋绥日报》采用在报纸上公开进行批评与自我批评的方式发动群众揭露假报道，维护新闻真实性原则。反“客里空”运动得到中共中央的售定，新华社于8月28日发表专论《锻炼我们的立场与作风-学（晋绥日报）检查工作》，9月1日发表社论《学习《晋绥日报》的自我批评》，将反“客里空”运动推广到其他解放区的新闻界，至1948年春季基本结束。
+（2）反“客里空”运动的作用
+这场反“客里空”运动，发扬了批评与自我批评的优良传统，克服了土改宣传中右的倾向，检查纠正了新闻报道失实的现象，维护了新闻真实性原则，改造了新闻工作者的立场与作风，提高了新闻工作的政治素质，但也存在“左”的偏向，误伤了一些好人。
+（3）反“客里空”活动的影响
+①反“客里空”活动是党的新闻事业史上首次反对虚假报道，坚持新闻真实性的运动，查究了新闻失实的原因，并在此基础上做到了思想和行动的端正和调整，是维护新闻真实性的一次胜利。
+②形成了监督的风气。在这场运动中，党报十分重视群众作用，根据群众不满反省自身工作、积极展开批评，表达群众的呼声和意愿，成为交换意见、展开批评、监督社会的平台。
+③在这次活动中，为了有效地防止新闻报道的失实和偏差，针对稿件中的某一观点或疑难不清的问题，或者阐释交代政策，或者表达赞成什么、反对什么，或者提出问题，加以说明或补充，表达编者的意见，即运用了“偏者按语”，这一编辑手段对后来的由板书报产生了降路的生期，
+④通过反客里空运动。改造了新例工作者的立场和作风，提高了新侧工作者的政治素质，新网工作者的职业道德素质得以改造。`},
+  {ch:11, type:"short", q:`联系新园传播实际，论述“提高我国国际传播他力”与建立世界信息传播铁序的关系。`, a:`（1）提升国际传播能力
+国际传播是以国家社会为基本单位，以大众传播为主要手段的国与国之间的信息传播，国际传播的基本主体是国家，除此之外还包括各种国际组织和机构以及活跃在国际事务领域中的个人。国际传播是一种由政治所规定的跨国界传播，对内政与外交具有重要的影响：它与国家和民族利益密切相关，传播主体通常以国家社会代表的身份出现。
+一个国家的国际传播能力是其文化软实力的组成部分，是维护国家形象的重要手级，构建现代传播体系，提高我国国际传播能力，是使国际社会了解中国，提升国家文化软实力，塑请国家良舒形象的必然要求，对于提升我国的国际影响和国际地位，加强我国媒体在国际典论格局中的地位和作用具有十分重要的意义。
+（2）建立世界信息传播秩序
+现行的全球性信息系统并不是一个机制合理，结构平衡的系统，而是存在着严重的不平衡和不平等状况。主要表现在：当今世界上“信息富有国”和“信息贫困国”之间的两极分化十分严重：少数发达国家凭借自己强大的经济、技术和资本实力控制着当今世界的信息生产和传播，造成了世界信息单向流通的不平衡、不平等结构：这种结构维护的是少数发达国家的利益，而把大多数发展中国家置于受控制、受支配的地位。
+对此，发展中国家为了维护自身利益，围绕建立“均衡、平等”的世界信息传播新序问题，而与发达国家之间展开了一场旷日持久的大论战，称为“新世界信息秩序”论争，这场论争始于1973年的《阿尔及尔宣言》，经历三个阶段，至今仍是国际传播的一个重要议题。
+（3）“提高我国国际传播能力”与建立世界信息传播秩序的关系
+新形势、新任务要求我们必须高度重视和大力加强国际传播能力建设，要充分认识提高国际传播能力的重要性，增强扩大对外传播能力的紧迫感和责任感，构建覆盖广泛、技术先进的现代传播体系，形成中国经济社会发展水平和国际地位相称的国际传播力，才能打破西方媒体垄断格局，建立世界信息传播新秩序。
+①提高国际传播能力，是顺应世界传媒发展趋势，实现我国媒体跨越式发展的需要。媒体全球化是与经济全球化的进程相伴而生并随着传播手段的成熟而不断发展的。这是媒体发展规律，也是媒体发展的必然条件。
+②提高国际传播能力，是更好地让国际社会了解中国、认识中国，向世界说明中国的需要。随着经济全球化的深入发展和我国改革开放的全面推进，中国的前途命运与世界的前途命运紧密地联系在一起，实践证明，传播力决定影响力。拥有强大的国际传播力，才能确保传播的自主性，让国际社会更好地了解认识中国。没有强大的国际传播能力，向世界介绍一个真实的中国、营造对我有利的国际奥论环境是难以做到的。
+③提高国际传播能力，是积极参与国际文化竞争，增强我国国际影响力的需要。国际传播能力作为软实力，是综合国力的重要组成部分，其影响力也是国际竞争力的重要方面。当今激烈的国际竞争中，我国要全面实现对外发展目标，发展与世界各国交往合作关系，在加强经济实力的同时，必须大力加强包括国际传播能力在内的软实力，更加有力地应对国际舆论的新挑战。
+④提高国际传播能力，是打破西方舆论垄断，促进世界信息传播秩序更加公正合理的需要。发达国家凭借强大经济实力，在掌握现代通信技术和促进传播全球化方面占据着优势。在信息传播中，他们通过议程设置，把全世界发生的事情按照西方思维和价值观进行报道传播，形成了舆论传播的强势，不但抢占发展中国家媒介市场，对发展中国家的文化传统形成冲击，而且还对发展中国家的核心价值观以至内政外交进行干预。有效应对西方思想舆论渗透，抵制西方媒体的歪曲报道，已经成为广大发展中国家的共识。广大发展中国家需要更多客观的、代表发展中国家的声音，作为世界上最大发展中国家的中国，应当从加强传播能力建设入手，以更加主动的姿态发出自己的声音，向世界阐释自己的观点主张及各项方针政策，为世界提供更多可供选择的客观公正的信息，这既是广大发展中国家对我们的强烈愿望，也是我们为世界信息公平所应作的努力。`},
+];
+
+
+// ========================= Data Layer =========================
+const STORAGE_KEY = 'chuanbao_study_v1';
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      CARDS.forEach((_, i) => { if (!d.cardStatus[i]) d.cardStatus[i] = { status: 'new', reviewCount: 0, lastReview: null }; });
+      if (!d.studyLog) d.studyLog = [];
+      if (!d.quizHistory) d.quizHistory = [];
+      if (!d.settings) d.settings = { examDate: '', dailyGoal: 10 };
+      return d;
+    }
+  } catch(e) {}
+  return getDefaultData();
+}
+function getDefaultData() {
+  const cardStatus = {};
+  CARDS.forEach((_, i) => { cardStatus[i] = { status: 'new', reviewCount: 0, lastReview: null }; });
+  return { checkIns: {}, cardStatus, settings: { examDate: '', dailyGoal: 10 }, studyLog: [], quizHistory: [] };
+}
+function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+let data = loadData();
+
+// ========================= Navigation =========================
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelector(`.nav-item[data-page="${name}"]`).classList.add('active');
+  if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+  if (name === 'dashboard') refreshDashboard();
+  if (name === 'study') initStudyPage();
+  if (name === 'quiz') initQuizPage();
+  if (name === 'wrong') renderWrongBook('all');
+  if (name === 'stats') renderStats();
+  if (name === 'settings') loadSettings();
+}
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
+function toggleDarkMode() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.getElementById('darkIcon').textContent = isDark ? '\u263E' : '\u2600';
+  document.getElementById('darkLabel').textContent = isDark ? '夜间模式' : '日间模式';
+  localStorage.setItem('theme', isDark ? '' : 'dark');
+}
+
+// ========================= Toast =========================
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (type || 'info');
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========================= Dashboard =========================
+function refreshDashboard() {
+  const cs = data.cardStatus;
+  const total = Object.values(cs).filter(c => c.status !== 'new').length;
+  const mastered = Object.values(cs).filter(c => c.status === 'mastered').length;
+  const wrong = Object.values(cs).filter(c => c.status === 'unknown' || c.status === 'fuzzy').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statMastered').textContent = mastered;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statStreak').textContent = calcStreak();
+  const todayKey = formatDate(new Date());
+  const todayCount = data.studyLog.filter(l => l.date === todayKey).length;
+  const goal = data.settings.dailyGoal || 10;
+  document.getElementById('ringDone').textContent = todayCount;
+  document.getElementById('ringGoal').textContent = goal;
+  const circumference = 2 * Math.PI * 52;
+  document.getElementById('progressRing').style.strokeDashoffset = circumference * (1 - Math.min(todayCount / goal, 1));
+  updateCountdown(); renderCalendar(); renderChapterProgress(); updateCheckinBtn(); renderReviewBanner();
+}
+
+function renderReviewBanner() {
+  const due = getDueCards();
+  const banner = document.getElementById('reviewBanner');
+  if (due.length === 0) { banner.style.display = 'none'; return; }
+  const unknownDue = due.filter(c => data.cardStatus[c.idx]?.status === 'unknown').length;
+  const fuzzyDue = due.filter(c => data.cardStatus[c.idx]?.status === 'fuzzy').length;
+  const masteredDue = due.filter(c => data.cardStatus[c.idx]?.status === 'mastered').length;
+  let detail = [];
+  if (unknownDue > 0) detail.push(unknownDue + ' 道不熟');
+  if (fuzzyDue > 0) detail.push(fuzzyDue + ' 道模糊');
+  if (masteredDue > 0) detail.push(masteredDue + ' 道巩固');
+  banner.style.display = 'flex';
+  banner.className = 'review-banner';
+  banner.onclick = () => { switchPage('study'); };
+  banner.innerHTML = `<div class="review-banner-icon">&#128214;</div>
+    <div class="review-banner-text"><strong>今日有到期复习的题目</strong><span>${detail.join(' + ')}，根据艾宾浩斯遗忘曲线安排</span></div>
+    <div class="review-banner-count">${due.length}</div>`;
+}
+function calcStreak() {
+  let streak = 0; const today = new Date();
+  for (let i = 0; i < 365; i++) { const d = new Date(today); d.setDate(d.getDate() - i); if (data.checkIns[formatDate(d)]) streak++; else break; }
+  return streak;
+}
+function formatDate(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function updateCountdown() {
+  const ed = data.settings.examDate;
+  if (!ed) { document.getElementById('countdownDays').textContent = '--'; document.getElementById('countdownLabel').textContent = '请在设置中填写考试日期'; return; }
+  const diff = Math.ceil((new Date(ed) - new Date()) / 86400000);
+  document.getElementById('countdownDays').textContent = diff > 0 ? diff + ' 天' : '考试日';
+  document.getElementById('countdownLabel').textContent = diff > 0 ? '距离考试还有' : '考试时间已到，加油！';
+}
+function updateCheckinBtn() {
+  const btn = document.getElementById('checkinBtn'); const today = formatDate(new Date());
+  if (data.checkIns[today]) { btn.classList.add('done'); btn.textContent = '已打卡'; }
+  else { btn.classList.remove('done'); btn.textContent = '今日打卡'; }
+}
+function doCheckin() {
+  const today = formatDate(new Date());
+  if (data.checkIns[today]) { showToast('今天已经打卡过了', 'info'); return; }
+  data.checkIns[today] = { time: new Date().toISOString() }; saveData();
+  showToast('打卡成功！坚持就是胜利', 'success'); refreshDashboard();
+}
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid'); const labels = document.getElementById('calLabels');
+  grid.innerHTML = ''; labels.innerHTML = '';
+  ['日','一','二','三','四','五','六'].forEach(w => { labels.innerHTML += `<span>${w}</span>`; });
+  const today = new Date(); const start = new Date(today); start.setDate(start.getDate() - 41); start.setDate(start.getDate() - start.getDay());
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i); const key = formatDate(d);
+    const el = document.createElement('div'); el.className = 'cal-day';
+    if (d > today) el.classList.add('future');
+    else if (data.checkIns[key]) { const cnt = countDayStudy(key); el.classList.add(cnt >= 20 ? 'level-4' : cnt >= 10 ? 'level-3' : cnt >= 5 ? 'level-2' : 'level-1'); }
+    if (key === formatDate(today)) el.classList.add('today');
+    el.title = key; grid.appendChild(el);
+  }
+}
+function countDayStudy(dateKey) { return data.studyLog.filter(l => l.date === dateKey).length; }
+function renderChapterProgress() {
+  const container = document.getElementById('chapterProgressList'); container.innerHTML = '';
+  CHAPTERS.forEach((name, i) => {
+    const cards = CARDS.filter(c => c.ch === i); if (cards.length === 0) return;
+    const m = cards.filter(c => { const idx = CARDS.indexOf(c); return data.cardStatus[idx]?.status === 'mastered'; }).length;
+    const pct = Math.round((m / cards.length) * 100);
+    container.innerHTML += `<div class="chapter-progress"><div class="chapter-progress-header"><span class="chapter-progress-name">${name}</span><span class="chapter-progress-pct">${m}/${cards.length} (${pct}%)</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
+  });
+}
+
+// ========================= Study =========================
+let studyQueue = [], studyIdx = 0, currentChapter = -1, currentStudyType = 'all';
+function initStudyPage() {
+  const sel = document.getElementById('studyChapterSelect');
+  sel.innerHTML = '<span class="chapter-tag active" onclick="selectStudyChapter(-1, this)">全部</span>';
+  CHAPTERS.forEach((name, i) => { sel.innerHTML += `<span class="chapter-tag" onclick="selectStudyChapter(${i}, this)">${name}</span>`; });
+  currentChapter = -1; buildStudyQueue(); studyIdx = 0; showCurrentCard();
+}
+function selectStudyChapter(ch, el) {
+  document.querySelectorAll('#studyChapterSelect .chapter-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); currentChapter = ch; buildStudyQueue(); studyIdx = 0; showCurrentCard();
+}
+function filterStudyType(type, el) {
+  el.parentElement.querySelectorAll('.chapter-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); currentStudyType = type; buildStudyQueue(); studyIdx = 0; showCurrentCard();
+}
+function getReviewInterval(status, reviewCount) {
+  if (status === 'unknown') return 0;
+  if (status === 'fuzzy') return 1;
+  if (status === 'mastered') {
+    const intervals = [1, 3, 7, 14, 30];
+    return intervals[Math.min(reviewCount - 1, intervals.length - 1)] || 30;
+  }
+  return 0;
+}
+
+function isDueForReview(cardIdx) {
+  const cs = data.cardStatus[cardIdx];
+  if (!cs || cs.status === 'new') return false;
+  if (cs.status === 'unknown') return true;
+  if (!cs.lastReview) return true;
+  const interval = getReviewInterval(cs.status, cs.reviewCount);
+  const lastDate = new Date(cs.lastReview);
+  const dueDate = new Date(lastDate);
+  dueDate.setDate(dueDate.getDate() + interval);
+  return new Date(formatDate(new Date())) >= new Date(formatDate(dueDate));
+}
+
+function getDueCards() {
+  return CARDS.map((c, i) => ({ ...c, idx: i })).filter(c => isDueForReview(c.idx));
+}
+
+function buildStudyQueue() {
+  let pool = CARDS.map((c, i) => ({ ...c, idx: i }));
+  if (currentChapter >= 0) pool = pool.filter(c => c.ch === currentChapter);
+  if (currentStudyType !== 'all') pool = pool.filter(c => c.type === currentStudyType);
+  const getStatus = c => data.cardStatus[c.idx]?.status || 'new';
+
+  const dueUnknown = pool.filter(c => getStatus(c) === 'unknown');
+  const dueFuzzy = pool.filter(c => getStatus(c) === 'fuzzy' && isDueForReview(c.idx));
+  const dueMastered = pool.filter(c => getStatus(c) === 'mastered' && isDueForReview(c.idx));
+  const notDueFuzzy = pool.filter(c => getStatus(c) === 'fuzzy' && !isDueForReview(c.idx));
+  const newCards = pool.filter(c => getStatus(c) === 'new');
+  const notDueMastered = pool.filter(c => getStatus(c) === 'mastered' && !isDueForReview(c.idx));
+
+  studyQueue = [...dueUnknown, ...dueFuzzy, ...dueMastered, ...notDueFuzzy, ...newCards, ...notDueMastered];
+}
+function showCurrentCard() {
+  const fc = document.getElementById('flashcard'); fc.classList.remove('flipped');
+  document.getElementById('fcActions').style.display = 'none';
+  const fill = document.getElementById('studyProgressFill');
+  fill.style.width = studyQueue.length > 0 ? ((studyIdx + 1) / studyQueue.length * 100) + '%' : '0%';
+  if (studyQueue.length === 0) {
+    document.getElementById('fcProgress').textContent = '0 / 0';
+    document.getElementById('fcQuestion').textContent = '暂无匹配的题目';
+    document.getElementById('fcHint').textContent = '尝试切换筛选条件';
+    document.getElementById('fcChapter').textContent = ''; document.getElementById('fcType').textContent = '';
+    document.getElementById('answerTemplate').style.display = 'none'; return;
+  }
+  const card = studyQueue[studyIdx];
+  document.getElementById('fcProgress').textContent = `${studyIdx + 1} / ${studyQueue.length}`;
+  document.getElementById('fcQuestion').textContent = card.q;
+  document.getElementById('fcHint').textContent = '点击卡片翻转查看答案';
+  document.getElementById('fcChapter').textContent = CHAPTERS[card.ch];
+  const typeEl = document.getElementById('fcType');
+  const typeMap = { noun: ['名词解释', 'type-noun'], short: ['简答题', 'type-short'], essay: ['论述题', 'type-essay'] };
+  const [tLabel, tClass] = typeMap[card.type] || ['题目', ''];
+  typeEl.textContent = tLabel; typeEl.className = 'flashcard-type ' + tClass;
+  document.getElementById('fcAnswer').textContent = card.a;
+  updateAnswerTemplate(card.type);
+}
+function flipCard() {
+  if (studyQueue.length === 0) return;
+  const fc = document.getElementById('flashcard'); fc.classList.toggle('flipped');
+  if (fc.classList.contains('flipped')) document.getElementById('fcActions').style.display = 'flex';
+}
+function rateCard(rating) {
+  const card = studyQueue[studyIdx];
+  data.cardStatus[card.idx] = { status: rating, reviewCount: (data.cardStatus[card.idx]?.reviewCount || 0) + 1, lastReview: formatDate(new Date()) };
+  data.studyLog.push({ cardIdx: card.idx, rating, date: formatDate(new Date()), time: new Date().toISOString() });
+  saveData();
+  const msgs = { unknown: '已标记为不熟', fuzzy: '已标记为模糊', mastered: '已掌握！' };
+  showToast(msgs[rating], rating === 'mastered' ? 'success' : 'info');
+  studyIdx++;
+  if (studyIdx >= studyQueue.length) { studyIdx = 0; buildStudyQueue(); if (studyQueue.length === 0) showToast('当前筛选下全部学完！', 'success'); }
+  showCurrentCard();
+}
+document.addEventListener('keydown', e => {
+  const ap = document.querySelector('.page.active'); if (!ap) return;
+  if (ap.id === 'page-study') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+    const fc = document.getElementById('flashcard');
+    if (e.key === '1' && fc.classList.contains('flipped')) rateCard('unknown');
+    if (e.key === '2' && fc.classList.contains('flipped')) rateCard('fuzzy');
+    if (e.key === '3' && fc.classList.contains('flipped')) rateCard('mastered');
+    if (e.key === 'ArrowLeft' && studyIdx > 0) { studyIdx--; showCurrentCard(); }
+    if (e.key === 'ArrowRight' && studyIdx < studyQueue.length - 1) { studyIdx++; showCurrentCard(); }
+  }
+});
+
+// ========================= Quiz =========================
+let quizCards = [], quizTimerInterval = null, quizTimeLeft = 0, quizTotalTime = 0;
+let quizMode = 'quick', qrIdx = 0;
+
+function initQuizPage() {
+  const sel = document.getElementById('quizYear');
+  sel.innerHTML = '<option value="-1">不限年份</option>';
+  CHAPTERS.forEach((name, i) => { sel.innerHTML += `<option value="${i}">${name}</option>`; });
+  selectQuizMode(quizMode);
+}
+
+function selectQuizMode(mode) {
+  quizMode = mode;
+  document.getElementById('modeQuick').classList.toggle('active', mode === 'quick');
+  document.getElementById('modeFormal').classList.toggle('active', mode === 'formal');
+  document.getElementById('quizTimeRow').style.display = mode === 'formal' ? 'flex' : 'none';
+}
+
+function buildQuizPool() {
+  const scope = document.getElementById('quizScope').value;
+  const yearIdx = parseInt(document.getElementById('quizYear').value);
+  let pool = CARDS.map((c, i) => ({ ...c, idx: i }));
+  if (yearIdx >= 0) pool = pool.filter(c => c.ch === yearIdx);
+  if (scope === 'wrong') { const wp = pool.filter(c => data.cardStatus[c.idx]?.status === 'unknown' || data.cardStatus[c.idx]?.status === 'fuzzy'); if (wp.length > 0) pool = wp; }
+  else if (scope === 'unknown') { const up = pool.filter(c => data.cardStatus[c.idx]?.status === 'unknown' || data.cardStatus[c.idx]?.status === 'new'); if (up.length > 0) pool = up; }
+  pool.sort(() => Math.random() - 0.5);
+  return pool;
+}
+
+function startQuiz() {
+  const count = parseInt(document.getElementById('quizCount').value);
+  const pool = buildQuizPool();
+  quizCards = pool.slice(0, Math.min(count, pool.length));
+  if (quizCards.length === 0) { showToast('没有匹配的题目', 'error'); return; }
+
+  document.getElementById('quizSetup').style.display = 'none';
+
+  if (quizMode === 'formal') {
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('quickReviewArea').style.display = 'none';
+    const time = parseInt(document.getElementById('quizTime').value);
+    quizTotalTime = time * 60; quizTimeLeft = quizTotalTime;
+    document.getElementById('quizTimerBar').style.display = 'flex';
+    updateQuizTimer();
+    quizTimerInterval = setInterval(() => { quizTimeLeft--; updateQuizTimer(); if (quizTimeLeft <= 0) { clearInterval(quizTimerInterval); showToast('时间到！', 'error'); submitQuiz(); } }, 1000);
+    renderQuizNavDots(); renderFormalQuestions();
+  } else {
+    document.getElementById('quizArea').style.display = 'none';
+    document.getElementById('quickReviewArea').style.display = 'block';
+    qrIdx = 0; renderQRCard();
+  }
+}
+
+// ---------- Formal exam mode ----------
+function updateQuizTimer() {
+  const m = Math.floor(quizTimeLeft / 60), s = quizTimeLeft % 60;
+  const el = document.getElementById('quizTimer');
+  el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  el.classList.toggle('warning', quizTimeLeft < 60);
+  const fill = document.getElementById('quizTimerFill');
+  fill.style.width = (quizTotalTime > 0 ? quizTimeLeft / quizTotalTime * 100 : 0) + '%';
+  fill.classList.toggle('warning', quizTimeLeft < 60);
+}
+function renderQuizNavDots() {
+  document.getElementById('quizNavDots').innerHTML = quizCards.map((_, i) => `<div class="quiz-nav-dot" id="qDot${i}" onclick="scrollToQuiz(${i})">${i+1}</div>`).join('');
+}
+function scrollToQuiz(idx) { const el = document.getElementById('quizCard' + idx); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function updateQuizDots() {
+  quizCards.forEach((_, i) => { const dot = document.getElementById('qDot' + i); const ta = document.getElementById('quizAns' + i); if (dot) dot.classList.toggle('answered', !!(ta && ta.value.trim())); });
+}
+function renderFormalQuestions() {
+  const container = document.getElementById('quizQuestions'); container.innerHTML = '';
+  const typeMap = { noun: '名词解释', short: '简答题', essay: '论述题' };
+  quizCards.forEach((card, i) => {
+    container.innerHTML += `<div class="quiz-question-card" id="quizCard${i}"><div class="quiz-q-number">第 ${i+1} 题 · ${typeMap[card.type] || '题目'} · ${CHAPTERS[card.ch]}</div><div class="quiz-q-text">${card.q}</div><textarea class="quiz-textarea" id="quizAns${i}" placeholder="在此作答..." oninput="updateQuizDots()"></textarea><div class="quiz-ref-answer" id="quizRef${i}"><h4>参考答案</h4><p>${card.a}</p><div class="quiz-self-rate" id="quizRate${i}"><span style="font-size:12px;color:var(--text-tertiary);margin-right:4px;">自评:</span><button class="fc-btn unknown" style="padding:5px 14px;font-size:11px;" onclick="selfRateQuiz(${i},'unknown')">不熟</button><button class="fc-btn fuzzy" style="padding:5px 14px;font-size:11px;" onclick="selfRateQuiz(${i},'fuzzy')">模糊</button><button class="fc-btn mastered" style="padding:5px 14px;font-size:11px;" onclick="selfRateQuiz(${i},'mastered')">掌握</button></div></div></div>`;
+  });
+}
+function selfRateQuiz(idx, rating) {
+  const card = quizCards[idx];
+  data.cardStatus[card.idx] = { status: rating, reviewCount: (data.cardStatus[card.idx]?.reviewCount || 0) + 1, lastReview: formatDate(new Date()) };
+  data.studyLog.push({ cardIdx: card.idx, rating, date: formatDate(new Date()), time: new Date().toISOString() });
+  saveData();
+  const el = document.getElementById('quizRate' + idx);
+  const lm = {mastered:'掌握',fuzzy:'模糊',unknown:'不熟'};
+  const cm = {mastered:'var(--success)',fuzzy:'var(--warning)',unknown:'var(--danger)'};
+  el.innerHTML = `<span style="font-size:12px;font-weight:700;color:${cm[rating]};">已标记为${lm[rating]}</span>`;
+}
+function submitQuiz() {
+  if (quizTimerInterval) clearInterval(quizTimerInterval);
+  quizCards.forEach((_, i) => { document.getElementById('quizRef' + i).classList.add('show'); });
+  showToast('已交卷，请对照参考答案自评', 'success');
+}
+
+// ---------- Keyword highlighting ----------
+function highlightKeywords(text) {
+  return text
+    .replace(/\u201c([^\u201d]{1,30})\u201d/g, "\u201c<span class='kw-quote'>$1<\/span>\u201d")
+    .replace(/"([^"]{1,30})"/g, "\"<span class='kw-quote'>$1<\/span>\"")
+    .replace(/\u300a([^\u300b]+)\u300b/g, "\u300a<span class='kw-book'>$1<\/span>\u300b")
+    .replace(/(\d{4})\s*\u5e74/g, "<span class='kw-year'>$1\u5e74<\/span>")
+    .replace(/([\u4e00-\u9fa5]{2,6})(\u7406\u8bba|\u5b66\u8bf4|\u5047\u8bf4|\u6548\u679c|\u5b9a\u5f8b|\u6a21\u5f0f|\u539f\u5219|\u8fd0\u52a8|\u4e3b\u4e49)/g, "<span class='kw-theory'>$1$2<\/span>");
+}
+
+// ---------- Quick review mode ----------
+let qrCardStartTime = 0, qrLiveTimerInterval = null;
+
+function startQRLiveTimer() {
+  if (qrLiveTimerInterval) clearInterval(qrLiveTimerInterval);
+  qrLiveTimerInterval = setInterval(() => {
+    const el = document.getElementById('qrLiveTimer');
+    if (!el) { clearInterval(qrLiveTimerInterval); return; }
+    const sec = Math.round((Date.now() - qrCardStartTime) / 1000);
+    el.textContent = sec >= 60 ? Math.floor(sec/60) + 'm' + (sec%60) + 's' : sec + 's';
+  }, 1000);
+}
+
+function splitPoints(text) {
+  const lines = text.split('\n').filter(l => l.trim());
+  if (lines.length <= 1) {
+    const segs = text.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/g).filter(s => s.trim());
+    if (segs.length > 1) return segs.map(s => s.trim());
+    const numSegs = text.split(/(?=\(\d+\)|\（\d+\）)/g).filter(s => s.trim());
+    if (numSegs.length > 1) return numSegs.map(s => s.trim());
+    const sentences = text.split(/(?<=[。；])/g).filter(s => s.trim().length > 5);
+    if (sentences.length >= 2 && sentences.length <= 8) return sentences.map(s => s.trim());
+    return [text.trim()];
+  }
+  return lines.map(l => l.trim());
+}
+
+function renderQRCard() {
+  const container = document.getElementById('qrCardContainer');
+  if (qrIdx >= quizCards.length) {
+    container.innerHTML = '<div class="empty-state" style="padding:60px 24px;"><div class="icon" style="font-size:56px;">&#127881;</div><p style="font-size:16px;font-weight:700;margin-bottom:8px;">全部做完了！</p><p>共 ' + quizCards.length + ' 题</p><button class="btn btn-primary" style="margin-top:20px;" onclick="cancelQuiz()">返回</button></div>';
+    updateQRProgress(); return;
+  }
+  const card = quizCards[qrIdx];
+  const typeMap = { noun: '名词解释', short: '简答题', essay: '论述题' };
+  const typeLabel = typeMap[card.type] || '题目';
+  const typeClass = card.type === 'noun' ? 'type-noun' : card.type === 'short' ? 'type-short' : 'type-essay';
+
+  let bodyHTML = '';
+  if (card.type === 'noun') {
+    bodyHTML = renderNounCard(card, qrIdx);
+  } else if (card.type === 'short') {
+    bodyHTML = renderShortCard(card, qrIdx);
+  } else {
+    bodyHTML = renderEssayCard(card, qrIdx);
+  }
+
+  qrCardStartTime = Date.now();
+
+  container.innerHTML = `<div class="qr-card" style="animation:fadeIn .3s ease;">
+    <div class="qr-card-header">
+      <div><div class="quiz-q-number">第 ${qrIdx+1} 题 · ${typeLabel} · ${CHAPTERS[card.ch]}</div></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="qr-timer-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span id="qrLiveTimer">0s</span></span>
+        <span class="flashcard-type ${typeClass}" style="position:static;">${typeLabel}</span>
+      </div>
+    </div>
+    <div class="qr-card-body"><div class="qr-card-q">${card.q}</div></div>
+    <div class="qr-card-answer-area" id="qrAnswerArea${qrIdx}">${bodyHTML}</div>
+    <div class="qr-rate-bar" id="qrRateBar${qrIdx}" style="display:none;">
+      <span>自评</span>
+      <button class="fc-btn unknown" style="padding:6px 18px;font-size:12px;" onclick="qrRate('unknown')">不熟</button>
+      <button class="fc-btn fuzzy" style="padding:6px 18px;font-size:12px;" onclick="qrRate('fuzzy')">模糊</button>
+      <button class="fc-btn mastered" style="padding:6px 18px;font-size:12px;" onclick="qrRate('mastered')">掌握</button>
+    </div>
+  </div>`;
+  updateQRProgress();
+  startQRLiveTimer();
+}
+
+function renderNounCard(card, idx) {
+  return `<button class="qr-reveal-btn" id="qrRevealBtn${idx}" onclick="revealNounAnswer(${idx})">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    点击查看答案</button>
+  <div id="qrNounAns${idx}" style="display:none;"></div>`;
+}
+
+function revealNounAnswer(idx) {
+  const card = quizCards[idx];
+  document.getElementById('qrRevealBtn' + idx).style.display = 'none';
+  document.getElementById('qrNounAns' + idx).innerHTML = `<div class="qr-answer-block">${highlightKeywords(card.a)}</div>`;
+  document.getElementById('qrNounAns' + idx).style.display = 'block';
+  document.getElementById('qrRateBar' + idx).style.display = 'flex';
+}
+
+function renderShortCard(card, idx) {
+  const points = splitPoints(card.a);
+  if (points.length <= 1) return renderNounCard(card, idx);
+  let html = `<div class="qr-point-counter">本题共 <strong>${points.length}</strong> 个要点，已揭开 <strong id="qrPtRevealed${idx}">0</strong> 个</div>`;
+  html += `<div class="qr-points-list" id="qrPoints${idx}">`;
+  points.forEach((p, pi) => {
+    html += `<div class="qr-point" id="qrPt${idx}_${pi}" onclick="revealPoint(${idx},${pi},${points.length})">
+      <span class="qr-point-num">${pi+1}</span><span class="qr-point-hidden" id="qrPtText${idx}_${pi}">${highlightKeywords(p)}</span></div>`;
+  });
+  html += `</div><button class="qr-reveal-all" onclick="revealAllPoints(${idx},${points.length})">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    全部展开</button>`;
+  return html;
+}
+
+function revealPoint(idx, pi, total) {
+  const el = document.getElementById('qrPtText' + idx + '_' + pi);
+  if (el) { el.classList.remove('qr-point-hidden'); el.style.pointerEvents = 'auto'; }
+  let revealed = 0;
+  for (let i = 0; i < total; i++) {
+    const t = document.getElementById('qrPtText' + idx + '_' + i);
+    if (t && !t.classList.contains('qr-point-hidden')) revealed++;
+  }
+  const counter = document.getElementById('qrPtRevealed' + idx);
+  if (counter) counter.textContent = revealed;
+  if (revealed === total) document.getElementById('qrRateBar' + idx).style.display = 'flex';
+}
+
+function revealAllPoints(idx, total) {
+  for (let i = 0; i < total; i++) revealPoint(idx, i, total);
+  document.getElementById('qrRateBar' + idx).style.display = 'flex';
+}
+
+function renderEssayCard(card, idx) {
+  return `<div class="qr-essay-toggle" id="qrEssayToggle${idx}">
+    <button onclick="showEssayTextarea(${idx})">我要写一写</button>
+    <button onclick="revealEssayAnswer(${idx})">直接看答案</button>
+  </div>
+  <div id="qrEssayWrite${idx}" style="display:none;">
+    <textarea class="qr-essay-textarea" placeholder="在此写下你的思路..."></textarea>
+    <button class="qr-reveal-btn" style="margin-top:12px;" onclick="revealEssayAnswer(${idx})">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      查看参考答案</button>
+  </div>
+  <div id="qrEssayAns${idx}" style="display:none;"></div>`;
+}
+
+function showEssayTextarea(idx) {
+  document.getElementById('qrEssayToggle' + idx).style.display = 'none';
+  document.getElementById('qrEssayWrite' + idx).style.display = 'block';
+}
+
+function revealEssayAnswer(idx) {
+  const card = quizCards[idx];
+  document.getElementById('qrEssayToggle' + idx).style.display = 'none';
+  const writeEl = document.getElementById('qrEssayWrite' + idx);
+  if (writeEl.style.display === 'block') {
+    const revealBtns = writeEl.querySelectorAll('.qr-reveal-btn');
+    revealBtns.forEach(b => b.style.display = 'none');
+  }
+  document.getElementById('qrEssayAns' + idx).innerHTML = `<div class="qr-answer-block">${highlightKeywords(card.a)}</div>`;
+  document.getElementById('qrEssayAns' + idx).style.display = 'block';
+  document.getElementById('qrRateBar' + idx).style.display = 'flex';
+}
+
+function qrRate(rating) {
+  if (qrLiveTimerInterval) clearInterval(qrLiveTimerInterval);
+  const card = quizCards[qrIdx];
+  const elapsed = Math.round((Date.now() - qrCardStartTime) / 1000);
+  data.cardStatus[card.idx] = { status: rating, reviewCount: (data.cardStatus[card.idx]?.reviewCount || 0) + 1, lastReview: formatDate(new Date()) };
+  data.studyLog.push({ cardIdx: card.idx, rating, date: formatDate(new Date()), time: new Date().toISOString(), elapsed });
+  saveData();
+  const msgs = { unknown: '已标记为不熟', fuzzy: '已标记为模糊', mastered: '已掌握！' };
+  showToast(msgs[rating], rating === 'mastered' ? 'success' : 'info');
+  qrIdx++; renderQRCard();
+}
+
+function qrNav(dir) {
+  if (qrLiveTimerInterval) clearInterval(qrLiveTimerInterval);
+  const next = qrIdx + dir;
+  if (next < 0 || next >= quizCards.length) return;
+  qrIdx = next; renderQRCard();
+}
+
+function updateQRProgress() {
+  const done = Math.min(qrIdx, quizCards.length);
+  document.getElementById('qrCount').textContent = done + '/' + quizCards.length;
+  document.getElementById('qrProgressFill').style.width = (quizCards.length > 0 ? done / quizCards.length * 100 : 0) + '%';
+  document.getElementById('qrPrev').disabled = qrIdx <= 0;
+  document.getElementById('qrNext').disabled = qrIdx >= quizCards.length - 1;
+}
+
+function cancelQuiz() {
+  if (quizTimerInterval) clearInterval(quizTimerInterval);
+  if (qrLiveTimerInterval) clearInterval(qrLiveTimerInterval);
+  document.getElementById('quizSetup').style.display = 'block';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('quickReviewArea').style.display = 'none';
+}
+
+// ========================= Wrong Book =========================
+function renderWrongBook(filter) {
+  const container = document.getElementById('wrongList');
+  const allItems = CARDS.map((c, i) => ({ ...c, idx: i }));
+  const unknownCount = allItems.filter(c => data.cardStatus[c.idx]?.status === 'unknown').length;
+  const fuzzyCount = allItems.filter(c => data.cardStatus[c.idx]?.status === 'fuzzy').length;
+  document.getElementById('wrongStatsBar').innerHTML = `<span>共 <strong>${unknownCount + fuzzyCount}</strong> 个薄弱点</span><span style="color:var(--danger);">不熟 ${unknownCount}</span><span style="color:var(--warning);">模糊 ${fuzzyCount}</span>`;
+  let items = allItems.filter(c => { const st = data.cardStatus[c.idx]?.status; if (filter === 'all') return st === 'unknown' || st === 'fuzzy'; return st === filter; });
+  if (items.length === 0) { container.innerHTML = '<div class="empty-state" style="padding:40px 24px;"><div class="icon">&#128161;</div><p>暂无记录</p></div>'; return; }
+  container.innerHTML = items.map((c, i) => {
+    const st = data.cardStatus[c.idx]?.status;
+    const tagClass = st === 'unknown' ? 'tag-unknown' : 'tag-fuzzy';
+    const tagText = st === 'unknown' ? '不熟' : '模糊';
+    return `<div class="wrong-list-item" onclick="toggleWrongAnswer(${i})"><div class="wrong-q">${c.q}</div><div class="wrong-chapter">${CHAPTERS[c.ch]} <span class="tag ${tagClass}" style="margin-left:8px">${tagText}</span><span style="float:right;font-size:11px;color:var(--text-tertiary);">复习${data.cardStatus[c.idx]?.reviewCount || 0}次</span></div><div class="wrong-answer-preview" id="wrongAns${i}">${c.a}</div></div>`;
+  }).join('');
+}
+function toggleWrongAnswer(idx) { const el = document.getElementById('wrongAns' + idx); if (el) el.classList.toggle('show'); }
+function filterWrong(type, el) { document.querySelectorAll('#page-wrong .chapter-tag').forEach(t => t.classList.remove('active')); el.classList.add('active'); renderWrongBook(type); }
+function jumpToCard(idx) {
+  switchPage('study'); const card = CARDS[idx]; currentChapter = card.ch; buildStudyQueue();
+  studyIdx = studyQueue.findIndex(c => c.idx === idx); if (studyIdx < 0) studyIdx = 0; showCurrentCard();
+  const tags = document.querySelectorAll('#studyChapterSelect .chapter-tag');
+  tags.forEach(t => t.classList.remove('active')); tags[card.ch + 1]?.classList.add('active');
+}
+
+// ========================= Stats =========================
+// ========================= Answer Template =========================
+const ANSWER_TEMPLATES = {
+  noun: {
+    title: '名词解释答题框架',
+    steps: ['<b>定义</b>：用一句话概括这个概念是什么', '<b>提出者/背景</b>：谁提出的、在什么语境下', '<b>核心内容</b>：2-3 个关键要点展开', '<b>意义/评价</b>：学术价值或现实意义'],
+    tip: '名词解释一般 150-200 字，控制在 5 分钟内'
+  },
+  short: {
+    title: '简答题答题框架',
+    steps: ['<b>总述</b>：一句话点明核心观点', '<b>分点论述</b>：3-5 个要点，每点一句核心 + 一句展开', '<b>小结</b>：回扣题目，总结意义（可选）'],
+    tip: '简答题一般 300-400 字，注意要点完整性比展开深度更重要'
+  },
+  essay: {
+    title: '论述题答题框架',
+    steps: ['<b>破题</b>：界定核心概念，明确论述方向', '<b>理论基础</b>：引用相关传播学理论', '<b>分层论述</b>：3-4 个层次，逻辑递进（是什么→为什么→怎么样）', '<b>结合实际</b>：举例说明，联系当下传播现象', '<b>总结升华</b>：回应题目，提出见解或展望'],
+    tip: '论述题一般 800-1200 字，注意理论 + 实例结合，逻辑层次分明'
+  }
+};
+
+function updateAnswerTemplate(type) {
+  const tmpl = ANSWER_TEMPLATES[type];
+  const container = document.getElementById('answerTemplate');
+  const content = document.getElementById('templateContent');
+  if (!tmpl) { container.style.display = 'none'; return; }
+  container.style.display = 'block';
+  content.innerHTML = `<ol>${tmpl.steps.map(s => '<li>' + s + '</li>').join('')}</ol><div class="tmpl-tip">${tmpl.tip}</div>`;
+  content.classList.remove('show');
+}
+
+function toggleTemplate() {
+  document.getElementById('templateContent').classList.toggle('show');
+}
+
+// ========================= Stats =========================
+function renderStats() { renderTimeStats(); renderMasteryChart(); renderDailyChart(); renderChapterChart(); renderStudyLog(); }
+function renderTimeStats() {
+  const container = document.getElementById('timeStats');
+  const logsWithTime = data.studyLog.filter(l => l.elapsed > 0);
+  if (logsWithTime.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-tertiary);font-size:13px;">开始快速刷题后会记录答题时间</div>';
+    return;
+  }
+  const avg = Math.round(logsWithTime.reduce((s,l) => s + l.elapsed, 0) / logsWithTime.length);
+  const typeAvg = {};
+  ['noun','short','essay'].forEach(t => {
+    const tl = logsWithTime.filter(l => { const c = CARDS[l.cardIdx]; return c && c.type === t; });
+    typeAvg[t] = tl.length > 0 ? Math.round(tl.reduce((s,l) => s + l.elapsed, 0) / tl.length) : 0;
+  });
+  const fastest = logsWithTime.reduce((min,l) => l.elapsed < min.elapsed ? l : min, logsWithTime[0]);
+  const slowest = logsWithTime.reduce((max,l) => l.elapsed > max.elapsed ? l : max, logsWithTime[0]);
+  const fmtTime = s => s >= 60 ? Math.floor(s/60) + 'm' + (s%60) + 's' : s + 's';
+  container.innerHTML = `<div class="time-stats-grid">
+    <div class="time-stat-item"><div class="time-stat-value">${fmtTime(avg)}</div><div class="time-stat-label">平均用时</div></div>
+    <div class="time-stat-item"><div class="time-stat-value">${fmtTime(fastest.elapsed)}</div><div class="time-stat-label">最快</div></div>
+    <div class="time-stat-item"><div class="time-stat-value">${fmtTime(slowest.elapsed)}</div><div class="time-stat-label">最慢</div></div>
+  </div>
+  <div style="display:flex;gap:12px;">
+    ${[{t:'noun',l:'名词解释',c:'#f59e0b'},{t:'short',l:'简答题',c:'#10b981'},{t:'essay',l:'论述题',c:'#8b5cf6'}].map(x =>
+      `<div style="flex:1;text-align:center;padding:10px;background:var(--border-light);border-radius:10px;">
+        <div style="font-size:16px;font-weight:800;color:${x.c};">${typeAvg[x.t] ? fmtTime(typeAvg[x.t]) : '--'}</div>
+        <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">${x.l}</div>
+      </div>`
+    ).join('')}
+  </div>
+  <div style="font-size:11px;color:var(--text-tertiary);text-align:center;margin-top:8px;">共 ${logsWithTime.length} 次计时记录</div>`;
+}
+function renderMasteryChart() {
+  const cs = data.cardStatus; const counts = { mastered:0, fuzzy:0, unknown:0, 'new':0 };
+  Object.values(cs).forEach(c => { counts[c.status] = (counts[c.status] || 0) + 1; });
+  const total = CARDS.length;
+  const items = [{label:'已掌握',count:counts.mastered,color:'#10b981'},{label:'模糊',count:counts.fuzzy,color:'#f59e0b'},{label:'不熟',count:counts.unknown,color:'#ef4444'},{label:'未学习',count:counts.new,color:'#d1d5db'}];
+  document.getElementById('masteryChart').innerHTML = items.map(it => { const pct = total > 0 ? Math.round(it.count/total*100) : 0; return `<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;font-weight:600;"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${it.color};margin-right:6px;"></span>${it.label}</span><span>${it.count} (${pct}%)</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${it.color};"></div></div></div>`; }).join('');
+}
+function renderDailyChart() {
+  const container = document.getElementById('dailyChart'); const days = []; const today = new Date();
+  for (let i = 6; i >= 0; i--) { const d = new Date(today); d.setDate(d.getDate()-i); const key = formatDate(d); days.push({date:key.slice(5),count:data.studyLog.filter(l=>l.date===key).length}); }
+  const max = Math.max(...days.map(d=>d.count),1);
+  container.innerHTML = `<div style="display:flex;align-items:flex-end;gap:6px;height:110px;">${days.map(d=>{const h=Math.max((d.count/max)*100,4);return `<div style="flex:1;text-align:center;"><div style="font-size:11px;font-weight:700;margin-bottom:3px;color:var(--text-secondary);">${d.count}</div><div style="height:${h}px;background:linear-gradient(180deg,var(--primary-light),var(--primary));border-radius:3px 3px 0 0;"></div><div style="font-size:10px;color:var(--text-tertiary);margin-top:3px;">${d.date}</div></div>`;}).join('')}</div>`;
+}
+function renderChapterChart() {
+  const container = document.getElementById('chapterChart'); container.innerHTML = '';
+  CHAPTERS.forEach((name, i) => {
+    const cards = CARDS.filter(c=>c.ch===i); if (cards.length===0) return;
+    const m=cards.filter(c=>{const idx=CARDS.indexOf(c);return data.cardStatus[idx]?.status==='mastered';}).length;
+    const f=cards.filter(c=>{const idx=CARDS.indexOf(c);return data.cardStatus[idx]?.status==='fuzzy';}).length;
+    const u=cards.filter(c=>{const idx=CARDS.indexOf(c);return data.cardStatus[idx]?.status==='unknown';}).length;
+    container.innerHTML+=`<div style="margin-bottom:8px;font-size:12px;"><div style="margin-bottom:3px;display:flex;justify-content:space-between;font-weight:600;"><span>${name}</span><span style="color:var(--text-tertiary);">${m}/${cards.length}</span></div><div class="progress-bar" style="display:flex;overflow:hidden;"><div style="width:${Math.round(m/cards.length*100)}%;height:6px;background:#10b981;"></div><div style="width:${Math.round(f/cards.length*100)}%;height:6px;background:#f59e0b;"></div><div style="width:${Math.round(u/cards.length*100)}%;height:6px;background:#ef4444;"></div></div></div>`;
+  });
+}
+function renderStudyLog() {
+  const container = document.getElementById('studyLog');
+  const recent = [...data.studyLog].reverse().slice(0, 20);
+  if (recent.length === 0) { container.innerHTML = '<div class="empty-state" style="padding:32px;"><p>暂无学习记录</p></div>'; return; }
+  container.innerHTML = recent.map(l => { const card=CARDS[l.cardIdx]; const sm={unknown:'不熟',fuzzy:'模糊',mastered:'掌握'}; const cm={unknown:'#ef4444',fuzzy:'#f59e0b',mastered:'#10b981'}; return `<div style="padding:7px 0;border-bottom:1px solid var(--border-light);font-size:12px;display:flex;justify-content:space-between;align-items:center;"><div style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${card?.q||'未知'}</div><div style="display:flex;gap:8px;align-items:center;flex-shrink:0;margin-left:12px;"><span style="color:${cm[l.rating]};font-weight:700;">${sm[l.rating]}</span><span style="color:var(--text-tertiary);">${l.date}</span></div></div>`; }).join('');
+}
+
+// ========================= Settings =========================
+function loadSettings() { document.getElementById('examDate').value = data.settings.examDate || ''; document.getElementById('dailyGoal').value = data.settings.dailyGoal || 10; }
+function saveSettings() { data.settings.examDate = document.getElementById('examDate').value; data.settings.dailyGoal = parseInt(document.getElementById('dailyGoal').value) || 10; saveData(); showToast('设置已保存', 'success'); }
+function exportData() { const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `传播学学习数据_${formatDate(new Date())}.json`; a.click(); showToast('数据已导出', 'success'); }
+function resetData() { if (!confirm('确定要重置所有学习数据吗？此操作不可撤销！')) return; data = getDefaultData(); saveData(); showToast('数据已重置', 'info'); refreshDashboard(); }
+
+// ========================= Init =========================
+(function init() {
+  const theme = localStorage.getItem('theme');
+  if (theme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('darkIcon').textContent = '\u2600'; document.getElementById('darkLabel').textContent = '日间模式'; }
+  refreshDashboard();
+})();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+</script>
+</body>
+</html>
