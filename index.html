@@ -62,7 +62,7 @@ body {
 .sidebar-header h1 {
   font-size:21px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px;
   background:linear-gradient(135deg,#e0e7ff,#c7d2fe);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
 }
 .sidebar-header p { font-size:12px; opacity:.5; }
 .sidebar-nav { flex:1; padding:16px 12px; }
@@ -198,23 +198,25 @@ body {
 .flashcard-progress { text-align:center; margin-bottom:16px; color:var(--text-secondary); font-size:13px; font-weight:600; }
 .flashcard {
   width:100%; min-height:340px; position:relative; cursor:pointer;
-  transform-style:preserve-3d; transition:transform .65s cubic-bezier(.4,0,.2,1);
+  -webkit-transform-style:preserve-3d; transform-style:preserve-3d;
+  transition:transform .65s cubic-bezier(.4,0,.2,1); transform:translateZ(0);
 }
-.flashcard.flipped { transform:rotateY(180deg); }
+.flashcard.flipped { transform:translateZ(0) rotateY(180deg); }
 .flashcard-face {
-  position:absolute; inset:0; backface-visibility:hidden; border-radius:20px;
+  position:absolute; inset:0; -webkit-backface-visibility:hidden; backface-visibility:hidden; border-radius:20px;
+  -webkit-transform-style:preserve-3d; transform-style:preserve-3d; transform:translateZ(0);
   box-shadow:var(--shadow-lg); padding:32px; display:flex; flex-direction:column; border:1px solid var(--border-light);
 }
 .flashcard-front {
   background:linear-gradient(160deg,#eef2ff,#e0e7ff,#c7d2fe);
-  justify-content:center; align-items:center; position:relative;
+  justify-content:center; align-items:center; position:relative; transform:translateZ(0);
 }
 [data-theme="dark"] .flashcard-front { background:linear-gradient(160deg,#1e1b4b,#312e81); }
 .flashcard-front::before {
   content:''; position:absolute; top:-50px; right:-50px; width:160px; height:160px;
   background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%); border-radius:50%;
 }
-.flashcard-back { background:var(--card); transform:rotateY(180deg); overflow-y:auto; pointer-events:none; }
+.flashcard-back { background:var(--card); transform:rotateY(180deg) translateZ(0); overflow-y:auto; pointer-events:none; }
 .flashcard.flipped .flashcard-back { pointer-events:auto; }
 .flashcard.flipped .flashcard-front { pointer-events:none; }
 .flashcard-chapter {
