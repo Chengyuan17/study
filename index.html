@@ -55,7 +55,7 @@ body {
 .sidebar {
   width:var(--sidebar-w); background:linear-gradient(180deg,#1e1b4b,#312e81,#3730a3);
   color:white; padding:28px 0 20px; position:fixed; top:0; left:0; bottom:0;
-  z-index:100; display:flex; flex-direction:column;
+  z-index:200; display:flex; flex-direction:column;
   transition:transform .35s cubic-bezier(.4,0,.2,1), visibility .35s, opacity .35s; box-shadow:4px 0 24px rgba(0,0,0,.15); overflow-y:auto;
 }
 .sidebar-header { padding:0 24px 24px; border-bottom:1px solid rgba(255,255,255,.1); }
@@ -476,7 +476,7 @@ body {
 
 /* Mobile */
 .menu-toggle {
-  display:none; position:fixed; top:14px; left:14px; z-index:200;
+  display:none; position:fixed; top:14px; left:14px; z-index:250;
   width:42px; height:42px; border:none; border-radius:11px;
   background:linear-gradient(135deg,var(--primary),var(--primary-dark));
   color:white; cursor:pointer; box-shadow:0 4px 14px rgba(99,102,241,.3);
