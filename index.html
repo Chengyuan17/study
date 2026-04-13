@@ -99,6 +99,24 @@ body {
   flex-shrink: 0; transition: all .2s;
 }
 .topbar-btn:active { transform: scale(.93); }
+
+/* Exam countdown (below topbar) */
+.exam-countdown-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 14px; margin: 0; background: linear-gradient(135deg, rgba(123,47,242,.08), rgba(155,93,229,.06));
+  border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text3); font-weight: 600;
+}
+.exam-countdown-label { flex-shrink: 0; letter-spacing: .02em; }
+.exam-countdown-right { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.exam-countdown-days { font-size: 22px; font-weight: 800; color: var(--purple); font-variant-numeric: tabular-nums; line-height: 1; }
+.exam-countdown-unit { font-size: 14px; font-weight: 700; color: var(--purple); }
+.exam-countdown-sub { font-size: 12px; font-weight: 600; color: var(--text3); }
+.exam-countdown-bar.past { background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(5,150,105,.06)); }
+.exam-countdown-bar.past .exam-countdown-days,
+.exam-countdown-bar.past .exam-countdown-unit { color: var(--text2); }
+body.dark .exam-countdown-bar { background: linear-gradient(135deg, rgba(155,93,229,.12), rgba(123,47,242,.08)); }
+body.dark .exam-countdown-bar.past { background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(5,150,105,.08)); }
+
 /* ===== Content ===== */
 .content { padding: 14px 16px; max-width: 960px; margin: 0 auto; transition: opacity .2s, transform .2s; }
 .content.slide-left { opacity: 0; transform: translateX(-24px); }
@@ -265,7 +283,8 @@ body.dark .font-panel { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
 }
 @media (min-width: 768px) {
   .topbar,
-  .content {
+  .content,
+  .exam-countdown-bar {
     max-width: 960px;
     margin: 0 auto;
   }
@@ -311,6 +330,15 @@ body.dark .font-panel { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
       <button class="topbar-btn" id="fontBtn">Aa</button>
     </div>
     <div class="filter-panel" id="filterPanel"></div>
+  </div>
+
+  <div class="exam-countdown-bar" id="examCountdownBar" aria-live="polite">
+    <span class="exam-countdown-label">距离考试</span>
+    <div class="exam-countdown-right">
+      <span class="exam-countdown-days" id="examCountdownDays">--</span>
+      <span class="exam-countdown-unit" id="examCountdownUnit">天</span>
+      <span class="exam-countdown-sub" id="examCountdownSub"></span>
+    </div>
   </div>
 
   <!-- Content -->
@@ -2020,12 +2048,62 @@ let currentFilterPanel = '';
 let filteredCards = [];
 let currentAssistMode = '';
 
+const EXAM_AT = new Date(2026, 4, 17, 9, 0, 0);
+
+function updateExamCountdown() {
+  const bar = document.getElementById('examCountdownBar');
+  const daysEl = document.getElementById('examCountdownDays');
+  const unitEl = document.getElementById('examCountdownUnit');
+  const subEl = document.getElementById('examCountdownSub');
+  if (!bar || !daysEl || !unitEl || !subEl) return;
+
+  const now = new Date();
+  const ms = EXAM_AT.getTime() - now.getTime();
+  const examY = EXAM_AT.getFullYear();
+  const examM = EXAM_AT.getMonth();
+  const examD = EXAM_AT.getDate();
+  const isExamCalendarDay = now.getFullYear() === examY && now.getMonth() === examM && now.getDate() === examD;
+
+  bar.classList.toggle('past', ms <= 0);
+
+  if (ms <= 0) {
+    daysEl.textContent = isExamCalendarDay ? '加油' : '—';
+    unitEl.textContent = '';
+    subEl.textContent = isExamCalendarDay ? '今天是考试日' : '考试日已过';
+    return;
+  }
+
+  const dayMs = 86400000;
+  const hourMs = 3600000;
+  const minMs = 60000;
+  if (ms >= dayMs) {
+    const d = Math.floor(ms / dayMs);
+    const h = Math.floor((ms % dayMs) / hourMs);
+    daysEl.textContent = String(d);
+    unitEl.textContent = '天';
+    subEl.textContent = h > 0 ? `另 ${h} 小时 · 5月17日 9:00` : '5月17日 9:00';
+  } else if (ms >= hourMs) {
+    const h = Math.floor(ms / hourMs);
+    const m = Math.floor((ms % hourMs) / minMs);
+    daysEl.textContent = String(h);
+    unitEl.textContent = '小时';
+    subEl.textContent = m > 0 ? `${m} 分钟后开考` : '5月17日 9:00';
+  } else {
+    const m = Math.max(1, Math.floor(ms / minMs));
+    daysEl.textContent = String(m);
+    unitEl.textContent = '分钟';
+    subEl.textContent = '即将开考';
+  }
+}
+
 function init() {
   bindFilterControls();
   bindFooter();
   bindFontPanel();
   bindSwipe();
   filterAndRender();
+  updateExamCountdown();
+  setInterval(updateExamCountdown, 60000);
 }
 
 function getQuestionKey(card) {
