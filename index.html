@@ -122,10 +122,32 @@ body.dark .exam-countdown-bar.past { background: linear-gradient(135deg, rgba(16
 .content.slide-left { opacity: 0; transform: translateX(-24px); }
 .content.slide-right { opacity: 0; transform: translateX(24px); }
 
-/* Progress */
-.progress { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 13px; color: var(--text3); font-weight: 500; }
-.progress-track { flex: 1; height: 3px; background: #eee; border-radius: 2px; overflow: hidden; }
+/* Progress + question nav (desktop / mouse) */
+.progress-wrap {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px; width: 100%; flex-wrap: nowrap;
+}
+.nav-q-btn {
+  flex-shrink: 0; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text3); font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s; white-space: nowrap;
+}
+.nav-q-btn:hover { border-color: var(--purple-mid); color: var(--purple); background: var(--purple-bg); }
+.nav-q-btn:active { transform: scale(.97); }
+.nav-q-btn:disabled { opacity: .35; cursor: not-allowed; }
+body.dark .nav-q-btn { background: var(--card); border-color: var(--border); }
+.progress-main { flex: 1; min-width: 0; }
+.progress { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
+.progress-side {
+  display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; min-width: 0;
+  font-size: 13px; color: var(--text3); font-weight: 500;
+}
+.progress-mastery {
+  font-size: 11px; font-weight: 600; color: var(--purple-mid); letter-spacing: .02em;
+  white-space: nowrap;
+}
+.progress-track { flex: 1; min-width: 80px; height: 3px; background: #eee; border-radius: 2px; overflow: hidden; align-self: center; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--purple-light)); border-radius: 2px; transition: width .3s; }
+body.dark .progress-track { background: #333; }
 
 /* Unified question flow */
 .q-flow {
@@ -141,8 +163,32 @@ body.dark .exam-countdown-bar.past { background: linear-gradient(135deg, rgba(16
   max-width: 860px;
   min-height: calc(100vh - 250px);
   margin: 0 auto;
-  padding: 28px 24px;
+  padding: 28px 24px 56px;
   background: var(--card);
+}
+.q-master-corner {
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 800;
+  background: linear-gradient(135deg, #10b981, #059669); color: #fff;
+  box-shadow: 0 2px 10px rgba(16,185,129,.35);
+  display: none; letter-spacing: .04em;
+}
+.q-master-corner.show { display: block; }
+.q-master-btn {
+  position: absolute; right: 12px; bottom: 12px; z-index: 3;
+  padding: 10px 16px; border-radius: 14px; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  background: linear-gradient(135deg, var(--purple), var(--purple-mid)); color: #fff;
+  box-shadow: 0 4px 14px rgba(123,47,242,.35);
+  transition: transform .15s, box-shadow .15s;
+}
+.q-master-btn:active { transform: scale(.96); }
+.q-master-btn.is-mastered {
+  background: linear-gradient(135deg, #34d399, #10b981);
+  box-shadow: 0 4px 14px rgba(16,185,129,.3);
+}
+body.dark .q-master-btn.is-mastered {
+  background: linear-gradient(135deg, #059669, #047857);
 }
 .sec-label { font-size: 12px; font-weight: 600; color: var(--purple); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; letter-spacing: .03em; }
 .sec-label svg { width: 14px; height: 14px; stroke: var(--purple); stroke-width: 2; fill: none; }
@@ -267,13 +313,17 @@ body.dark .font-panel { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
 
 /* ===== Responsive ===== */
 @media (max-width: 480px) {
+  .progress-wrap { gap: 6px; }
+  .nav-q-btn { padding: 7px 8px; font-size: 11px; }
   .topbar { padding: 10px 12px 8px; }
   .content { padding: 12px; }
   .q-section.sec-question {
     min-height: calc(100vh - 230px);
-    padding: 24px 18px;
+    padding: 24px 18px 52px;
     border-radius: 20px;
   }
+  .q-master-btn { right: 10px; bottom: 10px; padding: 9px 14px; font-size: 12px; }
+  .q-master-corner { top: 10px; right: 10px; font-size: 10px; padding: 3px 8px; }
   .q-title { font-size: 23px; line-height: 1.7; }
   .topbar-row { gap: 8px; }
   .filter-triggers { gap: 6px; }
@@ -291,7 +341,7 @@ body.dark .font-panel { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
   .topbar { padding-top: 14px; }
   .q-section.sec-question {
     min-height: calc(100vh - 270px);
-    padding: 36px 34px;
+    padding: 36px 34px 60px;
   }
   .q-title { font-size: 34px; }
   .assist-body { font-size: 16px; }
@@ -300,7 +350,7 @@ body.dark .font-panel { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
   .content { max-width: 1080px; padding: 22px 24px; }
   .q-section.sec-question {
     min-height: calc(100vh - 290px);
-    padding: 44px 42px;
+    padding: 44px 42px 64px;
   }
   .q-title { font-size: 38px; }
   .footer-row {
@@ -343,17 +393,28 @@ body.dark .font-panel { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
 
   <!-- Content -->
   <div class="content" id="swipeArea">
-    <div class="progress">
-      <span id="progressLabel">1 / 5</span>
-      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+    <div class="progress-wrap">
+      <button type="button" class="nav-q-btn" id="prevQBtn" aria-label="上一题">上一题</button>
+      <div class="progress-main">
+        <div class="progress">
+          <div class="progress-side">
+            <span id="progressLabel">1 / 5</span>
+            <span class="progress-mastery" id="progressMastery">本筛选已掌握 0 / 0</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+        </div>
+      </div>
+      <button type="button" class="nav-q-btn" id="nextQBtn" aria-label="下一题">下一题</button>
     </div>
     <div class="q-flow" id="qFlow">
       <!-- Question -->
       <div class="q-section sec-question">
+        <span class="q-master-corner" id="qMasterCorner">已背</span>
         <div class="q-head">
           <span class="q-badge" id="qBadge">名词解释</span>
         </div>
         <div class="q-title" id="qText">加载中...</div>
+        <button type="button" class="q-master-btn" id="qMasterBtn">标记已掌握</button>
         <div class="assist-panel" id="assistPanel">
           <div class="assist-head" id="assistHead"></div>
           <div class="assist-body" id="assistBody"></div>
@@ -2048,6 +2109,16 @@ let currentFilterPanel = '';
 let filteredCards = [];
 let currentAssistMode = '';
 
+const MASTER_STORAGE_KEY = 'study_mastered_qkeys_v1';
+let masteredKeys = new Set();
+(function loadMasteredKeysInit() {
+  try {
+    const raw = localStorage.getItem(MASTER_STORAGE_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(arr)) arr.forEach(k => { if (typeof k === 'string' && k) masteredKeys.add(k); });
+  } catch (e) {}
+})();
+
 const EXAM_AT = new Date(2026, 4, 17, 9, 0, 0);
 
 function updateExamCountdown() {
@@ -2101,6 +2172,8 @@ function init() {
   bindFooter();
   bindFontPanel();
   bindSwipe();
+  bindQuestionNav();
+  bindMasterBtn();
   filterAndRender();
   updateExamCountdown();
   setInterval(updateExamCountdown, 60000);
@@ -2108,6 +2181,56 @@ function init() {
 
 function getQuestionKey(card) {
   return card?.q || '';
+}
+
+function persistMasteredKeys() {
+  localStorage.setItem(MASTER_STORAGE_KEY, JSON.stringify([...masteredKeys]));
+}
+
+function isCardMastered(card) {
+  return masteredKeys.has(getQuestionKey(card));
+}
+
+function countMasteredInFilter() {
+  if (!filteredCards.length) return 0;
+  return filteredCards.reduce((n, c) => n + (masteredKeys.has(getQuestionKey(c)) ? 1 : 0), 0);
+}
+
+function updateMasteryUI() {
+  const pm = document.getElementById('progressMastery');
+  const corner = document.getElementById('qMasterCorner');
+  const btn = document.getElementById('qMasterBtn');
+  const total = filteredCards.length;
+  const done = countMasteredInFilter();
+  if (pm) pm.textContent = `本筛选已掌握 ${done} / ${total}`;
+  if (!total || !filteredCards[currentIndex]) {
+    if (corner) corner.classList.remove('show');
+    if (btn) btn.style.display = 'none';
+    return;
+  }
+  const q = filteredCards[currentIndex];
+  if (btn) {
+    btn.style.display = '';
+    const m = isCardMastered(q);
+    btn.classList.toggle('is-mastered', m);
+    btn.textContent = m ? '已背（点取消）' : '标记已掌握';
+  }
+  if (corner) corner.classList.toggle('show', isCardMastered(q));
+}
+
+function toggleMasteredCurrent() {
+  const q = filteredCards[currentIndex];
+  if (!q) return;
+  const k = getQuestionKey(q);
+  if (masteredKeys.has(k)) masteredKeys.delete(k);
+  else masteredKeys.add(k);
+  persistMasteredKeys();
+  updateMasteryUI();
+}
+
+function bindMasterBtn() {
+  const btn = document.getElementById('qMasterBtn');
+  if (btn) btn.addEventListener('click', e => { e.stopPropagation(); toggleMasteredCurrent(); });
 }
 
 function getBaseCards() {
@@ -2235,7 +2358,13 @@ function filterAndRender() {
   if (filteredCards.length === 0) {
     document.getElementById('qText').textContent = '该分类暂无题目';
     document.getElementById('progressLabel').textContent = '0 / 0';
+    document.getElementById('progressMastery').textContent = '本筛选已掌握 0 / 0';
     document.getElementById('progressFill').style.width = '0%';
+    const corner = document.getElementById('qMasterCorner');
+    const mb = document.getElementById('qMasterBtn');
+    if (corner) corner.classList.remove('show');
+    if (mb) mb.style.display = 'none';
+    updateNavButtonsState();
     currentAssistMode = '';
     renderAssistPanel();
     return;
@@ -2261,6 +2390,39 @@ function renderQuestion() {
 
   document.getElementById('progressLabel').textContent = `${currentIndex + 1} / ${filteredCards.length}`;
   document.getElementById('progressFill').style.width = ((currentIndex + 1) / filteredCards.length * 100) + '%';
+  updateMasteryUI();
+  updateNavButtonsState();
+}
+
+function updateNavButtonsState() {
+  const prev = document.getElementById('prevQBtn');
+  const next = document.getElementById('nextQBtn');
+  if (!prev || !next) return;
+  const n = filteredCards.length;
+  if (n === 0) {
+    prev.disabled = true;
+    next.disabled = true;
+    return;
+  }
+  prev.disabled = currentIndex <= 0;
+  next.disabled = currentIndex >= n - 1;
+}
+
+function bindQuestionNav() {
+  const prev = document.getElementById('prevQBtn');
+  const next = document.getElementById('nextQBtn');
+  if (prev) prev.addEventListener('click', () => goQuestion(-1));
+  if (next) next.addEventListener('click', () => goQuestion(1));
+  document.addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, select')) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goQuestion(-1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      goQuestion(1);
+    }
+  });
 }
 
 // ========================= Footer =========================
